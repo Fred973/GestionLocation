@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% include 'alert_messages.html' %}
+
+<div class="center">
+    <h1>Gestion Location</h1>
+    <div class="card">
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                <div>
+                    {{ form.username.label(class="form-label") }}
+                    {{ form.username(class="form-field") }}
+                </div>
+                <div>
+                    {{ form.password.label(class="form-label") }}
+                    {{ form.password(class="form-field") }}
+                </div>
+            </div>
+            <div class="center" style="padding-bottom: 15px;">
+                {{ form.submit(class="btn success") }}
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

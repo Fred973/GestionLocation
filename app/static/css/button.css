@@ -1,0 +1,99 @@
+.btn {
+    border: 2px solid black;
+    border-radius: 5px;
+    background-color: transparent;
+    color: black;
+    padding: 6px 24px;
+    font-size: 16px;
+    cursor: pointer;
+    font-family: "argue";
+    margin-left: 5px;
+    max-width: fit-content;
+    display: inline;
+}
+
+/* Noctu color */
+.noctu-purple {
+    border: 2px solid #6F4C7D !important;
+    border-color: #6F4C7D;
+}
+
+.noctu-purple:hover {
+    background-color: #6F4C7D;
+    color: white;
+}
+
+.noctu-orange {
+    border: 2px solid #DD862A !important;
+    border-color: #DD862A;
+}
+
+.noctu-orange:hover {
+    background-color: #DD862A;
+    color: white;
+}
+
+/* Green */
+.success {
+    border-color: #04AA6D;
+    color: green;
+}
+
+.success:hover {
+    background-color: #04AA6D;
+    color: white;
+}
+
+/* Blue */
+.info {
+    border-color: #2196F3;
+    color: dodgerblue;
+}
+
+.info:hover {
+    background: #2196F3;
+    color: white;
+}
+
+/* Orange */
+.warning {
+    border-color: #ff9800;
+    color: orange;
+}
+
+.warning:hover {
+    background: #ff9800;
+    color: white;
+}
+
+/* Red */
+.danger {
+    border-color: #f44336;
+    color: red;
+}
+
+.danger:hover {
+    background: #f44336;
+    color: white;
+}
+
+/* Gray */
+.default {
+    border-color: #999797;
+    color: #999797;
+}
+
+.default:hover {
+    background: #999797;
+    color: white;
+}
+
+@media (max-width: 1230px) {
+    a {
+        display: inline-flex;
+    }
+    .btn {
+        padding: 3px 7px;
+        
+    }
+}
