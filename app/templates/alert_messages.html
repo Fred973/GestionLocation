@@ -1,13 +1,12 @@
 {% with messages = get_flashed_messages(with_categories=true) %}
 {% for category, message in messages %}
-<div id="myMsg" class="{{ category }}-msg" role="alert">
+<div id="myMsg" class="{{ category }}-msg" role="alert" style="position: relative;">
   <i class="fa fa-times-circle message-alert"> {{ message }}</i>
-
 </div>
 {% endfor %}
 {% endwith %}
 
-<script>
+<script type="text/javascript">
   setTimeout(function () {
     $('#myMsg').fadeOut('fast');
   }, 3000);

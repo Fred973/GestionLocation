@@ -20,7 +20,7 @@ migrate = Migrate(app, db)
 # Flask login stuff
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'login'
+login_manager.login_view = 'index'
 login_manager.login_message = 'Vous devez être connecté pour accéder à la page'
 login_manager.login_message_category = 'error'
 

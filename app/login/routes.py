@@ -5,6 +5,18 @@ from flask import render_template, redirect, url_for, flash, session, request
 from app.login.model import Users, check_password_hash
 
 
+@login_manager.user_loader
+def load_user(user_id):
+    try:
+        return Users.query.get(int(user_id))
+    except Exception as e:
+        print(e)
+        return render_template(
+            "error_404.html",
+            log=e
+        )
+
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     try:
@@ -18,9 +30,7 @@ def index():
                     session['user'] = form.username.data
                     login_user(user)
                     flash("Vous êtes connecté", category='success')
-                    return render_template(
-                        'dashboard.html'
-                    )
+                    return redirect(url_for('dashboard'))
                 else:
                     flash("Mauvais mot de passe - Essai encore!", category='warning')
                     redirect(request.referrer)
@@ -40,24 +50,13 @@ def index():
         )
 
 
-@login_manager.user_loader
-def load_user(user_id):
-    try:
-        return Users.query.get(int(user_id))
-    except Exception as e:
-        print(e)
-        return render_template(
-            "error_404.html",
-            log=e
-        )
-
-
 # Create logout page
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required
 def logout():
-    logout_user()
     try:
+        session.pop("user", None)
+        logout_user()
         flash("Vous êtes déconnecté", category='info')
     except Exception as e:
         print(e)
@@ -67,3 +66,18 @@ def logout():
         )
 
     return redirect(url_for('index'))
+
+
+@app.route('/dashboard', methods=['GET', 'POST'])
+@login_required
+def dashboard():
+    try:
+        return render_template(
+            'dashboard.html'
+        )
+    except Exception as e:
+        print(e)
+        return render_template(
+            "error_404.html",
+            log=e
+        )
