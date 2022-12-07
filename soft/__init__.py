@@ -3,8 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from datetime import timedelta
-from app.constant import mysql_sqalchemy, secret_key
-from app.src.config import Config
+from soft.constant import mysql_sqalchemy, secret_key
+from soft.src.config import Config
 
 # Create a Flask Instance
 app = Flask(__name__)
@@ -24,4 +24,4 @@ login_manager.login_view = 'index'
 login_manager.login_message = 'Vous devez être connecté pour accéder à la page'
 login_manager.login_message_category = 'error'
 
-from app.login import routes
+from soft.login import routes

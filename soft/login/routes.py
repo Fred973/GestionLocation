@@ -1,8 +1,8 @@
 from flask_login import login_user, login_required, logout_user
-from app import app, login_manager
-from app.login.forms import LoginForm
+from soft import app, login_manager
+from soft.login.forms import LoginForm
 from flask import render_template, redirect, url_for, flash, session, request
-from app.login.model import Users, check_password_hash
+from soft.login.model import Users, check_password_hash
 
 
 @login_manager.user_loader

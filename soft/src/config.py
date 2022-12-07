@@ -1,4 +1,4 @@
-from app.constant import secret_key, mysql_sqalchemy
+from soft.constant import secret_key, mysql_sqalchemy
 
 
 class Config:
