@@ -5,6 +5,13 @@ from flask import render_template, redirect, url_for, flash, session, request
 from soft.login.model import Users, check_password_hash
 
 
+@app.route('/')
+def index():
+    return render_template(
+        "index.html"
+    )
+
+
 @login_manager.user_loader
 def load_user(user_id):
     try:
@@ -17,8 +24,8 @@ def load_user(user_id):
         )
 
 
-@app.route('/', methods=['GET', 'POST'])
-def index():
+@app.route('/login', methods=['GET', 'POST'])
+def login():
     try:
         form = LoginForm()
         if form.validate_on_submit():
@@ -39,7 +46,7 @@ def index():
                 redirect(request.referrer)
 
         return render_template(
-            'index.html',
+            'login.html',
             form=form
         )
     except Exception as e:
@@ -58,14 +65,13 @@ def logout():
         session.pop("user", None)
         logout_user()
         flash("Vous êtes déconnecté", category='info')
+        return redirect(url_for('index'))
     except Exception as e:
         print(e)
         return render_template(
             "error_404.html",
             log=e
         )
-
-    return redirect(url_for('index'))
 
 
 @app.route('/dashboard', methods=['GET', 'POST'])
