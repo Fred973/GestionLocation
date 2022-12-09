@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% include 'alert_messages.html' %}
+
+<div class="center">
+    <h1>Factures</h1>
+    <a class="btn default" href="{{ url_for('dashboard') }}">Retour à l'accueil</a>
+</div>
+
+{% endblock %}

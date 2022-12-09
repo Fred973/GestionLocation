@@ -1,4 +1,5 @@
 from soft import db, app
+from soft.gestion_loc.model import Apartments
 from soft.login.model import Users
 
 with app.app_context():
@@ -6,7 +7,7 @@ with app.app_context():
 
     db.create_all()
 
-    # fill DB
+    # Users Table
     user_1 = Users(
     id=1,
     username='fred',
@@ -25,3 +26,35 @@ with app.app_context():
     db.session.add(user_2)
     db.session.commit()
 
+    # Apartments Table
+    apart_01 = Apartments(
+        id=1,
+        apartment_name='7A',
+        rent_price=1500.00,
+        address='7, rue Edgar Degas',
+        zipcode=97310,
+        city='Kourou',
+
+    )
+    apart_02 = Apartments(
+        id=2,
+        apartment_name='7B',
+        rent_price=1200.00,
+        address='8, avenue Bourges Maunoury',
+        zipcode=31200,
+        city='Kourou',
+
+    )
+    apart_03 = Apartments(
+        id=3,
+        apartment_name='10A',
+        rent_price=1300.50,
+        address='7, rue du truc',
+        zipcode=97310,
+        city='Kourou',
+
+    )
+    db.session.add(apart_01)
+    db.session.add(apart_02)
+    db.session.add(apart_03)
+    db.session.commit()

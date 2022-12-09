@@ -8,13 +8,15 @@
     <h1>Gestion Location</h1>
     <div>
         <ul>
-            <li><a href="#home">Home</a></li>
-            <li><a href="#news">News</a></li>
-            <li><a href="#contact">Contact</a></li>
-            <li><a href="#about">About</a></li>
+            <li><a href="{{ url_for('apartments') }}">Appartements</a></li>
+            <li><a href="{{ url_for('contracts') }}">Contrats de location</a></li>
+            <li><a href="{{ url_for('tenants') }}">Locataires</a></li>
+            <li><a href="{{ url_for('invoices') }}">Factures</a></li>
         </ul>
     </div>
-    <a href="{{url_for('logout')}}" class="btn default">Se déconnecter</a>
+    <div class="div-btn">
+        <a href="{{url_for('logout')}}" class="btn default">Se déconnecter</a>
+    </div>
 </div>
 
 {% endblock %}

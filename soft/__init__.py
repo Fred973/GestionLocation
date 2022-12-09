@@ -26,6 +26,7 @@ login_manager.login_message_category = 'error'
 
 # import mode.py to create tables
 from soft.login import routes
+from soft.gestion_loc import routes
 from soft.login import model
 from soft.gestion_loc import model
 

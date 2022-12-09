@@ -5,46 +5,46 @@ class Apartments(db.Model):
     """
     Apartments Database structure:
         - id
-        - number
-        - address
-    """
-    id = db.Column(db.Integer, primary_key=True)
-    number = db.Column(db.Integer, nullable=False, unique=True)
-    rent = db.Column(db.Numeric(6, 2), nullable=False)
-
-    invoices = db.relationship('Invoices', backref='apartments', passive_deletes=True)
-    tenants = db.relationship('Tenants', backref='apartments', passive_deletes=True)
-
-    def __repr__(self):
-        return '<Apartments %r>' % self.number
-
-
-class Invoices(db.Model):
-    """
-    Invoices Database structure:
-        - id
-        - fk_apartment --> foreign key with Apartments id
+        - apartment_name
+        - rent_price
         - address
         - zipcode
         - city
-        - invoice_number
-        - added_date
+    """
+    id = db.Column(db.Integer, primary_key=True)
+    apartment_name = db.Column(db.String(255), nullable=False, unique=True)
+    rent_price = db.Column(db.Numeric(6, 2))
+    address = db.Column(db.String(255), nullable=False)
+    zipcode = db.Column(db.Numeric(5, 0), nullable=False)
+    city = db.Column(db.String(255), nullable=False)
+
+    invoices = db.relationship('Invoices', backref='apartments', passive_deletes=True)
+    tenants = db.relationship('Tenants', backref='apartments', passive_deletes=True)
+    contracts = db.relationship('Contracts', backref='apartments', passive_deletes=True)
+
+    def __repr__(self):
+        return '<Apartments %r>' % self.address
+
+
+class Contracts(db.Model):
+    """
+    Contracts Database structure:
+        - id
+        - fk_apartment --> foreign key with Apartments id
+        - apartment_name
+        - contract_nbr
         - file_name
 
     """
     id = db.Column(db.Integer, primary_key=True)
     fk_apartment = db.Column(db.Integer, db.ForeignKey('apartments.id', ondelete='CASCADE'), nullable=False)
-    email = db.Column(db.String(255), nullable=False, unique=True)
-    address = db.Column(db.String(255), nullable=False)
-    zipcode = db.Column(db.Numeric(5, 0), nullable=False)
-    city = db.Column(db.String(255), nullable=False)
-    invoice_number = db.Column(db.Integer, nullable=False, unique=True)
-    added_date = db.Column(db.Date, nullable=False, unique=True)
-    file_name = db.Column(db.String(128), nullable=False, unique=True)
+    apartment_name = db.Column(db.String(255), nullable=False, unique=True)
+    contract_nbr = db.Column(db.Integer, nullable=True, unique=True)
+    file_name = db.Column(db.String(255), nullable=False, unique=True)
 
     # Create a String
     def __repr__(self):
-        return '<Invoices %r>' % self.invoice_number
+        return '<Contracts %r>' % self.contract_nbr
 
 
 class Tenants(db.Model):
@@ -64,6 +64,30 @@ class Tenants(db.Model):
     name = db.Column(db.String(255), nullable=False)
     phone = db.Column(db.String(255), nullable=False, unique=True)
     email = db.Column(db.String(255), nullable=False, unique=True)
+
+    # Create a String
+    def __repr__(self):
+        return '<Invoices %r>' % self.invoice_number
+
+
+class Invoices(db.Model):
+    """
+    Invoices Database structure:
+        - id
+        - fk_apartment --> foreign key with Apartments id
+        - address
+        - zipcode
+        - city
+        - invoice_number
+        - added_date
+        - file_name
+
+    """
+    id = db.Column(db.Integer, primary_key=True)
+    fk_apartment = db.Column(db.Integer, db.ForeignKey('apartments.id', ondelete='CASCADE'), nullable=False)
+    invoice_number = db.Column(db.Integer, nullable=False, unique=True)
+    added_date = db.Column(db.Date, nullable=False, unique=True)
+    file_name = db.Column(db.String(128), nullable=False, unique=True)
 
     # Create a String
     def __repr__(self):

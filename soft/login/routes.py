@@ -72,18 +72,3 @@ def logout():
             "error_404.html",
             log=e
         )
-
-
-@app.route('/dashboard', methods=['GET', 'POST'])
-@login_required
-def dashboard():
-    try:
-        return render_template(
-            'gestion_loc/dashboard.html'
-        )
-    except Exception as e:
-        print(e)
-        return render_template(
-            "error_404.html",
-            log=e
-        )

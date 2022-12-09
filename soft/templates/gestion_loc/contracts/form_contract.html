@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% include 'alert_messages.html' %}
+
+<div class="center">
+    <h1>{{ title }}</h1>
+    <div class="card">
+        <form method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                {{ form.hidden_tag() }}
+                
+                <select name="apartment" class="form-field form-label">
+                    {% for apart in aparts %}
+                    <option class="form-label" value="{{ apart.id }}">{{ apart.apartment_name }}</option>
+                    {% endfor %}
+                </select>
+                <br />
+                {{ form.contract_nbr.label(class="form-label") }}
+                {{ form.contract_nbr(class="form-field") }}
+                <br />
+                {{ form.file_name.label(class="form-label") }}
+                <div>
+                    <input type="file" name="contract_file" accept=".pdf, .PDF">
+                </div>
+                <div class="center">
+                    {{ form.submit(class="btn success") }}
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="div-btn">
+        <a class="btn default" href="{{ url_for('contracts') }}">Retour</a>
+    </div>
+</div>
+
+{% endblock %}
