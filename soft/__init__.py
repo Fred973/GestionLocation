@@ -17,6 +17,9 @@ app.permanent_session_lifetime = timedelta(hours=90)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
+# Cookie Session config
+app.config['SESSION_COOKIE_SAMESITE'] = "Strict"
+
 # Flask login stuff
 login_manager = LoginManager()
 login_manager.init_app(app)

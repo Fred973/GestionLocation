@@ -1,20 +1,24 @@
 import os
 
-from flask_login import login_required
+from flask_login import login_required, current_user
 from soft import app, db
 from flask import render_template, redirect, url_for, flash, session, request, send_from_directory
 
 from soft.constant import rental_contracts_path
 from soft.gestion_loc.forms import ApartmentForm, ContractForm
 from soft.gestion_loc.model import Contracts, Invoices, Tenants, Apartments
+from soft.login.model import Users
 
 
 @app.route('/gestionLoc/dashboard', methods=['GET', 'POST'])
 @login_required
 def dashboard():
     try:
+        user_req = Users.query.get_or_404(current_user.id)
+        print(user_req.username)
         return render_template(
-            'gestion_loc/dashboard.html'
+            'gestion_loc/dashboard.html',
+            user=user_req
         )
     except Exception as e:
         print(e)
