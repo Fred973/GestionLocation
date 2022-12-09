@@ -79,7 +79,7 @@ def logout():
 def dashboard():
     try:
         return render_template(
-            'dashboard.html'
+            'gestion_loc/dashboard.html'
         )
     except Exception as e:
         print(e)
