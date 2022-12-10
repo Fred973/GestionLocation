@@ -33,3 +33,19 @@ class ContractForm(FlaskForm):
     contract_nbr = StringField("N° de Contrat", validators=[DataRequired()])
     file_name = StringField("Contrat", validators=[DataRequired()])
     submit = SubmitField("Valider")
+
+
+# Create a Posts Form
+class TenantForm(FlaskForm):
+    """
+    Apartment form structure:
+        - first_name
+        - name
+        - phone
+        - email
+    """
+    first_name = StringField("Prénom", validators=[DataRequired()])
+    name = StringField("Nom", validators=[DataRequired()])
+    phone = StringField("Téléphone", validators=[DataRequired()])
+    email = StringField("Email", validators=[DataRequired()])
+    submit = SubmitField("Valider")

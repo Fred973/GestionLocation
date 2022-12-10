@@ -1,11 +1,9 @@
 import os
-
 from flask_login import login_required, current_user
 from soft import app, db
 from flask import render_template, redirect, url_for, flash, session, request, send_from_directory
-
 from soft.constant import rental_contracts_path
-from soft.gestion_loc.forms import ApartmentForm, ContractForm
+from soft.gestion_loc.forms import ApartmentForm, ContractForm, TenantForm
 from soft.gestion_loc.model import Contracts, Invoices, Tenants, Apartments
 from soft.login.model import Users
 
@@ -15,7 +13,7 @@ from soft.login.model import Users
 def dashboard():
     try:
         user_req = Users.query.get_or_404(current_user.id)
-        print(user_req.username)
+
         return render_template(
             'gestion_loc/dashboard.html',
             user=user_req
@@ -31,6 +29,7 @@ def dashboard():
 @app.route('/gestionLoc/Apartments', methods=['GET', 'POST'])
 def apartments():
     apartment_list = Apartments.query.all()
+
     return render_template(
         "gestion_loc/apartments/apartments.html",
         aparts=apartment_list
@@ -84,6 +83,7 @@ def edit_apartment(id_apart):
         form.zipcode.data = ''
         form.city.data = ''
         form.rent_price.data = ''
+
         flash("L'appartement a bien été modifié", category='success')
         return redirect(url_for('apartments'))
 
@@ -104,15 +104,17 @@ def delete_apartment(id_apart):
     apart_to_delete = Apartments.query.get_or_404(id_apart)
     db.session.delete(apart_to_delete)
     db.session.commit()
+    flash("L'appartement a bien été supprimé", category='success')
     return redirect(request.referrer)
 
 @login_required
 @app.route('/gestionLoc/Contracts', methods=['GET', 'POST'])
 def contracts():
-    rental_contract = Contracts.query.all()
+    rental_contract_list = Contracts.query.all()
+
     return render_template(
         "gestion_loc/contracts/contracts.html",
-        contracts=rental_contract
+        contracts=rental_contract_list
     )
 
 @login_required
@@ -169,14 +171,90 @@ def delete_contract(id_contract):
     db.session.commit()
     # Delete file from rental_contract path
     os.remove(rental_contracts_path + '/' + apart_to_delete.file_name)
+    flash('Le contrat de location a bien été supprimé', category='success')
     return redirect(request.referrer)
 
 @login_required
 @app.route('/gestionLoc/Tenants', methods=['GET', 'POST'])
 def tenants():
+    tenants_list = Tenants.query.all()
+
     return render_template(
-        "gestion_loc/tenants/tenants.html"
+        "gestion_loc/tenants/tenants.html",
+        tenants=tenants_list
     )
+
+@login_required
+@app.route('/gestionLoc/Tenants/add_tenant', methods=['GET', 'POST'])
+def add_tenant():
+    form = TenantForm()
+    apartment_name_list = Apartments.query.all()
+    if request.method == "POST":
+        tenant_req = Tenants(
+            fk_apartment=request.form.get('apartment'),
+            first_name=form.first_name.data,
+            name=form.name.data,
+            phone=form.phone.data,
+            email=form.email.data
+        )
+        db.session.add(tenant_req)
+        db.session.commit()
+
+        flash('Le locataire a bien été ajouté !', category='success')
+        return redirect(url_for('tenants'))
+
+    return render_template(
+        "gestion_loc/tenants/form_tenant.html",
+        title='Ajouter un locataire',
+        aparts=apartment_name_list,
+        form=form
+    )
+
+@login_required
+@app.route('/gestionLoc/Tenants/edit_tenant<int:id_tenant>', methods=['GET', 'POST'])
+def edit_tenant(id_tenant):
+    form = TenantForm()
+    tenant_to_edit = Tenants.query.get_or_404(id_tenant)
+    apartment_name_list = Apartments.query.all()
+
+    if request.method == 'POST':
+        tenant_to_edit.name = form.name.data
+        tenant_to_edit.first_name = form.first_name.data
+        tenant_to_edit.phone = form.phone.data
+        tenant_to_edit.email = form.email.data
+        db.session.commit()
+
+        # Clear the form
+        form.name.data = ''
+        form.first_name.data = ''
+        form.phone.data = ''
+        form.email.data = ''
+
+        flash('Le Locataire a bien été modifié', category='success')
+        return redirect(url_for('tenants'))
+
+    form.name.data = tenant_to_edit.name
+    form.first_name.data = tenant_to_edit.first_name
+    form.phone.data = tenant_to_edit.phone
+    form.email.data = tenant_to_edit.email
+    return render_template(
+        "gestion_loc/tenants/form_tenant.html",
+        title='Modifier',
+        form=form,
+        aparts=apartment_name_list
+    )
+
+
+@login_required
+@app.route('/gestionLoc/Tenants/delete_tenant/<int:id_tenant>', methods=['GET'])
+def delete_tenant(id_tenant):
+    tenant_to_delete = Tenants.query.get_or_404(id_tenant)
+    # Delete contract of DB
+    db.session.delete(tenant_to_delete)
+    db.session.commit()
+
+    flash('Le locataire a bien été supprimé', category='success')
+    return redirect(request.referrer)
 
 @login_required
 @app.route('/gestionLoc/Invoices', methods=['GET', 'POST'])

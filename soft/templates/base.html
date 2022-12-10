@@ -23,6 +23,9 @@
 
 <body>
   <header>
+    {% if current_user.category %}
+    {% include 'gestion_loc/navbar.html' %}
+    {% endif %}
   </header>
   <div class="container page">
     {% block content %}

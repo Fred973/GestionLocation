@@ -35,6 +35,7 @@ def login():
                 # Check the hash
                 if check_password_hash(user.password_hash, form.password.data):
                     session['user'] = form.username.data
+                    session['category'] = user.category
                     login_user(user)
                     flash("Vous êtes connecté", category='success')
                     return redirect(url_for('dashboard'))
