@@ -11,3 +11,4 @@ db_name = 'gestion_loc'
 # Variable for base direction
 basedir = os.path.abspath(os.path.dirname(__file__))
 rental_contracts_path = basedir + '/static/rental_contracts'
+invoices_path = basedir + '/static/invoices'

@@ -6,6 +6,72 @@
 
 <div class="center">
     <h1>Factures</h1>
+    <div class="div-btn" style="text-align: left;">
+        <a class="btn info" href="{{ url_for('add_invoice') }}">Ajouter une Facture</a>
+    </div>
+    <div class="card">
+        <table id="myTable">
+            <tr class="header">
+                <th onclick="sortTable(0)">Appart.</th>
+                <th onclick="sortTable(0)">N° de Facture</th>
+                <th onclick="sortTable(0)">Description</th>
+                <th onclick="sortTable(0)">Date</th>
+                <th onclick="sortTable(0)">Facture</th>
+                <th>Télécharger</th>
+                <th>Supprimer</th>
+                {% for invoice in invoices %}
+            <tr>
+                <td>{{ invoice.apartment_name }}</td>
+                <td>{{ invoice.invoice_number }}</td>
+                <td>{{ invoice.description }}</td>
+                <td>{{ invoice.added_date }}</td>
+                <td>{{ invoice.file_name }}</td>
+                <td>
+                  <a class="btn default" style="margin: 10px;" href="{{ url_for('download_invoice', id_invoice=invoice.id) }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download"
+                      viewBox="0 0 16 16">
+                      <path
+                        d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
+                      <path
+                        d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z" />
+                    </svg>
+                  </a>
+                </td>
+                <td>
+                    <button class="btn danger"
+                        onclick="document.getElementById('{{invoice.id}}').style.display='inline-flex'">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-trash" viewBox="0 0 16 16">
+                            <path
+                                d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                            <path fill-rule="evenodd"
+                                d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                        </svg>
+                    </button>
+
+                    <div class="modal" id="{{invoice.id}}">
+                        <form class="modal-content" action="{{ url_for('delete_invoice', id_invoice=invoice.id) }}">
+                            <div class="container-modal">
+                                <h1>Supprimer la Fatcure</h1>
+                                <br>
+                                <p>Etes vous sûr de vouloir supprimer la facture ?</p>
+                                <br>
+                                <div class="clearfix">
+                                    <button type="button"
+                                        onclick="document.getElementById('{{invoice.id}}').style.display='none'"
+                                        class="btn default">Annuler</button>
+                                    <button type="submit" onclick="document.getElementById('id01').style.display='none'"
+                                        class="btn danger">Supprimer</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+            </tr>
+        </table>
+    </div>
     <div class="div-btn">
         <a class="btn default" href="{{ url_for('dashboard') }}">Retour à l'accueil</a>
     </div>

@@ -1,4 +1,7 @@
+import os
+
 from soft import db, app
+from soft.constant import invoices_path, rental_contracts_path
 from soft.gestion_loc.model import Apartments
 from soft.login.model import Users
 
@@ -58,3 +61,11 @@ with app.app_context():
     db.session.add(apart_02)
     db.session.add(apart_03)
     db.session.commit()
+
+    # Delete all files in folders : invoices & rental_contracts
+    for f in os.listdir(invoices_path):
+        if f:
+            os.remove(os.path.join(invoices_path, f))
+    for f in os.listdir(rental_contracts_path):
+        if f:
+            os.remove(os.path.join(rental_contracts_path, f))

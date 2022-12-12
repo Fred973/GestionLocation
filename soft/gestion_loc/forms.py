@@ -25,7 +25,7 @@ class ApartmentForm(FlaskForm):
 # Create a Posts Form
 class ContractForm(FlaskForm):
     """
-    Apartment form structure:
+    Contract form structure:
         - contract_nbr
         - file_name
         - submit
@@ -38,7 +38,7 @@ class ContractForm(FlaskForm):
 # Create a Posts Form
 class TenantForm(FlaskForm):
     """
-    Apartment form structure:
+    Tenant form structure:
         - first_name
         - name
         - phone
@@ -48,4 +48,20 @@ class TenantForm(FlaskForm):
     name = StringField("Nom", validators=[DataRequired()])
     phone = StringField("Téléphone", validators=[DataRequired()])
     email = StringField("Email", validators=[DataRequired()])
+    submit = SubmitField("Valider")
+
+
+# Create a Posts Form
+class InvoiceForm(FlaskForm):
+    """
+    Invoice form structure:
+        - invoice_number
+        - description
+        - added_date
+        - file_name
+    """
+    invoice_number = StringField("N° de facture (si existant)", validators=[DataRequired()])
+    description = StringField("Description", validators=[DataRequired()])
+    added_date = StringField("Date", validators=[DataRequired()])
+    file_name = StringField("Facture", validators=[DataRequired()])
     submit = SubmitField("Valider")

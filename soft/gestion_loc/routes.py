@@ -2,8 +2,8 @@ import os
 from flask_login import login_required, current_user
 from soft import app, db
 from flask import render_template, redirect, url_for, flash, session, request, send_from_directory
-from soft.constant import rental_contracts_path
-from soft.gestion_loc.forms import ApartmentForm, ContractForm, TenantForm
+from soft.constant import rental_contracts_path, invoices_path
+from soft.gestion_loc.forms import ApartmentForm, ContractForm, TenantForm, InvoiceForm
 from soft.gestion_loc.model import Contracts, Invoices, Tenants, Apartments
 from soft.login.model import Users
 
@@ -165,12 +165,12 @@ def download_contract(id_contract):
 @login_required
 @app.route('/gestionLoc/Contracts/delete_contract/<int:id_contract>', methods=['GET'])
 def delete_contract(id_contract):
-    apart_to_delete = Apartments.query.get_or_404(id_contract)
+    contract_to_delete = Contracts.query.get_or_404(id_contract)
     # Delete contract of DB
-    db.session.delete(apart_to_delete)
+    db.session.delete(contract_to_delete)
     db.session.commit()
     # Delete file from rental_contract path
-    os.remove(rental_contracts_path + '/' + apart_to_delete.file_name)
+    os.remove(rental_contracts_path + '/' + contract_to_delete.file_name)
     flash('Le contrat de location a bien été supprimé', category='success')
     return redirect(request.referrer)
 
@@ -190,8 +190,12 @@ def add_tenant():
     form = TenantForm()
     apartment_name_list = Apartments.query.all()
     if request.method == "POST":
+        # Get apartment_name
+        req = Apartments.query.get_or_404(request.form.get('apartment'))
+
         tenant_req = Tenants(
             fk_apartment=request.form.get('apartment'),
+            apartment_name=req.apartment_name,
             first_name=form.first_name.data,
             name=form.name.data,
             phone=form.phone.data,
@@ -259,6 +263,66 @@ def delete_tenant(id_tenant):
 @login_required
 @app.route('/gestionLoc/Invoices', methods=['GET', 'POST'])
 def invoices():
+    invoices_list = Invoices.query.all()
     return render_template(
-        "gestion_loc/invoices/invoices.html"
+        "gestion_loc/invoices/invoices.html",
+        invoices=invoices_list
     )
+
+@login_required
+@app.route('/gestionLoc/Invoices/add_invoice', methods=['GET', 'POST'])
+def add_invoice():
+    form = InvoiceForm()
+    apartment_name_list = Apartments.query.all()
+
+    if request.method == "POST":
+        # Get invoice file name
+        f = request.files['invoice_file']
+        # Get apartment_name
+        req = Apartments.query.get_or_404(request.form.get('apartment'))
+
+        invoice_req = Invoices(
+            fk_apartment=request.form.get('apartment'),
+            apartment_name=req.apartment_name,
+            invoice_number=request.form.get('added_date'),
+            added_date=form.added_date.data,
+            file_name=f.filename
+        )
+        db.session.add(invoice_req)
+        db.session.commit()
+
+        # Upload file to contract path
+        f.save(os.path.join(invoices_path, f.filename))
+
+        flash('Facture ajoutée !', category='success')
+        return redirect(url_for('invoices'))
+
+    return render_template(
+        'gestion_loc/invoices/form_invoice.html',
+        form=form,
+        title='Ajouter une facture',
+        aparts=apartment_name_list
+    )
+
+
+@login_required
+@app.route('/gestion_loc/Invoices/download_invoice/<int:id_invoice>', methods=['GET', 'POST'])
+def download_invoice(id_invoice):
+    # Get contract to download
+    invoice_to_download = Invoices.query.get_or_404(id_invoice)
+    return send_from_directory(
+        invoices_path, invoice_to_download.file_name
+    )
+
+
+@login_required
+@app.route('/gestionLoc/Invoices/delete_invoice/<int:id_invoice>', methods=['GET'])
+def delete_invoice(id_invoice):
+    invoice_to_delete = Invoices.query.get_or_404(id_invoice)
+    # Delete contract of DB
+    db.session.delete(invoice_to_delete)
+    db.session.commit()
+    # Delete file from rental_contract path
+    os.remove(invoices_path + '/' + invoice_to_delete.file_name)
+    flash('La facture a bien été supprimé', category='success')
+    return redirect(request.referrer)

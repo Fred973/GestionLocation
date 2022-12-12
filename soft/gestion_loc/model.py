@@ -52,6 +52,7 @@ class Tenants(db.Model):
     Tenants Database structure:
         - id
         - fk_apartment --> foreign key with Apartments id
+        - apartment_name
         - first_name
         - name
         - phone
@@ -60,6 +61,7 @@ class Tenants(db.Model):
     """
     id = db.Column(db.Integer, primary_key=True)
     fk_apartment = db.Column(db.Integer, db.ForeignKey('apartments.id', ondelete='CASCADE'), nullable=False)
+    apartment_name = db.Column(db.String(255), nullable=False, unique=True)
     first_name = db.Column(db.String(255), nullable=False)
     name = db.Column(db.String(255), nullable=False)
     phone = db.Column(db.String(255), nullable=False, unique=True)
@@ -75,17 +77,17 @@ class Invoices(db.Model):
     Invoices Database structure:
         - id
         - fk_apartment --> foreign key with Apartments id
-        - address
-        - zipcode
-        - city
+        - apartment_name
         - invoice_number
+        - description
         - added_date
         - file_name
-
     """
     id = db.Column(db.Integer, primary_key=True)
     fk_apartment = db.Column(db.Integer, db.ForeignKey('apartments.id', ondelete='CASCADE'), nullable=False)
-    invoice_number = db.Column(db.Integer, nullable=False, unique=True)
+    apartment_name = db.Column(db.String(255), nullable=False, unique=True)
+    invoice_number = db.Column(db.String(255), nullable=True, unique=True)
+    description = db.Column(db.String(128), nullable=True, unique=True)
     added_date = db.Column(db.Date, nullable=False, unique=True)
     file_name = db.Column(db.String(128), nullable=False, unique=True)
 
