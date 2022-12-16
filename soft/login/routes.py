@@ -63,8 +63,9 @@ def login():
 @login_required
 def logout():
     try:
-        session.pop("user", None)
         logout_user()
+        session.pop("user", None)
+        session.clear()
         flash("Vous êtes déconnecté", category='info')
         return redirect(url_for('index'))
     except Exception as e:

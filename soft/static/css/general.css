@@ -39,6 +39,16 @@
     border-radius: 5px;
 }
 
+.form-field-short {
+    width: 200px;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    border-radius: 5px;
+}
+
 .form-label {
     font-size: 20px;
 }

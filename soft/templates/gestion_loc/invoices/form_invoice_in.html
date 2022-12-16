@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% include 'alert_messages.html' %}
+
+<div class="center">
+    <h1>{{ title }}</h1>
+    <div class="card">
+        <form method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                {{ form.hidden_tag() }}
+                
+                <select name="apartment" class="form-field form-label">
+                    {% for apart in aparts %}
+                    <option class="form-label" value="{{ apart.id }}">{{ apart.apartment_name }}</option>
+                    {% endfor %}
+                </select>
+    
+                {{ form.invoice_number.label(class="form-label") }}
+                {{ form.invoice_number(class="form-field") }}
+                <br />
+                {{ form.description.label(class="form-label") }}
+                {{ form.description(class="form-field") }}
+                <br />
+                {{ form.added_date.label(class="form-label") }}
+                <input class="form-field" type="date" name="added_date">
+                <br />
+                {{ form.file_name.label(class="form-label") }}
+                <div>
+                    <input type="file" name="invoice_file" accept=".pdf, .PDF">
+                </div>
+                
+                <div class="center">
+                    {{ form.submit(class="btn success") }}
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="div-btn">
+        <a class="btn default" href="{{ url_for('invoices_in') }}">Retour</a>
+    </div>
+</div>
+
+{% endblock %}

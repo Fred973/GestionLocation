@@ -3,31 +3,31 @@
 {% block content %}
 
 {% include 'alert_messages.html' %}
+<div style="text-align: right;">
+    <input type="text" id="myInput" onkeyup="searchTable()" placeholder="Chercher...">
+</div>
 
 <div class="center">
-    <h1>Factures</h1>
+    <h1>Quittances</h1>
     <div class="div-btn" style="text-align: left;">
-        <a class="btn info" href="{{ url_for('add_invoice') }}">Ajouter une Facture</a>
+        <a class="btn info" href="{{ url_for('add_receipt') }}">Ajouter une quittance</a>
     </div>
     <div class="card">
         <table id="myTable">
             <tr class="header">
-                <th onclick="sortTable(0)">Appart.</th>
-                <th onclick="sortTable(0)">N° de Facture</th>
-                <th onclick="sortTable(0)">Description</th>
-                <th onclick="sortTable(0)">Date</th>
-                <th onclick="sortTable(0)">Facture</th>
+                <th onclick="sortTable(0)">Nom</th>
+                <th onclick="sortTable(0)">Prénom</th>
+                <th onclick="sortTable(0)">Téléphone</th>
                 <th>Télécharger</th>
+                <th>Editer</th>
                 <th>Supprimer</th>
-                {% for invoice in invoices %}
+                {% for receipt in receipts %}
             <tr>
-                <td>{{ invoice.apartment_name }}</td>
-                <td>{{ invoice.invoice_number }}</td>
-                <td>{{ invoice.description }}</td>
-                <td>{{ invoice.added_date }}</td>
-                <td>{{ invoice.file_name }}</td>
+                <td>{{ receipt.apartment_name }}</td>
+                <td>{{ receipt.contract_nbr }}</td>
+                <td>{{ receipt.file_name }}</td>
                 <td>
-                  <a class="btn default" style="margin: 10px;" href="{{ url_for('download_invoice', id_invoice=invoice.id) }}">
+                  <a class="btn default" style="margin: 10px;" href="{{ url_for('download_receipt', id_receipt=receipt.id) }}">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download"
                       viewBox="0 0 16 16">
                       <path
@@ -38,8 +38,17 @@
                   </a>
                 </td>
                 <td>
+                    <a href="{{ url_for('edit_receipt', id_receipt=receipt.id) }}" class="btn info">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-pencil" viewBox="0 0 16 16">
+                            <path
+                                d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
+                        </svg>
+                    </a>
+                </td>
+                <td>
                     <button class="btn danger"
-                        onclick="document.getElementById('{{invoice.id}}').style.display='inline-flex'">
+                        onclick="document.getElementById('{{receipt.id}}').style.display='inline-flex'">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-trash" viewBox="0 0 16 16">
                             <path
@@ -49,16 +58,16 @@
                         </svg>
                     </button>
 
-                    <div class="modal" id="{{invoice.id}}">
-                        <form class="modal-content" action="{{ url_for('delete_invoice', id_invoice=invoice.id) }}">
+                    <div class="modal" id="{{receipt.id}}">
+                        <form class="modal-content" action="{{ url_for('delete_receipt', id_receipt=receipt.id) }}">
                             <div class="container-modal">
-                                <h1>Supprimer la Fatcure</h1>
+                                <h1>Supprimer la quittance</h1>
                                 <br>
-                                <p>Etes vous sûr de vouloir supprimer la facture ?</p>
+                                <p>Etes vous sûr de vouloir supprimer la quittance ?</p>
                                 <br>
                                 <div class="clearfix">
                                     <button type="button"
-                                        onclick="document.getElementById('{{invoice.id}}').style.display='none'"
+                                        onclick="document.getElementById('{{receipt.id}}').style.display='none'"
                                         class="btn default">Annuler</button>
                                     <button type="submit" onclick="document.getElementById('id01').style.display='none'"
                                         class="btn danger">Supprimer</button>

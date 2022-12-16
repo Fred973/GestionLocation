@@ -3,9 +3,20 @@
 <label for="mobile-icon" class="toggle"><span class="hamburger-icon"></span></label>
 <nav>
     <ul>
+        <li><a href="{{ url_for('dashboard') }}">Accueil</a></li>
         <li><a href="{{ url_for('apartments') }}">Appartements</a></li>
         <li><a href="{{ url_for('contracts') }}">Contrats de location</a></li>
         <li><a href="{{ url_for('tenants') }}">Locataires</a></li>
-        <li><a href="{{ url_for('invoices') }}">Factures</a></li>
+        <li>
+            <a class="hide-mobile" href="#">Factures<span class="arrow">&#x25bc;</span></a>
+            <label for="submenu-product"> Factures<span class="arrow">&#x25bc;</span></label>
+            <input id="submenu-product" type="checkbox">
+            <ul class="submenu-1">
+                <li><a href="{{ url_for('invoices_in')}}">Factures entrantes</a></li>
+                <hr>
+                <li><a href="{{ url_for('invoices_out') }}">Factures sortantes</a></li>
+            </ul>
+        </li>
+        <li><a href="{{ url_for('receipts') }}">Quittances</a></li>
     </ul>
 </nav>

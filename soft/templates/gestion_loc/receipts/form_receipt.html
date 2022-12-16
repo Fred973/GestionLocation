@@ -17,19 +17,18 @@
                     {% endfor %}
                 </select>
     
-                {{ form.invoice_number.label(class="form-label") }}
-                {{ form.invoice_number(class="form-field") }}
+                {{ form.name.label(class="form-label") }}
+                {{ form.name(class="form-field") }}
                 <br />
-                {{ form.description.label(class="form-label") }}
-                {{ form.description(class="form-field") }}
+                {{ form.first_name.label(class="form-label") }}
+                {{ form.first_name(class="form-field") }}
                 <br />
-                {{ form.added_date.label(class="form-label") }}
-                <input class="form-field" type="date" name="added_date">
+                {{ form.phone.label(class="form-label") }}
+                {{ form.phone(class="form-field") }}
                 <br />
-                {{ form.file_name.label(class="form-label") }}
-                <div>
-                    <input type="file" name="invoice_file" accept=".pdf, .PDF">
-                </div>
+                {{ form.email.label(class="form-label") }}
+                {{ form.email(class="form-field") }}
+                <br />
                 
                 <div class="center">
                     {{ form.submit(class="btn success") }}
@@ -38,7 +37,7 @@
         </form>
     </div>
     <div class="div-btn">
-        <a class="btn default" href="{{ url_for('tenants') }}">Retour</a>
+        <a class="btn default" href="{{ url_for('receipts') }}">Retour</a>
     </div>
 </div>
 

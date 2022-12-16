@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% include 'alert_messages.html' %}
+
+<div class="center">
+    <h1>{{ title }}</h1>
+    <div class="card">
+        <form method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                {{ form.hidden_tag() }}
+
+                <!-- Invoice type choice (by day or by month)-->
+                <div style="margin: 5px;">
+                    <input type="checkbox" name="byMonth" id="byMonth" class="typeCheckBox group_type" onclick="onlyOne(this); ShowHideMonthDiv(this)" checked>
+                    <label for="byMonth" class="form-label">Par mois</label>
+                    <input type="checkbox" name="byDay" id="byDay" class="group_type" onclick="onlyOne(this); ShowHideDayDiv(this)">
+                    <label for="byDay" class="form-label">Par jour</label>
+                    <h3 style="color: red; padding: 5px;">* Champ obligatoire</h3>
+                </div>
+                <select name="apartment" class="form-field form-label">
+                    {% for apart in aparts %}
+                    <option class="form-label" value="{{ apart.id }}">{{ apart.apartment_name }}</option>
+                    {% endfor %}
+                </select>
+
+                <div id="monthDiv">
+                    <br>
+                    {{ form.first_name.label(class="form-label") }}
+                    {{ form.first_name(class="form-field", disabled=True) }}
+                    <br />
+                    {{ form.name.label(class="form-label") }}
+                    {{ form.name(class="form-field", disabled=True) }}
+                    <br />
+                </div>
+                
+                <div id="dayDiv" style="display: none;">
+                    {{ form.ref_customer.label(class="form-label") }}
+                    {{ form.ref_customer(class="form-field") }}
+                    <br />
+                    <div>
+                        {{ form.date_in.label(class="form-label") }}
+                    </div>
+                    <div>
+                        <input class="form-field-short" type="date" name="date_in">
+                    </div>
+                    <br />
+                    <div>
+                        {{ form.date_out.label(class="form-label") }}
+                    </div>
+                    <div>
+                        <input class="form-field-short" type="date" name="date_out">
+                    </div>
+                    <br />
+                    <div>
+                        {{ form.due_date.label(class="form-label") }}
+                    </div>
+                    <div>
+                        <input class="form-field-short" type="date" name="due_date">
+                    </div>
+                    <br />
+                    <div>
+                        {{ form.price.label(class="form-label") }}
+                    </div>
+                    <div>
+                        {{ form.price(class="form-field-short") }}
+                    </div>
+                </div>
+                <div class="center">
+                    {{ form.submit(class="btn success") }}
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="div-btn">
+        <a class="btn default" href="{{ url_for('invoices_out') }}">Retour</a>
+    </div>
+</div>
+
+<script>
+
+  function onlyOne(checkbox) {
+    var checkboxes = document.getElementsByClassName('group_type')
+    Array.from(checkboxes).forEach((item) => {
+      if (item !== checkbox) item.checked = false;
+      if (item == checkbox) item.checked = true;
+    })
+  }
+</script>
+
+{% endblock %}

@@ -1,5 +1,10 @@
-TODO tenant page
-TODO invoices page
 TODO dashboard page
 TODO edit user
-TODO navbar on top
+
+TODO see to reset log files
+TODO see to add date of log files
+
+TODO add address, zipcode, city fields to TenantsForm with a radiobutton to hide or not.
+
+TODO add page create rental invoice
+TODO apartment_name already registered remove from <select> list
