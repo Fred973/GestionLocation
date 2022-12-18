@@ -1,6 +1,5 @@
 import os
 import shutil
-
 from soft import db, app
 from soft.constant import invoices_in_path, rental_contracts_path, invoices_out_path, receipts_path
 from soft.func.various_func import create_contract_nbr
@@ -152,5 +151,8 @@ with app.app_context():
     db.session.commit()
     # Copy contract files to directory
     src_path = os.path.abspath(os.path.dirname(__file__)) + '/default_files_src'
-    for f in os.listdir(src_path):
-        shutil.copy2(src_path + '/' + f, rental_contracts_path + '/' + f)
+    try:
+        for f in os.listdir(src_path):
+            shutil.copy2(src_path + '/' + f, rental_contracts_path + '/' + f)
+    except:
+        pass

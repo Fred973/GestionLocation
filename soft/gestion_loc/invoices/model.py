@@ -38,7 +38,7 @@ class InvoicesOut(db.Model):
     """
     id = db.Column(db.Integer, primary_key=True)
     fk_apartment = db.Column(db.Integer, db.ForeignKey('apartments.id', ondelete='CASCADE'), nullable=False)
-    apartment_name = db.Column(db.String(255), nullable=True, unique=True)
+    apartment_name = db.Column(db.String(255), nullable=True)
     ref_customer = db.Column(db.String(255), nullable=True)
     first_name = db.Column(db.String(255), nullable=True)
     name = db.Column(db.String(255), nullable=False)
