@@ -14,6 +14,11 @@ def convert_date_str_to_date_to_string(date_: str):
     return str(datetime.strftime(d, '%d %B %Y'))
 
 
+def convert_date_to_string_for_nbr(date_):
+    d= datetime.strptime(date_, '%Y-%m-%d')
+    return str(datetime.strftime(d, '%Y%m%d'))
+
+
 def convert_date_to_string(date_):
     locale.setlocale(locale.LC_TIME,'')
     d_in = datetime.strptime(date_, '%Y-%m-%d')

@@ -154,9 +154,17 @@ def create_invoice_out_pdf(id_apart, date_in, date_out, due_date, price, ref_cus
     pdf.cell(50, 10, 'RIB', align='C', border=1)
     pdf.cell(140, 10, '{}   BIC : {}'.format(george_json[0]['RIB']['account_nbr'], george_json[0]['RIB']['BIC']), align='L', border=1)
 
-    pdf.output(invoices_out_path + '/{}'.format('{}.pdf'.format(create_invoice_nbr(n=0, apart_name=get_apartment_name(id_apart)))))
+    pdf.output(invoices_out_path + '/{}'.format('{}.pdf'.format(create_invoice_nbr(
+        n=0,
+        apart_name=get_apartment_name(id_apart),
+        date_=date_in
+    ))))
 
-    return '{}.pdf'.format(create_invoice_nbr(n=0, apart_name=get_apartment_name(id_apart)))
+    return '{}.pdf'.format(create_invoice_nbr(
+        n=0,
+        apart_name=get_apartment_name(id_apart),
+        date_=date_in
+    ))
 
 
 def create_receipt_pdf(date_in, date_out, apartment, id_tenant):

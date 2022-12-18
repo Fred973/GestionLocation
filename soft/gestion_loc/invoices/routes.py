@@ -146,14 +146,22 @@ def add_invoice_out():
                 address=avio_json['address'],
                 zipcode=avio_json['zipcode'],
                 city=avio_json['city'],
-                invoice_number=create_invoice_nbr(n=0, apart_name=get_apartment_name(request.form.get('apartment'))),
+                invoice_number=create_invoice_nbr(
+                    n=0,
+                    apart_name=get_apartment_name(request.form.get('apartment')),
+                    date_=request.form.get('due_date')
+                ),
                 added_date=datetime.date.today(),
                 date_in=convert_date_string_to_isoformat(form.date_in.data),
                 date_out=convert_date_string_to_isoformat(form.date_out.data),
                 due_date=convert_date_string_to_isoformat(form.due_date.data),
                 month_year=convert_to_month_year(request.form.get('date_in')),
                 price=form.price.data,
-                file_name='{}.pdf'.format(create_invoice_nbr(n=0, apart_name=get_apartment_name(request.form.get('apartment'))))
+                file_name='{}.pdf'.format(create_invoice_nbr(
+                    n=0,
+                    apart_name=get_apartment_name(request.form.get('apartment')),
+                    date_=request.form.get('due_date')
+                ))
             )
             db.session.add(invoice_req)
             db.session.commit()

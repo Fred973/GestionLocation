@@ -1,13 +1,13 @@
 from soft.constant import avio_json
-from soft.func.date_func import today_date, convert_date_string_to_isoformat_for_db, convert_date_to_string, \
-    convert_date_string_to_isoformat, convert_date_str_to_date_to_string
+from soft.func.date_func import today_date, convert_date_str_to_date_to_string, convert_date_to_string_for_nbr
 from soft.gestion_loc.apartments.model import Apartments
 
 
-def create_invoice_nbr(n, apart_name, id_customer=''):
+def create_invoice_nbr(n, apart_name, date_, id_customer=''):
     """
     n = 0 -> Avio customer
     n > 0 -> other (tenants)
+    :param date_:
     :param apart_name:
     :param id_customer:
     :param n:
@@ -15,10 +15,10 @@ def create_invoice_nbr(n, apart_name, id_customer=''):
     """
     if n == 0:
         nbr = avio_json['id_customer']
-        return 'F-{}-{}-{}'.format(apart_name, today_date(), nbr)
+        return 'F-{}-{}-{}'.format(apart_name, convert_date_to_string_for_nbr(date_), nbr)
     else:
         nbr = id_customer
-        return 'F-{}-{}-{}'.format(apart_name, today_date(), nbr)
+        return 'F-{}-{}-{}'.format(apart_name, convert_date_to_string_for_nbr(date_), nbr)
 
 
 def create_contract_nbr(apart_name, id_customer=''):
