@@ -12,17 +12,19 @@ class Receipts(db.Model):
 
     """
     id = db.Column(db.Integer, primary_key=True)
-    fk_receipt = db.Column(db.Integer, db.ForeignKey('apartments.id', ondelete='CASCADE'), nullable=False)
-    apartments_id = db.Column(db.Integer, nullable=False, unique=True)
-    lessor_id = db.Column(db.Integer, nullable=False, unique=True)
-    tenant_id = db.Column(db.Integer, nullable=False, unique=True)
-    added_date = db.Column(db.Date, nullable=False, unique=True)
-    date_in = db.Column(db.Date, nullable=False, unique=True)
-    date_out = db.Column(db.Date, nullable=False, unique=True)
+    fk_apartment = db.Column(db.Integer, db.ForeignKey('apartments.id', ondelete='CASCADE'), nullable=False)
+    apartment_name = db.Column(db.String(255), nullable=False)
+    name = db.Column(db.String(255), nullable=False)
+    lessor_id = db.Column(db.Integer, nullable=False)
+    tenant_id = db.Column(db.Integer, nullable=False)
+    added_date = db.Column(db.Date, nullable=False)
+    date_in = db.Column(db.Date, nullable=False)
+    date_out = db.Column(db.Date, nullable=False)
+    month_year = db.Column(db.String(255), nullable=False)
     price = db.Column(db.Numeric(6, 2))
     loads = db.Column(db.Numeric(6, 2))
-    contract_nbr = db.Column(db.Integer, nullable=True, unique=True)
-    file_name = db.Column(db.String(255), nullable=False, unique=True)
+    contract_nbr = db.Column(db.String(255), nullable=False)
+    file_name = db.Column(db.String(255), nullable=False)
 
     # Create a String
     def __repr__(self):

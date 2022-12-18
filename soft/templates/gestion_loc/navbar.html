@@ -14,9 +14,12 @@
             <ul class="submenu-1">
                 <li><a href="{{ url_for('invoices_in')}}">Factures entrantes</a></li>
                 <hr>
-                <li><a href="{{ url_for('invoices_out') }}">Factures sortantes</a></li>
+                <li><a href="{{ url_for('invoices_out') }}">Factures sortantes (AVIO)</a></li>
             </ul>
         </li>
         <li><a href="{{ url_for('receipts') }}">Quittances</a></li>
+        {% if current_user.category == 1 %}
+        <li><a href="{{ url_for('databases') }}">Databases</a></li>
+        {% endif %}
     </ul>
 </nav>

@@ -4,7 +4,7 @@ from flask import render_template, request, flash, redirect, url_for, send_from_
 from flask_login import login_required
 from soft import app, db
 from soft.constant import invoices_in_path, avio_json, invoices_out_path
-from soft.func.date_func import convert_date_string_to_isoformat
+from soft.func.date_func import convert_date_string_to_isoformat, convert_to_month_year
 from soft.func.pdf_func import create_invoice_out_pdf
 from soft.func.various_func import create_invoice_nbr, get_apartment_name
 from soft.gestion_loc.invoices.forms import InvoiceInForm, InvoiceOutForm
@@ -151,6 +151,7 @@ def add_invoice_out():
                 date_in=convert_date_string_to_isoformat(form.date_in.data),
                 date_out=convert_date_string_to_isoformat(form.date_out.data),
                 due_date=convert_date_string_to_isoformat(form.due_date.data),
+                month_year=convert_to_month_year(request.form.get('date_in')),
                 price=form.price.data,
                 file_name='{}.pdf'.format(create_invoice_nbr(n=0, apart_name=get_apartment_name(request.form.get('apartment'))))
             )
@@ -171,7 +172,6 @@ def add_invoice_out():
         return render_template(
             'gestion_loc/invoices/form_invoice_out.html',
             form=form,
-            title='Créer une Facture',
             aparts=apartment_name_list,
             tenants=tenants_list
         )

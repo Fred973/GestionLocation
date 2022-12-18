@@ -31,17 +31,9 @@ class InvoiceOutForm(FlaskForm):
         - price
     """
     ref_customer = StringField("Référence Client")
-    first_name = StringField("Prénom")
-    name = StringField("Nom *", validators=[DataRequired()])
-    address = StringField("Adresse *", validators=[DataRequired()])
-    zipcode = StringField("Code Postale *", validators=[DataRequired()])
-    city = StringField("Ville *", validators=[DataRequired()])
-    phone = StringField("Téléphone")
-    email = StringField("Email")
-    month = StringField("Mois")
     date_in = StringField("Date de début *")
     date_out = StringField("Date de fin *")
-    due_date = StringField("Date d'échéance")
-    price = DecimalField("Prix (jour/mois) *",places=2, validators=[DataRequired()])
+    due_date = StringField("Date d'échéance *")
+    price = DecimalField("Prix (par jour) *",places=2, validators=[DataRequired()])
 
     submit = SubmitField("Valider")

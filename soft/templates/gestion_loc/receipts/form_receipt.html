@@ -16,18 +16,20 @@
                     <option class="form-label" value="{{ apart.id }}">{{ apart.apartment_name }}</option>
                     {% endfor %}
                 </select>
-    
-                {{ form.name.label(class="form-label") }}
-                {{ form.name(class="form-field") }}
+                
+                <div>
+                    {{ form.date_in.label(class="form-label") }}
+                </div>
+                <div>
+                    <input class="form-field-short" type="date" name="date_in">
+                </div>
                 <br />
-                {{ form.first_name.label(class="form-label") }}
-                {{ form.first_name(class="form-field") }}
-                <br />
-                {{ form.phone.label(class="form-label") }}
-                {{ form.phone(class="form-field") }}
-                <br />
-                {{ form.email.label(class="form-label") }}
-                {{ form.email(class="form-field") }}
+                <div>
+                    {{ form.date_out.label(class="form-label") }}
+                </div>
+                <div>
+                    <input class="form-field-short" type="date" name="date_out">
+                </div>
                 <br />
                 
                 <div class="center">

@@ -6,7 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 # Create Model
 class Users(db.Model, UserMixin):
     """
-    Users database structure:
+    Users databases structure:
         - id
         - username
         - category (

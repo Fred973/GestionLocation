@@ -5,9 +5,11 @@ from flask_login import login_required
 
 from soft import app, db
 from soft.constant import rental_contracts_path
+from soft.func.various_func import create_contract_nbr
 from soft.gestion_loc.contracts.forms import ContractForm
 from soft.gestion_loc.apartments.model import Apartments
 from soft.gestion_loc.contracts.model import Contracts
+from soft.gestion_loc.tenants.model import Tenants
 
 
 @app.route('/gestionLoc/Contracts', methods=['GET', 'POST'])
@@ -39,12 +41,18 @@ def add_contract():
             # Get contract file name
             f = request.files['contract_file']
             # Get apartment_name
-            req = Apartments.query.get_or_404(request.form.get('apartment'))
-
+            apart_req = Apartments.query.get_or_404(request.form.get('apartment'))
+            tenant_req = Tenants.query.filter_by(fk_apartment=request.form.get('apartment'))
+            id_tenant = ''
+            for data in tenant_req:
+                id_tenant = data.id
             contract_req = Contracts(
                 fk_apartment=request.form.get('apartment'),
-                apartment_name=req.apartment_name,
-                contract_nbr=form.contract_nbr.data,
+                apartment_name=apart_req.apartment_name,
+                contract_nbr=create_contract_nbr(
+                    apart_name=apart_req.apartment_name,
+                    id_customer=int(id_tenant)
+                ),
                 file_name=f.filename
             )
             db.session.add(contract_req)

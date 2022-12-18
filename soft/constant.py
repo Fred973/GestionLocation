@@ -1,12 +1,13 @@
 import os
 
 # Constant configuration variable for Flask
-user = 'root'
-mdp = 'Fred973*'
-mysql_sqalchemy = 'mysql+pymysql://{}:{}@localhost/gestion_loc'.format(user, mdp)
-secret_key = "9d7ac8ce47a5159ef96bd29f316cad4a"
-local_host = 'localhost'
-db_name = 'gestion_loc'
+DB_USER = 'root'
+DB_PASSWORD = 'Fred973*'
+MYSQL_ALCHEMY = 'mysql+pymysql://{}:{}@localhost/gestion_loc'.format(DB_USER, DB_PASSWORD)
+SCRET_KEY = "9d7ac8ce47a5159ef96bd29f316cad4a"
+DB_HOSTNAME = 'localhost'
+DB_PORT = 3306
+DB_NAME = 'gestion_loc'
 
 # Variable for base direction
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -14,20 +15,23 @@ rental_contracts_path = basedir + '/static/rental_contracts'
 invoices_in_path = basedir + '/static/invoices/in'
 invoices_out_path = basedir + '/static/invoices/out'
 receipts_path = basedir + '/static/receipts'
+db_save_path = basedir + '/db_save/'
 
 # Various Data
 
 george_json = {
-    'name': 'BAIA RIBEIRO',
-    'first_name': 'Georges',
-    'address': '3 rue EDGAR DEGAS ',
-    'zipcode': '97310',
-    'city': 'Kourou',
-    'phone': '+594/694 97 20 39',
-    'email': 'harison_baia@outlook.fr',
-    'RIB': {
-        'account_nbr': 'FR4620041010190035898Z01621',
-        'BIC': 'PSSTFRPPCAY'
+    0: {
+        'name': 'BAIA RIBEIRO',
+        'first_name': 'Georges',
+        'address': '3 rue EDGAR DEGAS ',
+        'zipcode': '97310',
+        'city': 'Kourou',
+        'phone': '+594/694 97 20 39',
+        'email': 'harison_baia@outlook.fr',
+        'RIB': {
+            'account_nbr': 'FR4620041010190035898Z01621',
+            'BIC': 'PSSTFRPPCAY'
+        }
     }
 }
 
@@ -39,4 +43,4 @@ avio_json = {
     'city': 'COLLEFERRO (RM)'
 }
 
-receipt_text = "La présente quittance ne libère l'occupant que pour la période indiquée et annule tout reçu à valoir.Elle n'est pas libératoire des loyers ou indemnités d'occupation antérieurs impayés et est délivrée sous réserve de toutes instances judiciaires en cours."
+receipt_text = "La présente quittance ne libère l'occupant que pour la période indiquée et annule tout reçu à valoir. Elle n'est pas libératoire des loyers ou indemnités d'occupation antérieurs impayés et est délivrée sous réserve de toutes instances judiciaires en cours."

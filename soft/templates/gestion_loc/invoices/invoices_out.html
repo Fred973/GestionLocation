@@ -17,7 +17,7 @@
             <tr class="header">
                 <th onclick="sortTable(0)">Appart.</th>
                 <th onclick="sortTable(0)">Réf. Client</th>
-                <th onclick="sortTable(0)">Nom</th>
+                <th onclick="sortTable(0)">Mois/Année</th>
                 <th onclick="sortTable(0)">N° Facture</th>
                 <th onclick="sortTable(0)">Ajouté le</th>
                 <th>Télécharger</th>
@@ -26,7 +26,7 @@
             <tr>
                 <td>{{ invoice.apartment_name }}</td>
                 <td>{{ invoice.ref_customer }}</td>
-                <td>{{ invoice.name }}</td>
+                <td>{{ invoice.month_year }}</td>
                 <td>{{ invoice.invoice_number }}</td>
                 <td>{{ invoice.added_date }}</td>
                 <td>

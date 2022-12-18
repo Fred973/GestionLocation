@@ -52,7 +52,7 @@ class InvoicesOut(db.Model):
     date_in = db.Column(db.Date, nullable=True)
     date_out = db.Column(db.Date, nullable=True)
     due_date = db.Column(db.Date, nullable=True)
-    month = db.Column(db.String(255), nullable=True)
+    month_year = db.Column(db.String(255), nullable=True)
     price = db.Column(db.Numeric(6, 2))
     file_name = db.Column(db.String(128), nullable=False)
 

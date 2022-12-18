@@ -11,8 +11,6 @@ class ReceiptForm(FlaskForm):
         - phone
         - email
     """
-    first_name = StringField("Prénom", validators=[DataRequired()])
-    name = StringField("Nom", validators=[DataRequired()])
-    phone = StringField("Téléphone", validators=[DataRequired()])
-    email = StringField("Email", validators=[DataRequired()])
+    date_in = StringField("Date de Début", validators=[DataRequired()])
+    date_out = StringField("Date de Fin", validators=[DataRequired()])
     submit = SubmitField("Valider")
