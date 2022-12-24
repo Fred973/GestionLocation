@@ -1,13 +1,13 @@
 from flask_login import login_required, current_user
 from soft import app
-from flask import render_template
+from flask import render_template, session
 
 from soft.login.model import Users
 
 
 @app.route('/gestionLoc/dashboard', methods=['GET', 'POST'])
 @login_required
-def dashboard():
+def dashboard_GL():
     try:
         user_req = Users.query.get_or_404(current_user.id)
 

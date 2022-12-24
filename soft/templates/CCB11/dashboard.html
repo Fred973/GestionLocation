@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% include 'alert_messages.html' %}
+
+<div class="center">
+    <div>
+        <div>
+            <h1>{{ user.username }}</h1>
+        </div>
+        <div class="div-btn">
+            <a href="{{url_for('logout')}}" class="btn default">Se déconnecter</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -24,9 +24,8 @@ def load_user(user_id):
         )
 
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    try:
+@app.route('/login<int:id_choice>', methods=['GET', 'POST'])
+def login(id_choice):
         form = LoginForm()
         if form.validate_on_submit():
             session.permanent = True  # Logout if you close navigator
@@ -34,11 +33,15 @@ def login():
             if user:
                 # Check the hash
                 if check_password_hash(user.password_hash, form.password.data):
+                    login_user(user)
                     session['user'] = form.username.data
                     session['category'] = user.category
-                    login_user(user)
+                    session['id_choice'] = id_choice
                     flash("Vous êtes connecté", category='success')
-                    return redirect(url_for('dashboard'))
+                    if id_choice == 0:
+                        return redirect(url_for('dashboard_GL'))
+                    elif id_choice == 1:
+                        return redirect(url_for('dashboard_CCB'))
                 else:
                     flash("Mauvais mot de passe - Essai encore!", category='warning')
                     redirect(request.referrer)
@@ -49,12 +52,6 @@ def login():
         return render_template(
             'login.html',
             form=form
-        )
-    except Exception as e:
-        print(e)
-        return render_template(
-            "error_404.html",
-            log=e
         )
 
 

@@ -14,11 +14,13 @@ class InvoicesIn(db.Model):
     """
     id = db.Column(db.Integer, primary_key=True)
     fk_apartment = db.Column(db.Integer, db.ForeignKey('apartments.id', ondelete='CASCADE'), nullable=False)
-    apartment_name = db.Column(db.String(255), nullable=False, unique=True)
-    invoice_number = db.Column(db.String(255), nullable=True, unique=True)
-    description = db.Column(db.String(128), nullable=True, unique=True)
-    added_date = db.Column(db.Date, nullable=False, unique=True)
-    file_name = db.Column(db.String(128), nullable=False, unique=True)
+    apartment_name = db.Column(db.String(255), nullable=False)
+    invoice_number = db.Column(db.String(255), nullable=True)
+    description = db.Column(db.String(255), nullable=True)
+    added_date = db.Column(db.Date, nullable=False)
+    year = db.Column(db.Numeric(4, 0), nullable=False)
+    price = db.Column(db.Numeric(10, 2), nullable=False)
+    file_name = db.Column(db.String(128), nullable=False)
 
     # Create a String
     def __repr__(self):
@@ -52,8 +54,9 @@ class InvoicesOut(db.Model):
     date_in = db.Column(db.Date, nullable=True)
     date_out = db.Column(db.Date, nullable=True)
     due_date = db.Column(db.Date, nullable=True)
-    month_year = db.Column(db.String(255), nullable=True)
-    price = db.Column(db.Numeric(6, 2))
+    month = db.Column(db.String(255), nullable=True)
+    year = db.Column(db.Numeric(4, 0), nullable=False)
+    price = db.Column(db.Numeric(10, 2))
     file_name = db.Column(db.String(128), nullable=False)
 
     # Create a String

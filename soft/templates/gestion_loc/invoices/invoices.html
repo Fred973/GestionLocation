@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% include 'alert_messages.html' %}
+<h1 class="center">Tableau de bord des Analyses et Prévisions Annuelles</h1>
+
+<div class="center">
+    <div>
+        <form method="post" enctype="multipart/form-data">
+            <div class="right">
+                {{ year_form.year.label(class="form-label") }}
+                {{ year_form.year(class="form-field-short form-label") }}
+
+                {{ year_form.submit(class="btn success") }}
+            </div>
+        </form>
+        <div style="display: inline-flex;">
+            <div style=" padding: 15px;">
+                <h2 class="left">Factures Sortantes (AVIO)</h2>
+                <br>
+                <table id="myTable" style="width: auto;">
+                    <tr class="header">
+                        <th onclick="sortTable(0)">Appart.</th>
+                        <th onclick="sortTable(0)">Nbr de Facture</th>
+                        <th onclick="sortTable(0)">Total</th>
+                    </tr>
+                    {% for invoice in invoices_out_list %}
+                    <tr>
+                        {% for data in invoice %}
+                        <td style="text-align: center;">{{ data }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <div style="padding: 15px;">
+                <h2 class="left">Factures Entrantes</h2>
+                <br>
+                <table id="myTable" style="width: auto;">
+                    <tr class="header">
+                        <th onclick="sortTable(0)">Appart.</th>
+                        <th onclick="sortTable(0)">Nbr de Facture</th>
+                        <th onclick="sortTable(0)">Total</th>
+                    </tr>
+                    {% for invoice in invoices_in_list %}
+                    <tr>
+                        {% for data in invoice %}
+                        <td style="text-align: center;">{{ data }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <div style="padding: 15px;">
+                <h2 class="left">Total par appartement</h2>
+                <br>
+                <table id="myTable" style="width: auto;">
+                    <tr class="header">
+                        <th onclick="sortTable(0)">Appart.</th>
+                        <th onclick="sortTable(0)">Total Net*</th>
+                    </tr>
+                    {% for apart in total_apart %}
+                    <tr>
+                        {% for data in apart %}
+                        <td style="text-align: center;">{{ data }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="center">
+        <div style="padding: 15px;">
+            <h2 class="left">Total par Bénéficiaire</h2>
+            <br>
+            <table id="myTable" style="width: auto;">
+                <tr class="header">
+                    <th onclick="sortTable(0)">Bénificiaire</th>
+                    <th onclick="sortTable(0)">Total Perçus</th>
+                    <th onclick="sortTable(0)">Total retenu sur compte (20%)</th>
+                </tr>
+                {% for benefits in total_by_benefits %}
+                <tr>
+                    {% for data in benefits %}
+                    <td style="text-align: center;">{{ data }}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+    <div class="center">
+        <div style="padding: 15px;">
+            <h2 class="left">Prévision sur l'année par Bénéficiaire</h2>
+            <br>
+            <table id="myTable" style="width: auto;">
+                <tr class="header">
+                    <th onclick="sortTable(0)">Bénificiaire</th>
+                    <th onclick="sortTable(0)">Total Brute</th>
+                    <th onclick="sortTable(0)">Total Factures Entrantes**</th>
+                    <th onclick="sortTable(0)">Total Net</th>
+                    <th onclick="sortTable(0)">Total Perçus</th>
+                    <th onclick="sortTable(0)">Total Retenus sur compte (20%)</th>
+                </tr>
+                {% for total in total_year_forecast_by_benefits %}
+                <tr>
+                    {% for data in total %}
+                    <td style="text-align: center;">{{ data }}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div style="padding: 15px;">
+            <h2 class="left">Total prévision sur l'année</h2>
+            <br>
+            <table id="myTable" style="width: auto;">
+                <tr class="header">
+                    <th onclick="sortTable(0)">Total Brute</th>
+                    <th onclick="sortTable(0)">Total Factures Entrantes**</th>
+                    <th onclick="sortTable(0)">Total Net</th>
+                    <th onclick="sortTable(0)">Total Perçus</th>
+                    <th onclick="sortTable(0)">Total Retenus sur compte (20%)</th>
+                </tr>
+                {% for total in total_year_forecast %}
+                <tr>
+                    {% for data in total %}
+                    <td style="text-align: center;">{{ data }}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+    <br>
+    <div class="left">
+        <div>
+            <h3>* Factures entrantes déduites</h3>
+        </div>
+        <div>
+            <h3>** Factures entrantes connues</h3>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

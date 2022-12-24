@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% include 'alert_messages.html' %}
+
+<div class="center">
+    <h1>{{ title }}</h1>
+    <div class="card">
+        <form method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                {{ form.hidden_tag() }}
+                
+                <div>
+                    {{ form.type.label(class="form-label") }}
+                </div>
+                <div>
+                    {{ form.type(class="form-field-short form-label") }}
+                </div>
+                <br>
+                <div>
+                    {{ form.description.label(class="form-label") }}
+                </div>
+                <div class="red-text">
+                    <p>Utiliser "Shift + Enter" pour un saut de ligne normal et "Enter" pour un saut de type
+                        paragraphe</p>
+                </div>
+                {{ form.description(class="form-field", rows="10") }}
+                <br/>
+                <div>
+                    {{ form.added_date.label(class="form-label") }}
+                </div>
+                <div>
+                    {{ form.added_date(class="form-field-short") }}
+                </div>
+                <br>
+                <div>
+                    {{ form.relevance.label(class="form-label") }}
+                </div>
+                <div>
+                    {{ form.relevance(class="form-field-short form-label") }}
+                </div>
+                <br>
+                <div>
+                    {{ form.closed_date.label(class="form-label") }}
+                </div>
+                <div>
+                    {{ form.closed_date(class="form-field-short") }}
+                </div>
+                <br>
+                <div>
+                    {{ form.remarks.label(class="form-label") }}
+                </div>
+                <div class="red-text">
+                    <p>Utiliser "Shift + Enter" pour un saut de ligne normal et "Enter" pour un saut de type
+                        paragraphe</p>
+                </div>
+                {{ form.remarks(class="form-field", rows="10") }}
+                <br/>
+                <div>
+                    {{ form.status.label(class="form-label") }}
+                </div>
+                <div>
+                    {{ form.status(class="form-field-short form-label") }}
+                </div>
+                <br>
+                <div class="center">
+                    {{ form.submit(class="btn success") }}
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="div-btn">
+        <a class="btn default" href="{{ url_for('tasks') }}">Retour</a>
+    </div>
+</div>
+
+{{ ckeditor.load() }}
+{{ ckeditor.config(name='description') }}
+{{ ckeditor.config(name='remarks') }}
+
+{% endblock %}

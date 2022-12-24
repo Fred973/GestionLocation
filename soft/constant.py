@@ -15,7 +15,8 @@ rental_contracts_path = basedir + '/static/rental_contracts'
 invoices_in_path = basedir + '/static/invoices/in'
 invoices_out_path = basedir + '/static/invoices/out'
 receipts_path = basedir + '/static/receipts'
-db_save_path = basedir + '/db_save/'
+db_save_path = basedir + '/db_save/db/'
+table_save_path = basedir + '/db_save/table/'
 
 # Various Data
 
@@ -44,3 +45,4 @@ avio_json = {
 }
 
 receipt_text = "La présente quittance ne libère l'occupant que pour la période indiquée et annule tout reçu à valoir. Elle n'est pas libératoire des loyers ou indemnités d'occupation antérieurs impayés et est délivrée sous réserve de toutes instances judiciaires en cours."
+

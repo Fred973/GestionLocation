@@ -24,7 +24,14 @@
                 {{ form.description(class="form-field") }}
                 <br />
                 {{ form.added_date.label(class="form-label") }}
-                <input class="form-field" type="date" name="added_date">
+                <div>
+                    <input class="form-field-short" type="date" name="added_date">
+                </div>
+                <br>
+                {{ form.price.label(class="form-label") }}
+                <div>
+                    {{ form.price(class="form-field-short") }}
+                </div>
                 <br />
                 {{ form.file_name.label(class="form-label") }}
                 <div>

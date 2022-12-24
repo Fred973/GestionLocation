@@ -2,9 +2,10 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
+from flask_ckeditor import CKEditor
 from datetime import timedelta
 from soft.constant import MYSQL_ALCHEMY, SCRET_KEY
-from soft.src.config import Config
+from soft.src.config import Config, CKEditorConfig
 
 # Create a Flask Instance
 app = Flask(__name__)
@@ -17,6 +18,10 @@ app.permanent_session_lifetime = timedelta(hours=90)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
+# Flask CKEditor
+app.config.from_object(CKEditorConfig)
+ckeditor = CKEditor(app)
+
 # Cookie Session config
 app.config['SESSION_COOKIE_SAMESITE'] = "Strict"
 
@@ -27,6 +32,7 @@ login_manager.login_view = 'login'
 login_manager.login_message = 'Vous devez être connecté pour accéder à la page'
 login_manager.login_message_category = 'error'
 
+""" Gestion Location """
 # import mode.py to create tables
 from soft.login import routes
 from soft.gestion_loc import routes
@@ -45,4 +51,11 @@ from soft.gestion_loc.apartments import model
 from soft.gestion_loc.contracts import model
 from soft.gestion_loc.receipts import model
 from soft.gestion_loc.database import model
+
+""" CCB11 Manager """
+# import mode.py to create tables
+from soft.ccb11_manager import routes
+
+from soft.ccb11_manager import model
+
 

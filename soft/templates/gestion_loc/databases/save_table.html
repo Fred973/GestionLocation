@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% include 'alert_messages.html' %}
+
+<div class="center">
+    <h1>Save Table</h1>
+    <div class="card">
+        <form method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                {{ form.hidden_tag() }}
+                <div>
+                    {{ form.table_name.label(class="form-label") }}
+                </div>
+                <div>
+                    {{ form.table_name(class="form-field-short form-label") }}
+                </div>
+                <br>
+                <div class="center">
+                    {{ form.submit(class="btn success") }}
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="div-btn">
+        <a class="btn default" href="{{ url_for('databases') }}">Retour</a>
+    </div>
+</div>
+
+{% endblock %}

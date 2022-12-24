@@ -50,7 +50,7 @@ with app.app_context():
     apart_01 = Apartments(
         id=1,
         apartment_name='7A',
-        rent_price=1500.00,
+        rent_price=50.00,
         address='7, rue Edgar Degas',
         zipcode=97310,
         city='Kourou',
@@ -59,7 +59,7 @@ with app.app_context():
     apart_02 = Apartments(
         id=2,
         apartment_name='7B',
-        rent_price=1200.00,
+        rent_price=50.00,
         address='8, avenue Bourges Maunoury',
         zipcode=31200,
         city='Kourou',
@@ -68,7 +68,7 @@ with app.app_context():
     apart_03 = Apartments(
         id=3,
         apartment_name='10A',
-        rent_price=1300.50,
+        rent_price=60.00,
         address='7, rue du truc',
         zipcode=97310,
         city='Kourou',

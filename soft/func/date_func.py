@@ -44,7 +44,12 @@ def number_of_day(d1, d2):
     delta = d2 - d1
     return delta.days + 1
 
-def convert_to_month_year(date_):
+def convert_to_month(date_):
     locale.setlocale(locale.LC_TIME,'')
     d_in = datetime.strptime(date_, '%Y-%m-%d')
-    return str(datetime.strftime(d_in, '%B/%Y'))
+    return str(datetime.strftime(d_in, '%B/'))
+
+def convert_to_year(date_):
+    locale.setlocale(locale.LC_TIME,'')
+    d_in = datetime.strptime(date_, '%Y-%m-%d')
+    return str(datetime.strftime(d_in, '%Y'))

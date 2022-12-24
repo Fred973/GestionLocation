@@ -1,0 +1,50 @@
+<input type="checkbox" id="mobile-icon">
+<label for="mobile-icon" class="toggle"><span class="hamburger-icon"></span></label>
+
+{% if session['id_choice'] == 0 %}
+<nav>
+    <ul>
+        <h1 class="logo">Gestion Location</h1>
+        <li><a href="{{ url_for('dashboard_GL') }}">Accueil</a></li>
+        <li><a href="{{ url_for('apartments') }}">Appartements</a></li>
+        <li><a href="{{ url_for('contracts') }}">Contrats de location</a></li>
+        <li><a href="{{ url_for('tenants') }}">Locataires</a></li>
+        <li>
+            <a class="hide-mobile" href="{{ url_for('invoices') }}">Factures<span class="arrow">&#x25bc;</span></a>
+            <label for="submenu-product"> Factures<span class="arrow">&#x25bc;</span></label>
+            <input id="submenu-product" type="checkbox">
+            <ul class="submenu-1">
+                <li><a href="{{ url_for('invoices_in')}}">Factures entrantes</a></li>
+                <hr>
+                <li><a href="{{ url_for('invoices_out') }}">Factures sortantes (AVIO)</a></li>
+            </ul>
+        </li>
+        <li><a href="{{ url_for('receipts') }}">Quittances</a></li>
+        {% if current_user.category == 1 %}
+        <li>
+            <a class="hide-mobile" href="#">Admin<span class="arrow">&#x25bc;</span></a>
+            <label for="submenu-product"> Admin<span class="arrow">&#x25bc;</span></label>
+            <input id="submenu-product" type="checkbox">
+            <ul class="submenu-1">
+                <li><a href="{{ url_for('databases') }}">Databases</a></li>
+                <hr>
+                <li><a href="{{ url_for('return_dashboard_CCB') }}">CCB11</a></li>
+            </ul>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+
+{% elif session['id_choice'] == 1 %}
+<nav>
+    <ul>
+        <h1 class="logo">CCB11 Manager</h1>
+        <li><a href="{{ url_for('dashboard_CCB') }}">Home</a></li>
+        <li><a href="{{ url_for('tasks') }}">Tasks</a></li>
+        {% if current_user.category == 1 %}
+        <li><a href="{{ url_for('databases') }}">Databases</a></li>
+        {% endif %}
+        <li><a href="{{ url_for('return_dashboard_GL') }}">Gestion Location</a></li>
+    </ul>
+</nav>
+{% endif %}

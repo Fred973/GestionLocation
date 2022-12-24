@@ -6,6 +6,22 @@
   overflow-x: auto;
 }
 
+.red-text {
+  color: red;
+}
+
+.green-text {
+  color: green;
+}
+
+.blue-text {
+  color: blue;
+}
+
+.yellow-text {
+  color: yellow;
+}
+
 #myInput {
   background-image: url("searchicon.png");
   background-position: 10px 10px;

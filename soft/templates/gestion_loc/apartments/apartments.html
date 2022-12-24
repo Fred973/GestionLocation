@@ -28,7 +28,7 @@
                 <td>{{ apart.address }}</td>
                 <td>{{ apart.zipcode }}</td>
                 <td>{{ apart.city }}</td>
-                <td>{{ apart.rent_price }}</td>
+                <td>{{ apart.rent_price }} €</td>
                 <td>
                     <a href="{{ url_for('edit_apartment', id_apart=apart.id) }}" class="btn info">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -74,7 +74,7 @@
         </table>
     </div>
     <div class="div-btn">
-        <a class="btn default" href="{{ url_for('dashboard') }}">Retour à l'accueil</a>
+        <a class="btn default" href="{{ url_for('dashboard_GL') }}">Retour à l'accueil</a>
     </div>
 </div>
 

@@ -13,7 +13,7 @@ class Apartments(db.Model):
     """
     id = db.Column(db.Integer, primary_key=True)
     apartment_name = db.Column(db.String(255), nullable=False, unique=True)
-    rent_price = db.Column(db.Numeric(6, 2))
+    rent_price = db.Column(db.Numeric(10, 2))
     address = db.Column(db.String(255), nullable=False)
     zipcode = db.Column(db.Numeric(5, 0), nullable=False)
     city = db.Column(db.String(255), nullable=False)

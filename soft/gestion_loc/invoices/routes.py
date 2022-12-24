@@ -4,14 +4,44 @@ from flask import render_template, request, flash, redirect, url_for, send_from_
 from flask_login import login_required
 from soft import app, db
 from soft.constant import invoices_in_path, avio_json, invoices_out_path
-from soft.func.date_func import convert_date_string_to_isoformat, convert_to_month_year
+from soft.func.date_func import convert_date_string_to_isoformat, convert_to_month, convert_to_year
 from soft.func.pdf_func import create_invoice_out_pdf
-from soft.func.various_func import create_invoice_nbr, get_apartment_name
-from soft.gestion_loc.invoices.forms import InvoiceInForm, InvoiceOutForm
+from soft.func.various_func import create_invoice_nbr, get_apartment_name, calculate_day_nbr, invoice_out_table_list, \
+    invoice_in_table_list, total_apart, total_by_benefits, total_year_forecast_by_benefits, total_year_forecast
+from soft.gestion_loc.invoices.forms import InvoiceInForm, InvoiceOutForm, YearForm
 from soft.gestion_loc.apartments.model import Apartments
 from soft.gestion_loc.tenants.model import Tenants
 from soft.gestion_loc.invoices.model import InvoicesIn, InvoicesOut
 
+
+@app.route('/gestion_loc/Invoices', methods=['GET', 'POST'])
+@login_required
+def invoices():
+    year_form = YearForm()
+
+    if request.method == 'POST':
+        year = int(year_form.year.data)
+        return render_template(
+            'gestion_loc/invoices/invoices.html',
+            invoices_out_list=invoice_out_table_list(year),
+            invoices_in_list=invoice_in_table_list(year),
+            total_apart=total_apart(year),
+            total_by_benefits=total_by_benefits(year),
+            total_year_forecast_by_benefits=total_year_forecast_by_benefits(year),
+            total_year_forecast=total_year_forecast(year),
+            year_form=year_form
+        )
+
+    return render_template(
+        'gestion_loc/invoices/invoices.html',
+        invoices_out_list=invoice_out_table_list(2023),
+        invoices_in_list=invoice_in_table_list(2023),
+        total_apart=total_apart(2023),
+        total_by_benefits=total_by_benefits(2023),
+        total_year_forecast_by_benefits=total_year_forecast_by_benefits(2023),
+        total_year_forecast=total_year_forecast(2023),
+        year_form=year_form
+    )
 
 @app.route('/gestionLoc/InvoicesIn', methods=['GET', 'POST'])
 @login_required
@@ -20,7 +50,8 @@ def invoices_in():
         invoices_in_list = InvoicesIn.query.all()
         return render_template(
             "gestion_loc/invoices/invoices_in.html",
-            invoices=invoices_in_list
+            invoices=invoices_in_list,
+
         )
     except Exception as e:
         print(e)
@@ -47,14 +78,21 @@ def add_invoice_in():
                 fk_apartment=request.form.get('apartment'),
                 apartment_name=req.apartment_name,
                 invoice_number=request.form.get('added_date'),
+                description=form.description.data,
                 added_date=form.added_date.data,
+                price=form.price.data,
+                year=int(convert_to_year(form.added_date.data)),
                 file_name=f.filename
             )
             db.session.add(invoice_req)
             db.session.commit()
 
-            # Upload file to contract path
-            f.save(os.path.join(invoices_in_path, f.filename))
+            try:
+                # Upload file to contract path
+                f.save(os.path.join(invoices_in_path, f.filename))
+            except IsADirectoryError:
+                flash('Un fichier est obligatoire', category='warning')
+                return redirect(request.referrer)
 
             flash('Facture ajoutée !', category='success')
             return redirect(url_for('invoices_in'))
@@ -137,6 +175,8 @@ def add_invoice_out():
         if request.method == 'POST':  # For Avio invoice
             # Get apartment_name
             req = Apartments.query.get_or_404(request.form.get('apartment'))
+            print(req.rent_price)
+            print(type(req.rent_price))
             # Record in DB invoice_out
             invoice_req = InvoicesOut(
                 fk_apartment=request.form.get('apartment'),
@@ -155,8 +195,9 @@ def add_invoice_out():
                 date_in=convert_date_string_to_isoformat(form.date_in.data),
                 date_out=convert_date_string_to_isoformat(form.date_out.data),
                 due_date=convert_date_string_to_isoformat(form.due_date.data),
-                month_year=convert_to_month_year(request.form.get('date_in')),
-                price=form.price.data,
+                year=int(convert_to_year(request.form.get('date_in'))),
+                month=convert_to_month(request.form.get('date_in')),
+                price=req.rent_price,
                 file_name='{}.pdf'.format(create_invoice_nbr(
                     n=0,
                     apart_name=get_apartment_name(request.form.get('apartment')),
@@ -171,7 +212,7 @@ def add_invoice_out():
                 date_in=request.form.get('date_in'),
                 date_out=request.form.get('date_out'),
                 due_date=request.form.get('due_date'),
-                price=form.price.data,
+                price=req.rent_price,
                 ref_customer=form.ref_customer.data
             )
             # return send_from_directory(invoices_out_path, file)

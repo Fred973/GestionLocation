@@ -2,7 +2,7 @@ from fpdf import FPDF
 from soft.constant import george_json, avio_json, receipts_path, receipt_text
 from soft.constant import invoices_out_path
 from soft.func.date_func import convert_date_to_string, today_date_str, number_of_day, convert_date_string_to_isoformat
-from soft.func.various_func import create_invoice_nbr, get_apartment_data, get_apartment_name
+from soft.func.various_func import create_invoice_nbr, get_apartment_data, get_apartment_name, calculate_day_nbr
 from soft.gestion_loc.apartments.model import Apartments
 from soft.gestion_loc.tenants.model import Tenants
 
@@ -110,9 +110,9 @@ def create_invoice_out_pdf(id_apart, date_in, date_out, due_date, price, ref_cus
     pdf.cell(42.5, 5, '{}'.format(convert_date_to_string(date_in)), align='C')
     pdf.cell(42.5, 5, '{}'.format(convert_date_to_string(date_out)), align='C')
     pdf.cell(35, 5, '{} {}'.format(price, chr(128)), align='C')
-    day_nbr = str(number_of_day(convert_date_string_to_isoformat(date_in), convert_date_string_to_isoformat(date_out)))
-    sub_total = str(int(day_nbr) * int(price))
-    pdf.cell(35, 5, '{}'.format(day_nbr), align='C')
+
+    sub_total = str(int(calculate_day_nbr(date_in, date_out)) * int(price))
+    pdf.cell(35, 5, '{}'.format(str(calculate_day_nbr(date_in, date_out))), align='C')
     pdf.cell(35, 5, '{} {}'.format(sub_total, chr(128)), align='C')
 
     pdf.set_font('arial', 'B', 12)

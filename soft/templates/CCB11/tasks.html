@@ -8,28 +8,39 @@
 </div>
 
 <div class="center">
-    <h1>Quittances</h1>
+    <h1>CCB11 Tasks</h1>
     <div class="div-btn" style="text-align: left;">
-        <a class="btn info" href="{{ url_for('add_receipt') }}">Ajouter une quittance</a>
+        <a class="btn info" href="{{ url_for('add_task') }}">Add a task</a>
     </div>
     <div class="card">
         <table id="myTable">
             <tr class="header">
-                <th onclick="sortTable(0)">Appart.</th>
-                <th onclick="sortTable(0)">Nom</th>
-                <th onclick="sortTable(0)">Mois/Année</th>
-                <th onclick="sortTable(0)">Loyer</th>
-                <th>Editer</th>
-                <th>Télécharger</th>
-                <th>Supprimer</th>
-                {% for receipt in receipts %}
+                <th onclick="sortTable(0)">Type</th>
+                <th onclick="sortTable(0)">Description</th>
+                <th style="text-align: center;" onclick="sortTable(0)">Creation Date</th>
+                <th onclick="sortTable(0)">Relevance</th>
+                <th style="text-align: center;" onclick="sortTable(0)">Closure Date</th>
+                <th onclick="sortTable(0)">Remarks</th>
+                <th onclick="sortTable(0)">Status</th>
+                <th style="text-align: center;">Edit</th>
+                <th style="text-align: center;">Delete</th>
+                {% for task in tasks %}
             <tr>
-                <td>{{ receipt.apartment_name }}</td>
-                <td>{{ receipt.name }}</td>
-                <td>{{ receipt.month_year }}</td>
-                <td>{{ receipt.price }}</td>
-                <td>
-                    <a href="{{ url_for('edit_receipt', id_receipt=receipt.id) }}" class="btn info">
+                <td>{{ task.type }}</td>
+                <td>{{ task.description|safe }}</td>
+                <td style="text-align: center;">{{ task.added_date }}</td>
+                <td>{{ task.relevance }}</td>
+                <td style="text-align: center;">{{ task.closed_date }}</td>
+                <td>{{ task.remarks|safe }}</td>
+                {% if task.status == 'Opened' %}
+                <td class="red-text">{{ task.status }}</td>
+                {% elif task.status == 'Closed' %}
+                <td class="green-text">{{ task.status }}</td>
+                {% elif task.status == 'Cancelled' %}
+                <td class="blue-text">{{ task.status }}</td>
+                {% endif %}
+                <td style="text-align: center;">
+                    <a href="{{ url_for('edit_task', id_task=task.id) }}" class="btn info">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-pencil" viewBox="0 0 16 16">
                             <path
@@ -37,20 +48,9 @@
                         </svg>
                     </a>
                 </td>
-                <td>
-                  <a class="btn default" style="margin: 10px;" href="{{ url_for('download_receipt', id_receipt=receipt.id) }}">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download"
-                      viewBox="0 0 16 16">
-                      <path
-                        d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
-                      <path
-                        d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z" />
-                    </svg>
-                  </a>
-                </td>
-                <td>
+                <td style="text-align: center;">
                     <button class="btn danger"
-                        onclick="document.getElementById('{{receipt.id}}').style.display='inline-flex'">
+                        onclick="document.getElementById('{{task.id}}').style.display='inline-flex'">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-trash" viewBox="0 0 16 16">
                             <path
@@ -60,19 +60,19 @@
                         </svg>
                     </button>
 
-                    <div class="modal" id="{{receipt.id}}">
-                        <form class="modal-content" action="{{ url_for('delete_receipt', id_receipt=receipt.id) }}">
+                    <div class="modal" id="{{task.id}}">
+                        <form class="modal-content" action="{{ url_for('delete_task', id_task=task.id) }}">
                             <div class="container-modal">
-                                <h1>Supprimer la quittance</h1>
+                                <h1>Task to delete</h1>
                                 <br>
-                                <p>Etes vous sûr de vouloir supprimer la quittance ?</p>
+                                <p>Are you sure to delete this task ?</p>
                                 <br>
                                 <div class="clearfix">
                                     <button type="button"
-                                        onclick="document.getElementById('{{receipt.id}}').style.display='none'"
-                                        class="btn default">Annuler</button>
+                                        onclick="document.getElementById('{{task.id}}').style.display='none'"
+                                        class="btn default">Cancel</button>
                                     <button type="submit" onclick="document.getElementById('id01').style.display='none'"
-                                        class="btn danger">Supprimer</button>
+                                        class="btn danger">Execute</button>
                                 </div>
                             </div>
                         </form>
@@ -81,11 +81,13 @@
             </tr>
             {% endfor %}
             </tr>
+            <div class="pagination"></div>
         </table>
     </div>
     <div class="div-btn">
-        <a class="btn default" href="{{ url_for('dashboard_GL') }}">Retour à l'accueil</a>
+        <a class="btn default" href="{{ url_for('dashboard_CCB') }}">Back Home</a>
     </div>
+
 </div>
 
 {% endblock %}

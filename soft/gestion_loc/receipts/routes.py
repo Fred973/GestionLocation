@@ -5,7 +5,7 @@ from flask import render_template, redirect, url_for, send_from_directory, flash
 from flask_login import login_required
 from soft import app, db
 from soft.constant import receipts_path
-from soft.func.date_func import convert_date_to_string, convert_to_month_year
+from soft.func.date_func import convert_date_to_string, convert_to_month
 from soft.func.pdf_func import create_receipt_pdf
 from soft.gestion_loc.apartments.model import Apartments
 from soft.gestion_loc.contracts.model import Contracts
@@ -71,7 +71,7 @@ def add_receipt():
                 added_date=datetime.date.today(),
                 date_in=request.form.get('date_in'),
                 date_out=request.form.get('date_out'),
-                month_year=convert_to_month_year(request.form.get('date_in')),
+                month_year=convert_to_month(request.form.get('date_in')),
                 price=apart_req.rent_price,
                 loads=0,  # TODO add loads in apartments DB
                 contract_nbr=contract_nbr,

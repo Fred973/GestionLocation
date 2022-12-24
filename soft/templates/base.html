@@ -23,9 +23,7 @@
 
 <body>
   <header>
-    {% if current_user.is_authenticated %}
-    {% include 'gestion_loc/navbar.html' %}
-    {% endif %}
+    {% include 'navbar.html' %}
   </header>
   <div class="container page">
     {% block content %}
