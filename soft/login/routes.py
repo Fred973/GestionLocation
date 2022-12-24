@@ -1,4 +1,4 @@
-from flask_login import login_user, login_required, logout_user
+from flask_login import login_user, login_required, logout_user, current_user
 from soft import app, login_manager
 from soft.login.forms import LoginForm
 from flask import render_template, redirect, url_for, flash, session, request
@@ -9,6 +9,15 @@ from soft.login.model import Users, check_password_hash
 def index():
     return render_template(
         "index.html"
+    )
+
+
+@app.route('/normal')
+def normal():
+    user_req = Users.query.get_or_404(current_user.id)
+    return render_template(
+        "normal.html",
+        user=user_req
     )
 
 
@@ -46,10 +55,14 @@ def login(id_choice):
                     elif session['category'] == 2 and id_choice == 1:
                         flash("Vous n'avez pas les droits pour vous connecter ici", category='warning')
                         return redirect(url_for('index'))
-                    else:
+                    elif session['category'] == 2 and session['category'] == 1:
                         login_user(user)
                         flash("Vous êtes connecté", category='success')
                         return redirect(url_for('dashboard_GL'))
+                    elif session['category'] == 0:
+                        login_user(user)
+                        flash("Vous êtes connecté", category='success')
+                        return redirect(url_for('normal'))
 
                 else:
                     flash("Mauvais mot de passe - Essai encore!", category='warning')

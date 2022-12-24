@@ -1,6 +1,3 @@
-TODO dashboard page
-TODO edit user
-
 TODO see to reset log files
 TODO see to add date of log files
 

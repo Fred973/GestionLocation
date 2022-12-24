@@ -1,7 +1,7 @@
 <input type="checkbox" id="mobile-icon">
 <label for="mobile-icon" class="toggle"><span class="hamburger-icon"></span></label>
 
-{% if session['id_choice'] == 0 %}
+{% if session['id_choice'] == 0 and session['category'] != 0 %}
 <nav>
     <ul>
         <h1 class="logo">Gestion Location</h1>

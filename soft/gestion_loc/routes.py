@@ -28,6 +28,36 @@ def dashboard_GL():
         )
 
 
+@app.route('/gestionLoc/dashboard/register', methods=['GET', 'POST'])
+@login_required
+def register():
+    try:
+        form = UserForm()
+        if request.method == 'POST':
+            user_to_add = Users(
+                username=form.username.data,
+                category=form.category.data,
+                password_hash=generate_password_hash(form.password.data, 'sha256')
+            )
+            db.session.add(user_to_add)
+            db.session.commit()
+
+            flash("L'utilisateur a bien été ajouté", category='success')
+            return redirect(url_for('dashboard_GL'))
+
+        return render_template(
+            'form_user.html',
+            form=form
+        )
+
+    except Exception as e:
+        print(e)
+        return render_template(
+            "error_404.html",
+            log=e
+        )
+
+
 @app.route('/gestionLoc/dashboard/edit_user/<int:id_user>', methods=['GET', 'POST'])
 @login_required
 def edit_user(id_user):
@@ -44,14 +74,11 @@ def edit_user(id_user):
             db.session.commit()
 
             flash("L'utilisateur a bien été modifié", category='success')
-            if session['id_choice'] == 0:
-                return redirect(url_for('dashboard_GL'))
-            elif session['id_choice'] == 1:
-                return redirect(url_for('dashboard_CCB'))
+            return redirect(url_for('dashboard_GL'))
 
 
         form.username.data = user_to_update.username
-        form.category.data = user_to_update.category
+        form.category.data = str(user_to_update.category)
 
         return render_template(
             'form_user.html',
@@ -70,13 +97,12 @@ def edit_user(id_user):
 @login_required
 def delete_user(id_user):
     try:
-        if request.method == 'POST':
-            user_to_delete = Users.query.get_or_404(id_user)
-            db.session.delete(user_to_delete)
-            db.session.commit()
+        user_to_delete = Users.query.get_or_404(id_user)
+        db.session.delete(user_to_delete)
+        db.session.commit()
 
-            flash("L'utilisateur a bien été supprimé", category='success')
-            return redirect(request.referrer)
+        flash("L'utilisateur a bien été supprimé", category='success')
+        return redirect(request.referrer)
 
     except Exception as e:
         print(e)
@@ -97,10 +123,7 @@ def pwd_update(id_user):
             db.session.commit()
 
             flash("Le mot de passe a bien été modifié", category='success')
-            if session['id_choice'] == 0:
-                return redirect(url_for('dashboard_GL'))
-            elif session['id_choice'] == 1:
-                return redirect(url_for('dashboard_CCB'))
+            return redirect(url_for('dashboard_GL'))
 
         return render_template(
             'form_pwd.html',
@@ -126,10 +149,7 @@ def username_update(id_user):
             db.session.commit()
 
             flash("Le nom d'utilisateur a bien été modifié", category='success')
-            if session['id_choice'] == 0:
-                return redirect(url_for('dashboard_GL'))
-            elif session['id_choice'] == 1:
-                return redirect(url_for('dashboard_CCB'))
+            return redirect(url_for('dashboard_GL'))
 
         return render_template(
             'form_username.html',

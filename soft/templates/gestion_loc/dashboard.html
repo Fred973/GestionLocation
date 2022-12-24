@@ -13,7 +13,7 @@
             <a class="btn danger" href="{{ url_for('pwd_update', id_user=user.id) }}">Changer de mot de passe</a>
             <a class="btn warning" href="{{ url_for('username_update', id_user=user.id) }}">Changer de nom d'utilisateur</a>
             {% if current_user.category == 1 %}
-            <a class="btn info" href="#">Ajouter un utilisateur</a>
+            <a class="btn info" href="{{ url_for('register') }}">Ajouter un utilisateur</a>
             {% endif %}
         </div>
         {% if current_user.category == 1 %}

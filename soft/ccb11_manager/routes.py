@@ -88,10 +88,6 @@ def edit_task(id_task):
     task_to_edit = Tasks.query.get_or_404(id_task)
 
     if request.method == 'POST':
-        if (request.form.get('closed_date')) == '':
-            closed_date = None
-        else:
-            closed_date = request.form.get('closed_date')
         task_to_edit.type = form.type.data
         task_to_edit.description = form.description.data
         task_to_edit.added_date = form.added_date.data
