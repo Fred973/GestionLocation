@@ -6,5 +6,5 @@ TODO see to add date of log files
 
 TODO add address, zipcode, city fields to TenantsForm with a radiobutton to hide or not.
 
-TODO apartment_name already registered remove from <select> list
+TODO apartment_name already registered remove from <select> list in add_apartment
 TODO faire une fonction pour création de nom de fichier (pdf) et mettre filename unique=True

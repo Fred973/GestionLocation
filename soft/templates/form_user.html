@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% include 'alert_messages.html' %}
+
+<div class="center">
+    <h1>Edit User</h1>
+    <div class="card">
+        <form method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                {{ form.hidden_tag() }}
+
+                {{ form.username.label(class="form-label") }}
+                {{ form.username(class="form-field form-label") }}
+                <br>
+
+                {{ form.category.label(class="form-label") }}
+                {{ form.category(class="form-field form-label") }}
+                <br>
+                <div style="padding-top: 10px;">
+                    <h3 style="color: red;">Mettre le nouveau Mdp sinon laisser vide</h3>
+                </div>
+                {{ form.password.label(class="form-label") }}
+                {{ form.password(class="form-field form-label") }}
+                <br>
+                <div class="center">
+                    {{ form.submit(class="btn success") }}
+                </div>
+            </div>
+        </form>
+    </div>
+    {% if session['id_choice'] == 0 %}
+    <div class="div-btn">
+        <a class="btn default" href="{{ url_for('dashboard_GL') }}">Retour</a>
+    </div>
+    {% elif session['id_choice'] == 1 %}
+    <div class="div-btn">
+        <a class="btn default" href="{{ url_for('dashboard_CCB') }}">Retour</a>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}
