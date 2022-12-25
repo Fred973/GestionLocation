@@ -175,8 +175,6 @@ def add_invoice_out():
         if request.method == 'POST':  # For Avio invoice
             # Get apartment_name
             req = Apartments.query.get_or_404(request.form.get('apartment'))
-            print(req.rent_price)
-            print(type(req.rent_price))
             # Record in DB invoice_out
             invoice_req = InvoicesOut(
                 fk_apartment=request.form.get('apartment'),

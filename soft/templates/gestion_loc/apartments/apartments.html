@@ -21,7 +21,9 @@
                 <th onclick="sortTable(0)">Ville</th>
                 <th onclick="sortTable(0)">Montant de la location</th>
                 <th>Editer</th>
+                {% if current_user.category == 1 %}
                 <th>Supprimer</th>
+                {% endif %}
                 {% for apart in aparts %}
             <tr>
                 <td>{{ apart.apartment_name }}</td>
@@ -38,6 +40,7 @@
                         </svg>
                     </a>
                 </td>
+                {% if current_user.category == 1 %}
                 <td>
                     <button class="btn danger"
                         onclick="document.getElementById('{{apart.id}}').style.display='inline-flex'">
@@ -68,6 +71,7 @@
                         </form>
                     </div>
                 </td>
+                {% endif %}
             </tr>
             {% endfor %}
             </tr>

@@ -2,7 +2,8 @@ from fpdf import FPDF
 from soft.constant import george_json, avio_json, receipts_path, receipt_text
 from soft.constant import invoices_out_path
 from soft.func.date_func import convert_date_to_string, today_date_str, number_of_day, convert_date_string_to_isoformat
-from soft.func.various_func import create_invoice_nbr, get_apartment_data, get_apartment_name, calculate_day_nbr
+from soft.func.various_func import create_invoice_nbr, get_apartment_data, get_apartment_name, calculate_day_nbr, \
+    create_receipt_nbr
 from soft.gestion_loc.apartments.model import Apartments
 from soft.gestion_loc.tenants.model import Tenants
 
@@ -242,6 +243,7 @@ def create_receipt_pdf(date_in, date_out, apartment, id_tenant):
     pdf.cell(5, 10, '', border='L')
     pdf.cell(105, 10, 'Loyer', border='R')
     pdf.cell(70, 10, '1550.00', align='R')
+    # TODO add price calculation or not, function of per month/per day
     pdf.cell(10, 10, '{}'.format(chr(128)), border='R')
 
     pdf.cell(w=0, h=10, ln=1)
@@ -263,6 +265,18 @@ def create_receipt_pdf(date_in, date_out, apartment, id_tenant):
     pdf.cell(w=0, h=30, ln=1)
     pdf.multi_cell(190, 7, '{}'.format(receipt_text), align='C')
 
-    pdf.output(receipts_path + '/{}'.format('test.pdf'))
+    pdf.output(
+        receipts_path + '/' + '{}.pdf'.format
+            (create_receipt_nbr(
+                apart_name=apart_req.apartment_name,
+                id_customer=tenant_req.id
+            )
+        )
+    )
 
-    return '{}.pdf'.format('test')
+    return '{}.pdf'.format(
+        create_receipt_nbr(
+            apart_name=apart_req.apartment_name,
+            id_customer=tenant_req.id
+        )
+    )

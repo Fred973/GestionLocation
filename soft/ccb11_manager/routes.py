@@ -44,7 +44,7 @@ def tasks():
 
     return render_template(
         'CCB11/tasks.html',
-        tasks=Tasks.query.all()
+        tasks=Tasks.query.order_by(Tasks.id.desc()).all()
     )
 
 

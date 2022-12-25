@@ -55,7 +55,7 @@ def login(id_choice):
                     elif session['category'] == 2 and id_choice == 1:
                         flash("Vous n'avez pas les droits pour vous connecter ici", category='warning')
                         return redirect(url_for('index'))
-                    elif session['category'] == 2 and session['category'] == 1:
+                    elif session['category'] == 2:
                         login_user(user)
                         flash("Vous êtes connecté", category='success')
                         return redirect(url_for('dashboard_GL'))

@@ -39,7 +39,6 @@ def total_year_forecast(y: int):
             log=e
         )
 
-
 def total_year_forecast_by_benefits(y: int):
     aparts_list = [[]]
 
@@ -148,8 +147,6 @@ def total_year_forecast_by_benefits(y: int):
 
     return aparts_list
 
-
-
 def total_by_benefits(y: int):
     total_price_out = 0
 
@@ -216,7 +213,6 @@ def total_by_benefits(y: int):
 
     return aparts_list
 
-
 def total_apart(y: int):
     total_net_list = []
     aparts_req = Apartments.query.all()
@@ -247,7 +243,6 @@ def total_apart(y: int):
 
     return total_net_list
 
-
 def invoice_in_table_list(y: int):
     aparts_list = []
     aparts_req = Apartments.query.all()
@@ -267,7 +262,6 @@ def invoice_in_table_list(y: int):
         n += 1
 
     return aparts_list
-
 
 def invoice_out_table_list(y: int):
     aparts_list = []
@@ -292,7 +286,6 @@ def invoice_out_table_list(y: int):
 
     return aparts_list
 
-
 def create_invoice_nbr(n, apart_name, date_, id_customer=''):
     """
     n = 0 -> Avio customer
@@ -310,18 +303,25 @@ def create_invoice_nbr(n, apart_name, date_, id_customer=''):
         nbr = id_customer
         return 'F-{}-{}-{}'.format(apart_name, convert_date_to_string_for_nbr(date_), nbr)
 
-
 def create_contract_nbr(apart_name, id_customer=''):
+    """
+    :param apart_name:
+    :param id_customer:
+    :return:
+    """
+    nbr = id_customer
+    return 'C-{}-{}-{}'.format(apart_name, today_date(), nbr)
+
+def create_receipt_nbr(apart_name, id_customer=''):
     """
     n = 0 -> Avio customer
     n > 0 -> other (tenants)
     :param apart_name:
     :param id_customer:
-    :param n:
     :return:
     """
     nbr = id_customer
-    return 'C-{}-{}-{}'.format(apart_name, today_date(), nbr)
+    return 'Q-{}-{}-{}'.format(apart_name, today_date(), nbr)
 
 def get_apartment_data(id_):
     apart_req = Apartments.query.get_or_404(id_)
