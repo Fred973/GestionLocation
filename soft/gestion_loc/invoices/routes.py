@@ -7,7 +7,8 @@ from soft.constant import invoices_in_path, avio_json, invoices_out_path
 from soft.func.date_func import convert_date_string_to_isoformat, convert_to_month, convert_to_year
 from soft.func.pdf_func import create_invoice_out_pdf
 from soft.func.various_func import create_invoice_nbr, get_apartment_name, calculate_day_nbr, invoice_out_table_list, \
-    invoice_in_table_list, total_apart, total_by_benefits, total_year_forecast_by_benefits, total_year_forecast
+    invoice_in_table_list, total_apart, total_by_benefits, total_year_forecast_by_benefits, total_year_forecast, \
+    total_year_forecast_by_aparts
 from soft.gestion_loc.invoices.forms import InvoiceInForm, InvoiceOutForm, YearForm
 from soft.gestion_loc.apartments.model import Apartments
 from soft.gestion_loc.tenants.model import Tenants
@@ -27,6 +28,7 @@ def invoices():
             invoices_in_list=invoice_in_table_list(year),
             total_apart=total_apart(year),
             total_by_benefits=total_by_benefits(year),
+            total_year_forecast_by_aparts=total_year_forecast_by_aparts(year),
             total_year_forecast_by_benefits=total_year_forecast_by_benefits(year),
             total_year_forecast=total_year_forecast(year),
             year_form=year_form
@@ -38,6 +40,7 @@ def invoices():
         invoices_in_list=invoice_in_table_list(2023),
         total_apart=total_apart(2023),
         total_by_benefits=total_by_benefits(2023),
+            total_year_forecast_by_aparts=total_year_forecast_by_aparts(2023),
         total_year_forecast_by_benefits=total_year_forecast_by_benefits(2023),
         total_year_forecast=total_year_forecast(2023),
         year_form=year_form

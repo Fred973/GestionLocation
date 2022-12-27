@@ -25,12 +25,17 @@
                 <th>Supprimer</th>
                 {% endif %}
                 {% for apart in aparts %}
+            </tr>
             <tr>
                 <td>{{ apart.apartment_name }}</td>
                 <td>{{ apart.address }}</td>
                 <td>{{ apart.zipcode }}</td>
                 <td>{{ apart.city }}</td>
-                <td>{{ apart.rent_price }} €</td>
+                {% if apart.month %}
+                <td>{{ apart.rent_price }} € (par mois)</td>
+                {% elif apart.day %}
+                <td>{{ apart.rent_price }} € (par jour)</td>
+                {% endif %}
                 <td>
                     <a href="{{ url_for('edit_apartment', id_apart=apart.id) }}" class="btn info">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"

@@ -46,17 +46,23 @@ def total_year_forecast_by_benefits(y: int):
     total_invoices_out_7A = 0
     invoices_out_7A_req = Apartments.query.filter_by(apartment_name='7A')
     for data_out_7A in invoices_out_7A_req:
-        total_invoices_out_7A += (data_out_7A.rent_price * 31 * 7)
-        total_invoices_out_7A += (data_out_7A.rent_price * 30 * 4)
-        total_invoices_out_7A += (data_out_7A.rent_price * 28)
+        if data_out_7A.month:
+            total_invoices_out_7A += data_out_7A * 12
+        else:
+            total_invoices_out_7A += (data_out_7A.rent_price * 31 * 7)
+            total_invoices_out_7A += (data_out_7A.rent_price * 30 * 4)
+            total_invoices_out_7A += (data_out_7A.rent_price * 28)
 
     # Calculate total gross for other for year = y
     total_invoices_out_other = 0
     invoices_out_other_req = Apartments.query.filter(Apartments.apartment_name != '7A')
     for data_out_other in invoices_out_other_req:
-        total_invoices_out_other += (data_out_other.rent_price * 31 * 7)
-        total_invoices_out_other += (data_out_other.rent_price * 30 * 4)
-        total_invoices_out_other += (data_out_other.rent_price * 28)
+        if data_out_other.month:
+            total_invoices_out_other += (data_out_other.rent_price * 12)
+        else:
+            total_invoices_out_other += (data_out_other.rent_price * 31 * 7)
+            total_invoices_out_other += (data_out_other.rent_price * 30 * 4)
+            total_invoices_out_other += (data_out_other.rent_price * 28)
 
     # Calculate total invoices in for 7A for year = y
     total_invoices_in_7A = 0
@@ -69,65 +75,7 @@ def total_year_forecast_by_benefits(y: int):
     invoices_in_other_req = InvoicesIn.query.filter(InvoicesIn.apartment_name != '7A').filter_by(year=y)
     for data_in_other in invoices_in_other_req:
         total_invoices_in_other += data_in_other.price
-    # global total_year
-    #
-    # # Calculate total invoice out for apartment 7A
-    # invoice_out_req = InvoicesOut.query.filter_by(apartment_name='7A').filter_by(year=y)
-    # for i in invoice_out_req:
-    #     total_year = 0
-    #     total_year += i.price * 31 * 7
-    #     total_year += i.price * 30 * 4
-    #     total_year += i.price * 28
-    #
-    # # Calculate total invoice in for apartment 7A
-    # total_invoice_in = 0
-    # invoice_in_req = InvoicesIn.query.filter_by(apartment_name='7A').filter_by(year=y)
-    # for i in invoice_in_req:
-    #     total_invoice_in += i.price
-    #
-    # # Made list with totals
-    # aparts_list = []
-    # aparts_req = Apartments.query.all()
-    # total_year_invoice_in_other = 0
-    # total_year_out_other = 0
-    # n = 0
-    # for i in aparts_req:
-    #     if i.apartment_name == '7A':
-    #         aparts_list.append(['7A (Katianne)'])
-    #         aparts_list[n].append('{} €'.format(str(total_year)))
-    #         aparts_list[n].append('{} €'.format(str(total_invoice_in)))
-    #         aparts_list[n].append('{} €'.format(str(total_year - total_invoice_in)))
-    #         aparts_list[n].append('{} €'.format(str((total_year - total_invoice_in) - (((total_year - total_invoice_in)*20)/100))))
-    #         aparts_list[n].append('{} €'.format(str(((total_year - total_invoice_in)*20)/100)))
-    #         n += 1
-    #     else:
-    #         invoice_out_req = InvoicesOut.query.filter_by(apartment_name=i.apartment_name).filter_by(year=y)
-    #         for item_out in invoice_out_req:
-    #             total_year_out_other += item_out.price * 31 * 7
-    #             total_year_out_other += item_out.price * 30 * 4
-    #             total_year_out_other += item_out.price * 28
-    #
-    #         invoice_in_req = InvoicesIn.query.filter_by(apartment_name=i.apartment_name).filter_by(year=y)
-    #         n_invoice = 0
-    #         total_in_other = 0
-    #         for item_in in invoice_in_req:
-    #             price = item_in.price
-    #             n_invoice += 1
-    #             total_in_other += price
-    #
-    #         total_year_invoice_in_other += (total_in_other * n_invoice)
-    #
-    # total_net_other = (total_year_out_other - total_year_invoice_in_other)
-    # total_receive_other = total_net_other - ((total_net_other * 20)/100)
-    # total_held_on_account_other = (total_net_other * 20)/100
-    # aparts_list.append(['Autres (Georges)'])
-    # aparts_list[1].append('{} €'.format(str(total_year_out_other)))
-    # aparts_list[1].append('{} €'.format(str(total_year_invoice_in_other)))
-    # aparts_list[1].append('{} €'.format(str(total_net_other)))
-    # aparts_list[1].append('{} €'.format(str(total_receive_other)))
-    # aparts_list[1].append('{} €'.format(str(total_held_on_account_other)))
 
-    # Append data in aparts_list for 7A
     total_net_7A = total_invoices_out_7A - total_invoices_in_7A
     aparts_list[0].append('7A (Katianne)')
     aparts_list[0].append('{} €'.format(str(total_invoices_out_7A)))
@@ -144,6 +92,38 @@ def total_year_forecast_by_benefits(y: int):
     aparts_list[1].append('{} €'.format(str(total_net_other)))
     aparts_list[1].append('{} €'.format(str(total_net_other - ((total_net_other * 20)/100))))
     aparts_list[1].append('{} €'.format(str((total_net_other * 20)/100)))
+
+    return aparts_list
+
+
+def total_year_forecast_by_aparts(y: int):
+    aparts_list = []
+
+    n = 0
+    invoice_our_req = Apartments.query.all()
+    for data_invoice_out in invoice_our_req:
+        total_invoices_in = 0
+        total_invoices_out = 0
+        aparts_list.append([data_invoice_out.apartment_name])
+        if data_invoice_out.month:
+            total_invoices_out += data_invoice_out.rent_price * 12
+        else:
+            total_invoices_out += data_invoice_out.rent_price * 31 * 7
+            total_invoices_out += data_invoice_out.rent_price * 30 * 4
+            total_invoices_out += data_invoice_out.rent_price * 28
+
+        invoices_in_req = InvoicesIn.query.filter_by(apartment_name=data_invoice_out.apartment_name).filter_by(year=y)
+        for i in invoices_in_req:
+            total_invoices_in += i.price
+
+        total_net = total_invoices_out - total_invoices_in
+        aparts_list[n].append('{} €'.format(str(total_invoices_out)))
+        aparts_list[n].append('{} €'.format(str(total_invoices_in)))
+        aparts_list[n].append('{} €'.format(str(total_net)))
+        aparts_list[n].append('{} €'.format(str(total_net - ((total_net * 20)/100))))
+        aparts_list[n].append('{} €'.format(str((total_net * 20)/100)))
+
+        n += 1
 
     return aparts_list
 
@@ -227,8 +207,12 @@ def total_apart(y: int):
         invoice_req = InvoicesOut.query.filter_by(apartment_name=i.apartment_name).filter_by(year=y)
         for item in invoice_req:
             n_invoice_out += 1
-            day_nbr = calculate_day_nbr(str(item.date_in), str(item.date_out))
-            total_out += item.price * day_nbr
+            if i.month:
+                total_out += item.price
+            else:
+                day_nbr = calculate_day_nbr(str(item.date_in), str(item.date_out))
+                total_out += item.price * day_nbr
+
         n_invoice_in = 0
         total_in = 0
         invoice_req = InvoicesIn.query.filter_by(apartment_name=i.apartment_name).filter_by(year=y)
@@ -277,8 +261,11 @@ def invoice_out_table_list(y: int):
         invoice_req = InvoicesOut.query.filter_by(apartment_name=i.apartment_name).filter_by(year=y)
         for item in invoice_req:
             n_invoice += 1
-            day_nbr = calculate_day_nbr(str(item.date_in), str(item.date_out))
-            total += item.price * day_nbr
+            if i.month:
+                total += item.price
+            else:
+                day_nbr = calculate_day_nbr(str(item.date_in), str(item.date_out))
+                total += item.price * day_nbr
         total_gross_ += (total * n_invoice)
         aparts_list[n].append(str(n_invoice))
         aparts_list[n].append("{} €".format(str(total * n_invoice)))

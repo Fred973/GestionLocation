@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, FloatField, SubmitField
+from wtforms import StringField, FloatField, SubmitField, SelectField
 from wtforms.validators import DataRequired
 
 
@@ -11,6 +11,7 @@ class ApartmentForm(FlaskForm):
         - zipcode
         - city
         - rent_price
+        - month_day
         - submit
     """
     apartment_name = StringField("Alias", validators=[DataRequired()])
@@ -18,4 +19,5 @@ class ApartmentForm(FlaskForm):
     zipcode = StringField("Code Postale", validators=[DataRequired()])
     city = StringField("Ville", validators=[DataRequired()])
     rent_price = FloatField("Montant de la location", validators=[DataRequired()])
+    month_day = SelectField("Mode de Paiement (Jour/Mois) ", choices=['Par Mois', 'Par Jour'], validators=[DataRequired()])
     submit = SubmitField("Valider")

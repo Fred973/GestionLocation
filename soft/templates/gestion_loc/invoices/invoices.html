@@ -93,6 +93,27 @@
     </div>
     <div class="center">
         <div style="padding: 15px;">
+            <h2 class="left">Prévision sur l'année par Appartement</h2>
+            <br>
+            <table id="myTable" style="width: auto;">
+                <tr class="header">
+                    <th onclick="sortTable(0)">Appartement</th>
+                    <th onclick="sortTable(0)">Total Brute</th>
+                    <th onclick="sortTable(0)">Total Factures Entrantes**</th>
+                    <th onclick="sortTable(0)">Total Net</th>
+                    <th onclick="sortTable(0)">Total Perçus</th>
+                    <th onclick="sortTable(0)">Total Retenus sur compte (20%)</th>
+                </tr>
+                {% for total in total_year_forecast_by_aparts %}
+                <tr>
+                    {% for data in total %}
+                    <td style="text-align: center;">{{ data }}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div style="padding: 15px;">
             <h2 class="left">Prévision sur l'année par Bénéficiaire</h2>
             <br>
             <table id="myTable" style="width: auto;">

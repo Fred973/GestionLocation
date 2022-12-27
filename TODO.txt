@@ -5,3 +5,5 @@ TODO add address, zipcode, city fields to TenantsForm with a radiobutton to hide
 
 TODO apartment_name already registered remove from <select> list in add_apartment
 TODO faire une fonction pour création de nom de fichier (pdf) et mettre filename unique=True
+
+TODO handle February 28 or 29 days for invoices

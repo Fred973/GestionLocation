@@ -30,12 +30,20 @@ def add_apartment():
     try:
         form = ApartmentForm()
         if form.validate_on_submit():
+            if form.month_day.data == 'Par Jour':
+                month = False
+                day = True
+            else:
+                month = True
+                day = False
             apart_to_add = Apartments(
                 apartment_name=form.apartment_name.data,
                 address=form.address.data,
                 zipcode=form.zipcode.data,
                 city=form.city.data,
-                rent_price=form.rent_price.data
+                rent_price=form.rent_price.data,
+                month=month,
+                day=day
             )
             # Clear the form
             form.apartment_name.data = ''

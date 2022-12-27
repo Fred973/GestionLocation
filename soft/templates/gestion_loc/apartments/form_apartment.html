@@ -24,7 +24,9 @@
                 {{ form.city(class="form-field") }}
                 <br>
                 {{ form.rent_price.label(class="form-label") }}
-                {{ form.rent_price(class="form-field") }}
+                {{ form.rent_price(class="form-field-short") }}
+                {{ form.month_day.label(class="form-label") }}
+                {{ form.month_day(class='form-field-short form-label')}}
                 <div class="center">
                     {{ form.submit(class="btn success") }}
                 </div>
