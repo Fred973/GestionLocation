@@ -48,7 +48,7 @@ def add_entry():
                 date=form.date.data,
                 ac_type=form.ac_type.data,
                 registration=form.registration.data,
-                ata=int(form.ata.data),
+                ata=form.ata.data[1],
                 work_order=form.work_order.data,
                 description=form.description.data,
                 work_type=form.work_type.data,

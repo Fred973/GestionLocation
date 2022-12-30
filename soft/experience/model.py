@@ -19,7 +19,7 @@ class TechLog(db.Model):
     date = db.Column(db.Date, nullable=False)
     ac_type = db.Column(db.String(255), nullable=False)
     registration = db.Column(db.String(255), nullable=False)
-    ata = db.Column(db.Numeric(2, 0), nullable=False)
+    ata = db.Column(db.String(255), nullable=False)
     work_order = db.Column(db.String(255), nullable=False)
     description = db.Column(db.Text, nullable=False)
     work_type = db.Column(db.String(255), nullable=False)
