@@ -3,11 +3,11 @@ import os
 # Constant configuration variable for Flask
 DB_USER = 'root'
 DB_PASSWORD = 'Fred973*'
-MYSQL_ALCHEMY = 'mysql+pymysql://{}:{}@localhost/gestion_loc'.format(DB_USER, DB_PASSWORD)
+MYSQL_ALCHEMY = 'mysql+pymysql://{}:{}@localhost/fred_server'.format(DB_USER, DB_PASSWORD)
 SCRET_KEY = "9d7ac8ce47a5159ef96bd29f316cad4a"
 DB_HOSTNAME = 'localhost'
 DB_PORT = 3306
-DB_NAME = 'gestion_loc'
+DB_NAME = 'fred_server'
 
 # Variable for base direction
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -17,6 +17,7 @@ invoices_out_path = basedir + '/static/invoices/out'
 receipts_path = basedir + '/static/receipts'
 db_save_path = basedir + '/db_save/db/'
 table_save_path = basedir + '/db_save/table/'
+utils_path = basedir + '/utils/'
 
 # Various Data
 

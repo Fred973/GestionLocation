@@ -45,21 +45,23 @@ def login(id_choice):
                     session['user'] = form.username.data
                     session['category'] = user.category
                     session['id_choice'] = id_choice
-                    if session['category'] == 1:
+                    if session['category'] == 1:  # if admin
                         login_user(user)
                         flash("Vous êtes connecté", category='success')
                         if id_choice == 0:
                             return redirect(url_for('dashboard_GL'))
                         elif id_choice == 1:
                             return redirect(url_for('dashboard_CCB'))
-                    elif session['category'] == 2 and id_choice == 1:
+                        elif id_choice == 2:
+                            return redirect(url_for('experiences'))
+                    elif session['category'] == 2 and id_choice == 1 or id_choice == 2:  # if gestion loc users try to connect to CCB11 or Experiences
                         flash("Vous n'avez pas les droits pour vous connecter ici", category='warning')
                         return redirect(url_for('index'))
-                    elif session['category'] == 2:
+                    elif session['category'] == 2:  # if gestion loc users
                         login_user(user)
                         flash("Vous êtes connecté", category='success')
                         return redirect(url_for('dashboard_GL'))
-                    elif session['category'] == 0:
+                    elif session['category'] == 0:  # if normal user
                         login_user(user)
                         flash("Vous êtes connecté", category='success')
                         return redirect(url_for('normal'))

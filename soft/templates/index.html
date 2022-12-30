@@ -4,17 +4,19 @@
 
 {% include 'alert_messages.html' %}
 
-<div class="center">
-    <div class="card">
-        <h1>Fred-Server</h1>
-        <p>Choisir le module</p>
-        <div class="div-btn">
-            <a class="btn info" href="{{ url_for('login', id_choice=0) }}">Gestion Location</a>
-            <a class="btn info" href="{{ url_for('login', id_choice=1) }}">CCB11 Manager</a>
-            <a class="btn info" href="#">autre</a>
+<body class="gestion-loc">
+    <div class="center">
+        <div class="card">
+            <h1>Fred-Server</h1>
+            <p>Choisir le module</p>
+            <div class="div-btn">
+                <a class="btn info" href="{{ url_for('login', id_choice=0) }}">Gestion Location</a>
+                <a class="btn info" href="{{ url_for('login', id_choice=1) }}">CCB11 Manager</a>
+                <a class="btn info" href="{{ url_for('login', id_choice=2) }}">Experiences</a>
+            </div>
+            <br>
         </div>
-        <br>
     </div>
-</div>
+</body>
 
 {% endblock %}

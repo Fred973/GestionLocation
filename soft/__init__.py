@@ -58,4 +58,7 @@ from soft.ccb11_manager import routes
 
 from soft.ccb11_manager import model
 
+""" Experiences Manager """
+from soft.experience import routes
 
+from soft.experience import model

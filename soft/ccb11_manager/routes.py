@@ -38,6 +38,13 @@ def return_dashboard_CCB():
     return redirect(url_for('dashboard_CCB'))
 
 
+@app.route('/experiences/dashboard_exp', methods=['GET', 'POST'])
+@login_required
+def return_dashboard_exp():
+    session['id_choice'] = 2
+    return redirect(url_for('dashboard_exp'))
+
+
 @app.route('/CCB11/Tasks', methods=['GET', 'POST'])
 @login_required
 def tasks():

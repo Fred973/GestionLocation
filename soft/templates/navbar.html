@@ -29,6 +29,8 @@
                 <li><a href="{{ url_for('databases') }}">Databases</a></li>
                 <hr>
                 <li><a href="{{ url_for('return_dashboard_CCB') }}">CCB11</a></li>
+                <hr>
+                <li><a href="{{ url_for('return_dashboard_exp') }}">Experiences</a></li>
             </ul>
         </li>
         {% endif %}
@@ -42,9 +44,43 @@
         <li><a href="{{ url_for('dashboard_CCB') }}">Home</a></li>
         <li><a href="{{ url_for('tasks') }}">Tasks</a></li>
         {% if current_user.category == 1 %}
-        <li><a href="{{ url_for('databases') }}">Databases</a></li>
+        <li>
+            <a class="hide-mobile" href="#">Admin<span class="arrow">&#x25bc;</span></a>
+            <label for="submenu-product"> Admin<span class="arrow">&#x25bc;</span></label>
+            <input id="submenu-product" type="checkbox">
+            <ul class="submenu-1">
+                <li><a href="{{ url_for('databases') }}">Databases</a></li>
+                <hr>
+                <li><a href="{{ url_for('return_dashboard_GL') }}">Gestion Location</a></li>
+                <hr>
+                <li><a href="{{ url_for('return_dashboard_exp') }}">Experiences</a></li>
+            </ul>
+        </li>
         {% endif %}
-        <li><a href="{{ url_for('return_dashboard_GL') }}">Gestion Location</a></li>
     </ul>
 </nav>
+
+{% elif session['id_choice'] == 2 and session['category'] == 1 %}
+<nav>
+    <ul>
+        <h1 class="logo">Technician Logbook</h1>
+        <li><a href="{{ url_for('dashboard_exp') }}">Home</a></li>
+        <li><a href="{{ url_for('experiences') }}">TechLog</a></li>
+        {% if current_user.category == 1 %}
+        <li>
+            <a class="hide-mobile" href="#">Admin<span class="arrow">&#x25bc;</span></a>
+            <label for="submenu-product"> Admin<span class="arrow">&#x25bc;</span></label>
+            <input id="submenu-product" type="checkbox">
+            <ul class="submenu-1">
+                <li><a href="{{ url_for('databases') }}">Databases</a></li>
+                <hr>
+                <li><a href="{{ url_for('return_dashboard_CCB') }}">CCB11</a></li>
+                <hr>
+                <li><a href="{{ url_for('return_dashboard_GL') }}">Gestion Location</a></li>
+            </ul>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+
 {% endif %}

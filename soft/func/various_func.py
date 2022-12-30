@@ -15,9 +15,12 @@ def total_year_forecast(y: int):
         # Calculate total gross invoice out
         invoice_out_req = Apartments.query.all()
         for data in invoice_out_req:
-            total_invoices_out += (data.rent_price * 31 * 7)
-            total_invoices_out += (data.rent_price * 30 * 4)
-            total_invoices_out += (data.rent_price * 28)
+            if data.month:
+                total_invoices_out += data.rent_price * 12
+            else:
+                total_invoices_out += (data.rent_price * 31 * 7)
+                total_invoices_out += (data.rent_price * 30 * 4)
+                total_invoices_out += (data.rent_price * 28)
 
         # Calculate total invoice in
         invoices_in_req = InvoicesIn.query.filter_by(year=y)
