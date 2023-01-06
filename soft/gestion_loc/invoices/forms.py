@@ -53,3 +53,19 @@ class YearForm(FlaskForm):
 
     submit = SubmitField("Changer")
 
+
+class AllInvoicesOutForm(FlaskForm):
+    """
+    All invoices out structure
+        - validate
+    """
+    submit = SubmitField("Télécharger")
+
+
+class DateSelectForm(FlaskForm):
+    """
+    All invoices out structure
+        - validate
+    """
+    month_list = SelectField("Choisir le mois", choices=[])
+    submit = SubmitField("Changer")

@@ -1,15 +1,20 @@
 import datetime
 import os
-from flask import render_template, request, flash, redirect, url_for, send_from_directory
+import shutil
+import zipfile
+
+from flask import render_template, request, flash, redirect, url_for, send_from_directory, session
 from flask_login import login_required
 from soft import app, db
-from soft.constant import invoices_in_path, avio_json, invoices_out_path, amount_held_on_account
-from soft.func.date_func import convert_date_string_to_isoformat, convert_to_month, convert_to_year
+from soft.constant import invoices_in_path, avio_json, invoices_out_path, amount_held_on_account, tmp_path, \
+    invoices_out_zip_path
+from soft.func.date_func import convert_date_string_to_isoformat, convert_to_month, convert_to_year, today_date
 from soft.func.pdf_func import create_invoice_out_pdf
-from soft.func.various_func import create_invoice_out_nbr, get_apartment_name, calculate_day_nbr, invoice_out_table_list, \
+from soft.func.various_func import create_invoice_out_nbr, get_apartment_name, calculate_day_nbr, \
+    invoice_out_table_list, \
     invoice_in_table_list, total_apart, total_by_benefits, total_year_forecast_by_benefits, total_year_forecast, \
-    total_year_forecast_by_aparts, get_apartment_name_list
-from soft.gestion_loc.invoices.forms import InvoiceInForm, InvoiceOutForm, YearForm
+    total_year_forecast_by_aparts, get_apartment_name_list, mager_dicts, purge_tmp_path, create_invoices_zip_name
+from soft.gestion_loc.invoices.forms import InvoiceInForm, InvoiceOutForm, YearForm, DateSelectForm, AllInvoicesOutForm
 from soft.gestion_loc.apartments.model import Apartments
 from soft.gestion_loc.tenants.model import Tenants
 from soft.gestion_loc.invoices.model import InvoicesIn, InvoicesOut
@@ -344,6 +349,132 @@ def delete_invoice_out(id_invoice):
         os.remove(invoices_out_path + '/' + invoice_out_to_delete.file_name)
         flash('La facture a bien été supprimé', category='success')
         return redirect(request.referrer)
+    except Exception as e:
+        print(e)
+        return render_template(
+            "error_404.html",
+            log=e
+        )
+
+
+@app.route('/gestionLoc/InvoicesOut/download_invoices_out_index', methods=['GET', 'POST'])
+@login_required
+def download_invoices_out_index():
+    try:
+        def remove_same_value(items):
+            seen = []
+            for item in items:
+                if item not in seen:
+                    seen.append(item)
+            return list(seen)
+
+        form = AllInvoicesOutForm()
+        select_form = DateSelectForm()
+
+        month_year_list = []
+        for i in InvoicesOut.query.all():
+            month_year_list.append(i.month + str(i.year))
+        month_year_list = remove_same_value(month_year_list)
+
+        if request.method == 'POST':
+            # Get list of all invoices_out PDF created in folder
+            month, year = select_form.month_list.data.split('/')
+            invoices_out_req = InvoicesOut.query.filter_by(year=int(year)).filter_by(month=str(month + "/"))
+            # Update session
+            invoices_list = []
+            for i in invoices_out_req:
+                invoices_list.append(i.file_name)
+            session.pop("InvoicesOutList", None)
+            dict_invoices_out_list = {
+                "file": invoices_list
+            }
+
+            if 'InvoicesOutList' in session:
+                for key, item in session['InvoicesOutList'].items():
+                        session.modified = True
+                else:
+                    session['InvoicesOutList'] = mager_dicts(session['InvoicesOutList'], dict_invoices_out_list)
+            else:
+                session['InvoicesOutList'] = dict_invoices_out_list
+
+            select_form.month_list.choices = month_year_list
+
+            return render_template(
+                'gestion_loc/invoices/download_invoices.html',
+                select_form=select_form,
+                invoices=invoices_out_req,
+                form=form
+            )
+
+        # Get list of all invoices_out PDF created in folder and to session
+        month, year = month_year_list[0].split('/')
+        invoices_out_req = InvoicesOut.query.filter_by(year=int(year)).filter_by(month=str(month + "/"))
+        invoices_list = []
+        for i in invoices_out_req:
+            invoices_list.append(i.file_name)
+        session.pop("InvoicesOutList", None)
+        dict_invoices_out_list = {
+            "file": invoices_list
+        }
+
+        if 'InvoicesOutList' in session:
+            for key, item in session['InvoicesOutList'].items():
+                    session.modified = True
+            else:
+                session['InvoicesOutList'] = mager_dicts(session['InvoicesOutList'], dict_invoices_out_list)
+        else:
+            session['InvoicesOutList'] = dict_invoices_out_list
+
+
+        # set form value by default
+        select_form.month_list.choices = month_year_list
+
+        return render_template(
+            'gestion_loc/invoices/download_invoices.html',
+            invoices=invoices_out_req,
+            select_form=select_form,
+            form=form
+        )
+    except Exception as e:
+        print(e)
+        return render_template(
+            "error_404.html",
+            log=e
+        )
+
+
+@app.route('/gestionLoc/InvoicesOut/download_invoices_list', methods=['GET', 'POST'])
+@login_required
+def download_invoices_list():
+    try:
+        invoices_to_zip = []
+        for i in session['InvoicesOutList']['file']:
+            invoices_to_zip.append(i)
+
+        # Remove all files from tmp_path
+        purge_tmp_path()
+
+        # Create zip file name
+        zip_file = invoices_out_zip_path + create_invoices_zip_name()
+        zipf = zipfile.ZipFile(zip_file, 'w', zipfile.ZIP_DEFLATED)
+        # copy invoices pdf to tmp path
+        for file in invoices_to_zip:
+            shutil.copy2(invoices_out_path + '/' + file, tmp_path + file)
+        # create zip file
+        for file_to_zip in os.listdir(tmp_path):
+            file_to_zip_full_path = os.path.join(tmp_path, file_to_zip)
+            # arcname argument specifies what will be the name of the file inside the zipfile
+            zipf.write(filename=file_to_zip_full_path, arcname=file_to_zip)
+
+        zipf.close()
+
+        # Remove all files from tmp_path and pop cookie session
+        purge_tmp_path()
+        #session.pop("InvoicesOutList", None)
+
+        # download zipfile
+        return send_from_directory(invoices_out_zip_path, create_invoices_zip_name())
+
     except Exception as e:
         print(e)
         return render_template(

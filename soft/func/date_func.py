@@ -35,6 +35,11 @@ def today_datetime():
     return str(datetime.strftime(date_, '%d%m%Y-%H%M'))
 
 
+def today_datetime_sec():
+    date_ = datetime.now()
+    return str(datetime.strftime(date_, '%d%m%Y-%H%M%S'))
+
+
 def today_date_str():
     date_ = datetime.now()
     return str(datetime.strftime(date_, '%d %B %Y'))

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% include 'alert_messages.html' %}
+
+<div class="center">
+    <h1>Factures Sortantes</h1>
+    <div class="card-table-invoices" style="padding-top: 15px;">
+        <form method="post" enctype="multipart/form-data">
+            {{ select_form.hidden_tag() }}
+
+            {{ select_form.month_list.label(class="form-label") }}
+            {{ select_form.month_list(class="form-field-short form-label") }}
+
+            {{ select_form.submit(class="btn success") }}
+        </form>
+        <form action="{{ url_for('download_invoices_list', invoices_list=invoices) }}" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <table id="myTable">
+                <tr class="header">
+                    <th>Factures</th>
+                </tr>
+                {% for invoice in invoices %}
+                <tr>
+                    <td>{{ invoice.file_name }}</td>
+                </tr>
+                {% endfor %}
+                </tr>
+            </table>
+            <div style="padding: 15px;">
+                {{ form.submit(class="btn success") }}
+            </div>
+        </form>
+    </div>
+    <div class="div-btn">
+        <a class="btn default" href="{{ url_for('invoices_out') }}">Retour vers Factures Sortantes</a>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function checkAll(bx) {
+        var cbs = document.getElementsByName('cb[]');
+        for (var i = 0; i < cbs.length; i++) {
+            if (cbs[i].type == 'checkbox') {
+                cbs[i].checked = bx.checked;
+            }
+        }
+    }
+</script>
+
+{% endblock %}

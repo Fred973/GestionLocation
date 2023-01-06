@@ -18,6 +18,8 @@ receipts_path = basedir + '/static/receipts'
 db_save_path = basedir + '/db_save/db/'
 table_save_path = basedir + '/db_save/table/'
 utils_path = basedir + '/utils/'
+tmp_path = basedir + '/tmp_path/'
+invoices_out_zip_path = basedir + '/invoices_out_zip_path/'
 
 # Various Data
 

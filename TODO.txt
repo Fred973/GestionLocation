@@ -11,7 +11,7 @@ TODO handle February 28 or 29 days for invoices
 TODO séparer impots apart 7 et 12
 
 - TODO check invoice out pdf title miss apart number
-
+TODO voir taxe foncière, facture eau et elec
 
 - TODO check contract form doesn't work
 

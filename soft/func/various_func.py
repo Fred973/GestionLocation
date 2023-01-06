@@ -1,7 +1,9 @@
+import os
+
 from flask import render_template
-from soft.constant import avio_json, amount_held_on_account
+from soft.constant import avio_json, amount_held_on_account, tmp_path
 from soft.func.date_func import today_date, convert_date_to_string_for_nbr, number_of_day, \
-    convert_date_string_to_isoformat
+    convert_date_string_to_isoformat, today_datetime_sec
 from soft.gestion_loc.apartments.model import Apartments
 from soft.gestion_loc.invoices.model import InvoicesOut, InvoicesIn
 
@@ -346,3 +348,20 @@ def get_apartment_name_list():
     for i in aparts_name_req_list:
         aparts_name_list.append(i.apartment_name)
     return aparts_name_list
+
+def mager_dicts(dict1, dict2):
+    if isinstance(dict1, list) and isinstance(dict2, list):
+        return dict1 + dict2
+    if isinstance(dict1, dict) and isinstance(dict2, dict):
+        return dict(list(dict1.items()) + list(dict2.items()))
+
+def purge_tmp_path():
+    try:
+        for file in os.listdir(tmp_path):
+            os.remove(tmp_path + file)
+    except Exception as e:
+        print(e)
+
+def create_invoices_zip_name():
+    zip_name = 'Factures_{}.zip'.format(today_datetime_sec())
+    return str(zip_name)
