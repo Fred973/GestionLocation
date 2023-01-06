@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, DecimalField, SelectField
+from wtforms import StringField, SubmitField, DecimalField, SelectField, BooleanField
 from wtforms.validators import DataRequired
 
 
@@ -11,11 +11,15 @@ class InvoiceInForm(FlaskForm):
         - added_date
         - file_name
     """
-    invoice_number = StringField("N° de facture (si existant)", validators=[DataRequired()])
+
+    who = SelectField("Qui", choices=['Georges', 'Katianne'], validators=[DataRequired()])
+    aparts_name = SelectField("Appartement", choices=[], validators=[DataRequired()])
+    invoice_number = StringField("N° de facture (si existant)")
     description = StringField("Description", validators=[DataRequired()])
     added_date = StringField("Date", validators=[DataRequired()])
-    file_name = StringField("Facture", validators=[DataRequired()])
+    file_name = StringField("Facture")
     price = DecimalField("Somme", places=2, validators=[DataRequired()])
+    tax_deductible = BooleanField("Déductible ? (oui si coché)")
     submit = SubmitField("Valider")
 
 

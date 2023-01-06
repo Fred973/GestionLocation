@@ -1,5 +1,5 @@
 from flask import render_template
-from soft.constant import avio_json
+from soft.constant import avio_json, amount_held_on_account
 from soft.func.date_func import today_date, convert_date_to_string_for_nbr, number_of_day, \
     convert_date_string_to_isoformat
 from soft.gestion_loc.apartments.model import Apartments
@@ -31,8 +31,8 @@ def total_year_forecast(y: int):
         total_list[0].append('{} €'.format(str(total_invoices_out)))
         total_list[0].append('{} €'.format(str(total_invoices_in)))
         total_list[0].append('{} €'.format(str(total_net)))
-        total_list[0].append('{} €'.format(str(total_net - ((total_net * 20)/100))))
-        total_list[0].append('{} €'.format(str((total_net * 20)/100)))
+        total_list[0].append('{} €'.format(str(total_net - ((total_net * amount_held_on_account)/100))))
+        total_list[0].append('{} €'.format(str((total_net * amount_held_on_account)/100)))
 
         return total_list
     except Exception as e:
@@ -84,8 +84,8 @@ def total_year_forecast_by_benefits(y: int):
     aparts_list[0].append('{} €'.format(str(total_invoices_out_7A)))
     aparts_list[0].append('{} €'.format(str(total_invoices_in_7A)))
     aparts_list[0].append('{} €'.format(str(total_net_7A)))
-    aparts_list[0].append('{} €'.format(str(total_net_7A - ((total_net_7A * 20)/100))))
-    aparts_list[0].append('{} €'.format(str((total_net_7A * 20)/100)))
+    aparts_list[0].append('{} €'.format(str(total_net_7A - ((total_net_7A * amount_held_on_account)/100))))
+    aparts_list[0].append('{} €'.format(str((total_net_7A * amount_held_on_account)/100)))
 
     # append data in aparts_list for other
     total_net_other = total_invoices_out_other - total_invoices_in_other
@@ -93,8 +93,8 @@ def total_year_forecast_by_benefits(y: int):
     aparts_list[1].append('{} €'.format(str(total_invoices_out_other)))
     aparts_list[1].append('{} €'.format(str(total_invoices_in_other)))
     aparts_list[1].append('{} €'.format(str(total_net_other)))
-    aparts_list[1].append('{} €'.format(str(total_net_other - ((total_net_other * 20)/100))))
-    aparts_list[1].append('{} €'.format(str((total_net_other * 20)/100)))
+    aparts_list[1].append('{} €'.format(str(total_net_other - ((total_net_other * amount_held_on_account)/100))))
+    aparts_list[1].append('{} €'.format(str((total_net_other * amount_held_on_account)/100)))
 
     return aparts_list
 
@@ -123,8 +123,8 @@ def total_year_forecast_by_aparts(y: int):
         aparts_list[n].append('{} €'.format(str(total_invoices_out)))
         aparts_list[n].append('{} €'.format(str(total_invoices_in)))
         aparts_list[n].append('{} €'.format(str(total_net)))
-        aparts_list[n].append('{} €'.format(str(total_net - ((total_net * 20)/100))))
-        aparts_list[n].append('{} €'.format(str((total_net * 20)/100)))
+        aparts_list[n].append('{} €'.format(str(total_net - ((total_net * amount_held_on_account)/100))))
+        aparts_list[n].append('{} €'.format(str((total_net * amount_held_on_account)/100)))
 
         n += 1
 
@@ -155,9 +155,8 @@ def total_by_benefits(y: int):
         n_invoice_in +=1
 
     total_net_7A += (total_gross_7A - total_price_in)
-    total_net_7A = total_net_7A - ((total_net_7A * 20)/100)
-    total_held_on_account_7A = (total_net_7A * 20)/100
-    # TODO 20% create a setting variable to change value
+    total_net_7A = total_net_7A - ((total_net_7A * amount_held_on_account)/100)
+    total_held_on_account_7A = (total_net_7A * amount_held_on_account)/100
 
     aparts_list = []
     aparts_req = Apartments.query.all()
@@ -168,7 +167,10 @@ def total_by_benefits(y: int):
         if i.apartment_name == '7A':
             aparts_list.append(['7A (Katianne)'])
             aparts_list[n].append('{} €'.format(str(total_net_7A)))
-            aparts_list[n].append('{} €'.format(str(total_held_on_account_7A)))
+            if total_held_on_account_7A <= 0:
+                aparts_list[n].append('{} €'.format(str(0)))
+            else:
+                aparts_list[n].append('{} €'.format(str(total_held_on_account_7A)))
             n += 1
         else:
             invoice_out_req = InvoicesOut.query.filter_by(apartment_name=i.apartment_name).filter_by(year=y)
@@ -188,11 +190,14 @@ def total_by_benefits(y: int):
             total_invoice_in += (total_in_other * n_invoice)
 
     total_net_other = (total_out_gross_other - total_invoice_in)
-    total_net_other = total_net_other - ((total_net_other * 20)/100)
-    total_held_on_account_other = (total_net_other * 20)/100
+    total_net_other = total_net_other - ((total_net_other * amount_held_on_account)/100)
+    total_held_on_account_other = (total_net_other * amount_held_on_account)/100
     aparts_list.append(['Autres (Georges)'])
     aparts_list[1].append('{} €'.format(str(total_net_other)))
-    aparts_list[1].append('{} €'.format(str(total_held_on_account_other)))
+    if total_held_on_account_other <= 0:
+        aparts_list[1].append('{} €'.format(str(0)))
+    else:
+        aparts_list[1].append('{} €'.format(str(total_held_on_account_other)))
 
     return aparts_list
 
@@ -276,7 +281,7 @@ def invoice_out_table_list(y: int):
 
     return aparts_list
 
-def create_invoice_nbr(n, apart_name, date_, id_customer=''):
+def create_invoice_out_nbr(n, apart_name, date_, id_customer=''):
     """
     n = 0 -> Avio customer
     n > 0 -> other (tenants)
@@ -288,10 +293,20 @@ def create_invoice_nbr(n, apart_name, date_, id_customer=''):
     """
     if n == 0:
         nbr = avio_json['id_customer']
-        return 'F-{}-{}-{}'.format(apart_name, convert_date_to_string_for_nbr(date_), nbr)
+        return 'FS-{}-{}-{}'.format(apart_name, convert_date_to_string_for_nbr(date_), nbr)
     else:
         nbr = id_customer
-        return 'F-{}-{}-{}'.format(apart_name, convert_date_to_string_for_nbr(date_), nbr)
+        return 'FS-{}-{}-{}'.format(apart_name, convert_date_to_string_for_nbr(date_), nbr)
+
+def create_invoice_in_nbr(apart_name, date_, id_customer=''):
+    """
+    :param date_:
+    :param apart_name:
+    :param id_customer:
+    :return:
+    """
+    nbr = id_customer
+    return 'FE-{}-{}-{}'.format(apart_name, convert_date_to_string_for_nbr(date_), nbr)
 
 def create_contract_nbr(apart_name, id_customer=''):
     """
@@ -324,3 +339,10 @@ def get_apartment_name(id_):
 def calculate_day_nbr(d_in, d_out):
     nbr = str(number_of_day(convert_date_string_to_isoformat(d_in), convert_date_string_to_isoformat(d_out)))
     return int(nbr)
+
+def get_apartment_name_list():
+    aparts_name_list = []
+    aparts_name_req_list = Apartments.query.all()
+    for i in aparts_name_req_list:
+        aparts_name_list.append(i.apartment_name)
+    return aparts_name_list

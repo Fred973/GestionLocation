@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 # Database and project config
 app.config.from_object(Config)
-app.permanent_session_lifetime = timedelta(hours=90)
+app.permanent_session_lifetime = timedelta(minutes=90)
 
 # Initialize the databases
 db = SQLAlchemy(app)

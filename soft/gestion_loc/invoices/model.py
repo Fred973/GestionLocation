@@ -6,6 +6,7 @@ class InvoicesIn(db.Model):
     Invoices In Database structure:
         - id
         - fk_apartment --> foreign key with Apartments id
+        - who
         - apartment_name
         - invoice_number
         - description
@@ -14,13 +15,15 @@ class InvoicesIn(db.Model):
     """
     id = db.Column(db.Integer, primary_key=True)
     fk_apartment = db.Column(db.Integer, db.ForeignKey('apartments.id', ondelete='CASCADE'), nullable=False)
+    who = db.Column(db.String(255), nullable=False)
     apartment_name = db.Column(db.String(255), nullable=False)
     invoice_number = db.Column(db.String(255), nullable=True)
     description = db.Column(db.String(255), nullable=True)
     added_date = db.Column(db.Date, nullable=False)
     year = db.Column(db.Numeric(4, 0), nullable=False)
     price = db.Column(db.Numeric(10, 2), nullable=False)
-    file_name = db.Column(db.String(128), nullable=False)
+    tax_deductible = db.Column(db.Boolean, nullable=False)
+    file_name = db.Column(db.String(128), nullable=True)
 
     # Create a String
     def __repr__(self):

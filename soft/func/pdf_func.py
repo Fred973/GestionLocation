@@ -2,7 +2,7 @@ from fpdf import FPDF
 from soft.constant import george_json, avio_json, receipts_path, receipt_text
 from soft.constant import invoices_out_path
 from soft.func.date_func import convert_date_to_string, today_date_str, number_of_day, convert_date_string_to_isoformat
-from soft.func.various_func import create_invoice_nbr, get_apartment_data, get_apartment_name, calculate_day_nbr, \
+from soft.func.various_func import create_invoice_out_nbr, get_apartment_data, get_apartment_name, calculate_day_nbr, \
     create_receipt_nbr
 from soft.gestion_loc.apartments.model import Apartments
 from soft.gestion_loc.tenants.model import Tenants
@@ -20,6 +20,14 @@ def create_invoice_out_pdf(id_apart, date_in, date_out, due_date, price, ref_cus
     :param ref_customer:
     :return pdf file:
     """
+
+    # Get invoice nbr
+    invoice_nbr = create_invoice_out_nbr(
+        n=0,
+        apart_name=get_apartment_name(id_apart),
+        date_=date_in
+    )
+
     pdf = FPDF(
         orientation='P',
         unit='mm',
@@ -76,7 +84,7 @@ def create_invoice_out_pdf(id_apart, date_in, date_out, due_date, price, ref_cus
     x = 40
     pdf.set_font('arial', 'B', 12)
     pdf.cell(w=0, h=43, ln=1)
-    pdf.cell(x, 0, 'Ref. Client :', align='R')
+    pdf.cell(x, 0, 'N° Facture :', align='R')
     pdf.cell(x + 30, 0, 'Facturé à :', align='R')
     pdf.cell(w=0, h=7, ln=1)
     pdf.cell(x, 0, 'Date :', align='R')
@@ -86,7 +94,7 @@ def create_invoice_out_pdf(id_apart, date_in, date_out, due_date, price, ref_cus
     x_text_3 = 50
     y += 9
     pdf.set_font('arial', '', 12)
-    pdf.text(x_text_3, y, '{}'.format(ref_customer))
+    pdf.text(x_text_3, y, '{}'.format(invoice_nbr))
     pdf.text(x_text_3, y + 7, '{}'.format(today_date_str()))
     pdf.text(x_text_3, y + 14, 'du {}'.format(convert_date_to_string(date_in)))
     pdf.text(x_text_3, y + 21, 'au {}'.format(convert_date_to_string(date_out)))
@@ -143,8 +151,8 @@ def create_invoice_out_pdf(id_apart, date_in, date_out, due_date, price, ref_cus
     pdf.cell(50, 10, 'Réservation client', align='C', border=1)
     pdf.cell(140, 10, 'du {} au {}'.format(convert_date_to_string(date_in), convert_date_to_string(date_out)), align='L', border=1)
     pdf.cell(w=0, h=10, ln=1)
-    pdf.cell(50, 10, 'Référence client', align='C', border=1)
-    pdf.cell(140, 10, '{}'.format(ref_customer), align='L', border=1)
+    pdf.cell(50, 10, 'N° Facture', align='C', border=1)
+    pdf.cell(140, 10, '{}'.format(invoice_nbr), align='L', border=1)
     pdf.cell(w=0, h=10, ln=1)
     pdf.cell(50, 10, 'Date', align='C', border=1)
     pdf.cell(140, 10, '{}'.format(today_date_str()), align='L', border=1)
@@ -155,17 +163,9 @@ def create_invoice_out_pdf(id_apart, date_in, date_out, due_date, price, ref_cus
     pdf.cell(50, 10, 'RIB', align='C', border=1)
     pdf.cell(140, 10, '{}   BIC : {}'.format(george_json[0]['RIB']['account_nbr'], george_json[0]['RIB']['BIC']), align='L', border=1)
 
-    pdf.output(invoices_out_path + '/{}'.format('{}.pdf'.format(create_invoice_nbr(
-        n=0,
-        apart_name=get_apartment_name(id_apart),
-        date_=date_in
-    ))))
+    pdf.output(invoices_out_path + '/{}'.format('{}.pdf'.format(invoice_nbr)))
 
-    return '{}.pdf'.format(create_invoice_nbr(
-        n=0,
-        apart_name=get_apartment_name(id_apart),
-        date_=date_in
-    ))
+    return '{}.pdf'.format(invoice_nbr)
 
 
 def create_receipt_pdf(date_in, date_out, apartment, id_tenant):

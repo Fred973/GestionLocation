@@ -76,11 +76,19 @@ def edit_apartment(id_apart):
         form = ApartmentForm()
         apart_to_edit = Apartments.query.get_or_404(id_apart)
         if form.validate_on_submit():
+            if form.month_day.data == 'Par Jour':
+                month = False
+                day = True
+            else:
+                month = True
+                day = False
             apart_to_edit.apartment_name = form.apartment_name.data
             apart_to_edit.address = form.address.data
             apart_to_edit.zipcode = form.zipcode.data
             apart_to_edit.city = form.city.data
             apart_to_edit.rent_price = form.rent_price.data
+            apart_to_edit.month = month
+            apart_to_edit.day = day
             db.session.commit()
 
             # Clear the form
@@ -98,6 +106,11 @@ def edit_apartment(id_apart):
         form.zipcode.data = apart_to_edit.zipcode
         form.city.data = apart_to_edit.city
         form.rent_price.data = apart_to_edit.rent_price
+        if apart_to_edit.month:
+            form.month_day.data = "Par Mois"
+        else:
+            form.month_day.data = "Par Jour"
+
         return render_template(
             'gestion_loc/apartments/form_apartment.html',
             form=form,

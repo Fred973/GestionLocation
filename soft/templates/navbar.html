@@ -8,7 +8,7 @@
         <li><a href="{{ url_for('dashboard_GL') }}">Accueil</a></li>
         <li><a href="{{ url_for('apartments') }}">Appartements</a></li>
         <li><a href="{{ url_for('contracts') }}">Contrats de location</a></li>
-        <li><a href="{{ url_for('tenants') }}">Locataires</a></li>
+<!--        <li><a href="{{ url_for('tenants') }}">Locataires</a></li>-->
         <li>
             <a class="hide-mobile" href="{{ url_for('invoices') }}">Factures<span class="arrow">&#x25bc;</span></a>
             <label for="submenu-product"> Factures<span class="arrow">&#x25bc;</span></label>
@@ -19,7 +19,7 @@
                 <li><a href="{{ url_for('invoices_out') }}">Factures sortantes (AVIO)</a></li>
             </ul>
         </li>
-        <li><a href="{{ url_for('receipts') }}">Quittances</a></li>
+        <!--<li><a href="{{ url_for('receipts') }}">Quittances</a></li>-->
         {% if current_user.category == 1 %}
         <li>
             <a class="hide-mobile" href="#">Admin<span class="arrow">&#x25bc;</span></a>

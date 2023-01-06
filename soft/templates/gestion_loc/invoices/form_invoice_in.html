@@ -10,12 +10,24 @@
         <form method="post" enctype="multipart/form-data">
             <div class="form-group">
                 {{ form.hidden_tag() }}
-                
-                <select name="apartment" class="form-field form-label">
-                    {% for apart in aparts %}
-                    <option class="form-label" value="{{ apart.id }}">{{ apart.apartment_name }}</option>
-                    {% endfor %}
-                </select>
+
+                <div>
+                    <div>
+                        {{ form.who.label(class="form-label")}}
+                    </div>
+                    <div>
+                        {{ form.who(class="form-field-short form-label") }}
+                    </div>
+                </div>
+
+                <div>
+                    <div>
+                        {{ form.aparts_name.label(class="form-label")}}
+                    </div>
+                    <div>
+                        {{ form.aparts_name(class="form-field-short form-label") }}
+                    </div>
+                </div>
     
                 {{ form.invoice_number.label(class="form-label") }}
                 {{ form.invoice_number(class="form-field") }}
@@ -31,11 +43,18 @@
                 {{ form.price.label(class="form-label") }}
                 <div>
                     {{ form.price(class="form-field-short") }}
+                    {{ form.tax_deductible.label(class="form-label") }}
+                    {{ form.tax_deductible() }}
                 </div>
                 <br />
                 {{ form.file_name.label(class="form-label") }}
+                {% if edit %}
                 <div>
-                    <input type="file" name="invoice_file" accept=".pdf, .PDF">
+                    {{ form.file_name(class="form-field form-label", disabled=True) }}
+                </div>
+                {% endif %}
+                <div>
+                    <input class="form-label" type="file" name="invoice_file" accept=".pdf, .PDF, .jpg, .jpeg, .png, .gif, .bmp">
                 </div>
                 
                 <div class="center">

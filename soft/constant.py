@@ -47,3 +47,5 @@ avio_json = {
 
 receipt_text = "La présente quittance ne libère l'occupant que pour la période indiquée et annule tout reçu à valoir. Elle n'est pas libératoire des loyers ou indemnités d'occupation antérieurs impayés et est délivrée sous réserve de toutes instances judiciaires en cours."
 
+# % retenu sur compte
+amount_held_on_account = 5

@@ -37,7 +37,7 @@ def load_user(user_id):
 def login(id_choice):
         form = LoginForm()
         if form.validate_on_submit():
-            session.permanent = True  # Logout if you close navigator
+            session.permanent = False  # Logout if you close navigator
             user = Users.query.filter_by(username=form.username.data).first()
             if user:
                 # Check the hash
@@ -53,7 +53,7 @@ def login(id_choice):
                         elif id_choice == 1:
                             return redirect(url_for('dashboard_CCB'))
                         elif id_choice == 2:
-                            return redirect(url_for('experiences'))
+                            return redirect(url_for('dashboard_exp'))
                     elif session['category'] == 2 and id_choice == 1 or id_choice == 2:  # if gestion loc users try to connect to CCB11 or Experiences
                         flash("Vous n'avez pas les droits pour vous connecter ici", category='warning')
                         return redirect(url_for('index'))
