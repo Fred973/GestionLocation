@@ -15,7 +15,7 @@ class Contracts(db.Model):
     fk_apartment = db.Column(db.Integer, db.ForeignKey('apartments.id', ondelete='CASCADE'), nullable=False)
     apartment_name = db.Column(db.String(255), nullable=False, unique=True)
     contract_nbr = db.Column(db.String(255), nullable=True, unique=True)
-    file_name = db.Column(db.String(255), nullable=False, unique=True)
+    file_name = db.Column(db.String(255), nullable=False)
 
     # Create a String
     def __repr__(self):

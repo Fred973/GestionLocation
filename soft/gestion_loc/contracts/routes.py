@@ -5,7 +5,7 @@ from flask_login import login_required
 
 from soft import app, db
 from soft.constant import rental_contracts_path
-from soft.func.various_func import create_contract_nbr
+from soft.func.various_func import create_contract_nbr, compare_list
 from soft.gestion_loc.contracts.forms import ContractForm
 from soft.gestion_loc.apartments.model import Apartments
 from soft.gestion_loc.contracts.model import Contracts
@@ -33,33 +33,45 @@ def contracts():
 @app.route('/gestionLoc/Contracts/add_contract', methods=['GET', 'POST'])
 @login_required
 def add_contract():
-    try:
+    # try:
         form = ContractForm()
-        apartment_name_list = Apartments.query.all()
+        # Create apartment list for combobox
+        apartment_name_list = []
+        contracts_list = []
+        apartment_name_req = Apartments.query.all()
+        contracts_req = Contracts.query.all()
+        for i in apartment_name_req:
+            apartment_name_list.append(i.apartment_name)
+
+        for i in contracts_req:
+            contracts_list.append(i.apartment_name)
+
+        aparts_list = compare_list(apartment_name_list, contracts_list)
+
+        # Send apartment list to combobox
+        form.apartment.choices = aparts_list
 
         if request.method == "POST":
             # Get contract file name
             f = request.files['contract_file']
-            # Get apartment_name
-            apart_req = Apartments.query.get_or_404(request.form.get('apartment'))
-            tenant_req = Tenants.query.filter_by(fk_apartment=request.form.get('apartment'))
-            id_tenant = ''
-            for data in tenant_req:
-                id_tenant = data.id
+
+            # Get id apartment for fk_apartment
+            aparts_req = Apartments.query.filter_by(apartment_name=form.apartment.data)
+            apart_id = [i.id for i in aparts_req]
+
             contract_req = Contracts(
-                fk_apartment=request.form.get('apartment'),
-                apartment_name=apart_req.apartment_name,
+                fk_apartment=int(apart_id[0]),
+                apartment_name=form.apartment.data,
                 contract_nbr=create_contract_nbr(
-                    apart_name=apart_req.apartment_name,
-                    id_customer=int(id_tenant)
+                    apart_name=form.apartment.data
                 ),
-                file_name=f.filename
+                file_name=create_contract_nbr(apart_name=form.apartment.data) + ".pdf"
             )
             db.session.add(contract_req)
             db.session.commit()
 
             # Upload file to contract path
-            f.save(os.path.join(rental_contracts_path, f.filename))
+            f.save(os.path.join(rental_contracts_path, create_contract_nbr( apart_name=form.apartment.data) + ".pdf"))
 
             flash('Contrat de location ajouté !', category='success')
             return redirect(url_for('contracts'))
@@ -67,15 +79,14 @@ def add_contract():
         return render_template(
             "gestion_loc/contracts/form_contract.html",
             title='Ajouter un contrat',
-            form=form,
-            aparts = apartment_name_list
+            form=form
         )
-    except Exception as e:
-        print(e)
-        return render_template(
-            "error_404.html",
-            log=e
-        )
+    # except Exception as e:
+    #     print(e)
+    #     return render_template(
+    #         "error_404.html",
+    #         log=e
+    #     )
 
 
 @app.route('/gestion_loc/Contracts/download_contract/<int:id_contract>', methods=['GET', 'POST'])

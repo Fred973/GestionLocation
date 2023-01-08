@@ -126,8 +126,7 @@ with app.app_context():
         fk_apartment=1,
         apartment_name='7A',
         contract_nbr=create_contract_nbr(
-            apart_name='7A',
-            id_customer=1
+            apart_name='7A'
         ),
         file_name='contrat_01.pdf'
     )
@@ -136,8 +135,7 @@ with app.app_context():
         fk_apartment=2,
         apartment_name='7B',
         contract_nbr=create_contract_nbr(
-            apart_name='7B',
-            id_customer=2
+            apart_name='7B'
         ),
         file_name='contrat_02.pdf'
     )
@@ -146,8 +144,7 @@ with app.app_context():
         fk_apartment=3,
         apartment_name='10A',
         contract_nbr=create_contract_nbr(
-            apart_name='10A',
-            id_customer=3
+            apart_name='10A'
         ),
         file_name='contrat_03.pdf'
     )

@@ -133,73 +133,61 @@ def total_year_forecast_by_aparts(y: int):
     return aparts_list
 
 def total_by_benefits(y: int):
-    total_price_out = 0
+    aparts_list = [[]]
+    aparts_list_req = Apartments.query.all()
 
-    # Calculate total gross of apartment 7A
-    total_gross_7A = 0
-    day_nbr = 0
-    n_invoice_out = 0
-    invoice_req = InvoicesOut.query.filter_by(apartment_name='7A').filter_by(year=y)
-    for i in invoice_req:
-        total_price_out = 0
-        day_nbr += calculate_day_nbr(str(i.date_in), str(i.date_out))
-        total_price_out += i.price
-        n_invoice_out +=1
-    total_gross_7A += (day_nbr * total_price_out) * n_invoice_out
+    """ Calculate total 7A """
+    total_gross_out_7A = 0
+    total_invoice_in_7A = 0
 
-    # Calculate total net of apartment 7A
-    total_net_7A = 0
-    n_invoice_in = 0
-    total_price_in = 0
-    invoice_req = InvoicesIn.query.filter_by(apartment_name='7A').filter_by(year=y)
-    for i in invoice_req:
-        total_price_in += i.price
-        n_invoice_in +=1
+    # Calculate total gross 7A
+    invoice_out_7A_req = InvoicesOut.query.filter_by(apartment_name='7A').filter_by(year=y)
+    for i in invoice_out_7A_req:
+        d_nbr = 0
+        d_nbr += calculate_day_nbr(str(i.date_in), str(i.date_out))
+        total_gross_out_7A += i.price * d_nbr
 
-    total_net_7A += (total_gross_7A - total_price_in)
-    total_net_7A = total_net_7A - ((total_net_7A * amount_held_on_account)/100)
-    total_held_on_account_7A = (total_net_7A * amount_held_on_account)/100
+    # Calculate invoice in total 7A
+    invoice_in_7A_req = InvoicesIn.query.filter_by(apartment_name='7A').filter_by(year=y)
+    for i in invoice_in_7A_req:
+        total_invoice_in_7A += i.price
 
-    aparts_list = []
-    aparts_req = Apartments.query.all()
-    n = 0
-    total_out_gross_other = 0
-    total_invoice_in= 0
-    for i in aparts_req:
-        if i.apartment_name == '7A':
-            aparts_list.append(['7A (Katianne)'])
-            aparts_list[n].append('{} €'.format(str(total_net_7A)))
-            if total_held_on_account_7A <= 0:
-                aparts_list[n].append('{} €'.format(str(0)))
-            else:
-                aparts_list[n].append('{} €'.format(str(total_held_on_account_7A)))
-            n += 1
-        else:
-            invoice_out_req = InvoicesOut.query.filter_by(apartment_name=i.apartment_name).filter_by(year=y)
-            for item_out in invoice_out_req:
-                price = item_out.price
-                d_nbr = (calculate_day_nbr(str(item_out.date_in), str(item_out.date_out)))
-                total_out_gross_other += price * d_nbr
+    # Calculate total net 7A
+    total_net_7A = total_gross_out_7A - total_invoice_in_7A
 
-            invoice_in_req = InvoicesIn.query.filter_by(apartment_name=i.apartment_name).filter_by(year=y)
-            n_invoice = 0
-            total_in_other = 0
-            for item_in in invoice_in_req:
-                price = item_in.price
-                n_invoice += 1
-                total_in_other += price
+    """ Calculate total other """
+    total_gross_out_other = 0
+    total_in_other = 0
+    aparts_list_other = []
+    for i in aparts_list_req:
+        aparts_list_other.append(i.apartment_name)
 
-            total_invoice_in += (total_in_other * n_invoice)
+    aparts_list_other.remove('7A')
+    for apart in aparts_list_other:
+        # Calculate total gross other
+        invoices_out_other_req = InvoicesOut.query.filter_by(apartment_name=apart).filter_by(year=y)
+        for i in invoices_out_other_req:
+            d_nbr = 0
+            d_nbr += calculate_day_nbr(str(i.date_in), str(i.date_out))
+            total_gross_out_other += i.price * d_nbr
 
-    total_net_other = (total_out_gross_other - total_invoice_in)
-    total_net_other = total_net_other - ((total_net_other * amount_held_on_account)/100)
-    total_held_on_account_other = (total_net_other * amount_held_on_account)/100
-    aparts_list.append(['Autres (Georges)'])
-    aparts_list[1].append('{} €'.format(str(total_net_other)))
-    if total_held_on_account_other <= 0:
-        aparts_list[1].append('{} €'.format(str(0)))
-    else:
-        aparts_list[1].append('{} €'.format(str(total_held_on_account_other)))
+        # Calculate total invoices in other
+        invoices_in_other_req = InvoicesIn.query.filter_by(apartment_name=apart).filter_by(year=y)
+        for i in invoices_in_other_req:
+            total_in_other += i.price
+
+    # Calculate total net other
+    total_net_other = total_gross_out_other - total_in_other
+
+
+
+    # Made aparts_list
+    aparts_list[0].append('7A (Katianne)')
+    aparts_list[0].append(str(total_net_7A - ((total_net_7A * amount_held_on_account)/100)) + ' €')
+    aparts_list[0].append(str((total_net_7A * amount_held_on_account)/100) + ' €')
+    aparts_list.append(["Autres (Georges)"])
+    aparts_list[1].append(str(total_net_other - ((total_net_other * amount_held_on_account)/100)) + ' €')
+    aparts_list[1].append(str((total_net_other * amount_held_on_account)/100) + ' €')
 
     return aparts_list
 
@@ -230,7 +218,7 @@ def total_apart(y: int):
             n_invoice_in += 1
             total_in += item.price
 
-        total_gross += (total_out * n_invoice_out)
+        total_gross += total_out
 
         total_net_list[n].append("{} €".format(str(total_gross - total_in)))
         n += 1
@@ -276,9 +264,10 @@ def invoice_out_table_list(y: int):
             else:
                 day_nbr = calculate_day_nbr(str(item.date_in), str(item.date_out))
                 total += item.price * day_nbr
-        total_gross_ += (total * n_invoice)
+
+        total_gross_ += total
         aparts_list[n].append(str(n_invoice))
-        aparts_list[n].append("{} €".format(str(total * n_invoice)))
+        aparts_list[n].append("{} €".format(str(total)))
         n += 1
 
     return aparts_list
@@ -310,14 +299,13 @@ def create_invoice_in_nbr(apart_name, date_, id_customer=''):
     nbr = id_customer
     return 'FE-{}-{}-{}'.format(apart_name, convert_date_to_string_for_nbr(date_), nbr)
 
-def create_contract_nbr(apart_name, id_customer=''):
+def create_contract_nbr(apart_name):
     """
     :param apart_name:
-    :param id_customer:
     :return:
     """
-    nbr = id_customer
-    return 'C-{}-{}-{}'.format(apart_name, today_date(), nbr)
+
+    return 'C-{}-{}'.format(apart_name, today_datetime_sec())
 
 def create_receipt_nbr(apart_name, id_customer=''):
     """
@@ -365,3 +353,18 @@ def purge_tmp_path():
 def create_invoices_zip_name():
     zip_name = 'Factures_{}.zip'.format(today_datetime_sec())
     return str(zip_name)
+
+
+def compare_list(l1: list, l2: list):
+    """
+    compare list and return a list without same values
+    :return:
+    """
+    i = 0
+    while i < len(l1):
+        if l1[i] in l2:
+            del l1[i]
+            continue
+        i += 1
+
+    return l1

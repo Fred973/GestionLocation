@@ -95,3 +95,19 @@ def logout():
             "error_404.html",
             log=e
         )
+
+
+# Create logout page
+@app.route('/index', methods=['GET', 'POST'])
+@login_required
+def not_logged_return():
+    try:
+        session.pop("user", None)
+        session.clear()
+        return redirect(url_for('index'))
+    except Exception as e:
+        print(e)
+        return render_template(
+            "error_404.html",
+            log=e
+        )

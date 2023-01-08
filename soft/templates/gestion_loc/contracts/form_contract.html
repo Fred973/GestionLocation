@@ -6,29 +6,27 @@
 
 <div class="center">
     <h1>{{ title }}</h1>
-    <div class="card">
+    <div class="card" style="width: 30%;">
         <form method="post" enctype="multipart/form-data">
             <div class="form-group">
                 {{ form.hidden_tag() }}
-                
-                <select name="apartment" class="form-field form-label">
-                    {% for apart in aparts %}
-                    <option class="form-label" value="{{ apart.id }}">{{ apart.apartment_name }}</option>
-                    {% endfor %}
-                </select>
+                <div>
+                    {{ form.apartment.label(class="form-label") }}
+                </div>
+                <div>
+                    {{ form.apartment(class="form-field-short form-label") }}
+                </div>
                 <br />
                 {{ form.file_name.label(class="form-label") }}
                 <div style="margin-top: 5px;">
                     <input type="file" name="contract_file" accept=".pdf, .PDF">
                 </div>
-                <div class="center">
+                <div class="center" style="padding: 15px;">
                     {{ form.submit(class="btn success") }}
+                    <a class="btn default" href="{{ url_for('contracts') }}">Retour</a>
                 </div>
             </div>
         </form>
-    </div>
-    <div class="div-btn">
-        <a class="btn default" href="{{ url_for('contracts') }}">Retour</a>
     </div>
 </div>
 

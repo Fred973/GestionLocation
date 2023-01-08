@@ -28,7 +28,7 @@ app.config['SESSION_COOKIE_SAMESITE'] = "Strict"
 # Flask login stuff
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'login'
+login_manager.login_view = 'not_logged_return'
 login_manager.login_message = 'Vous devez être connecté pour accéder à la page'
 login_manager.login_message_category = 'error'
 
