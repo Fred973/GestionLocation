@@ -259,7 +259,10 @@ def invoice_in_table_list(y: int):
             nbr_invoice_in += nbr_invoice_common_in
 
         total_invoices_in_list[n].append(str(nbr_invoice_in))
-        total_invoices_in_list[n].append(str(total_invoices_in) + ' €')
+        if total_invoices_in < 0:
+            total_invoices_in_list[n].append(str(0) + ' €')
+        else:
+            total_invoices_in_list[n].append(str(total_invoices_in) + ' €')
         n += 1
 
     return total_invoices_in_list
