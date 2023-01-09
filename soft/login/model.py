@@ -19,6 +19,7 @@ class Users(db.Model, UserMixin):
     """
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(15), nullable=False, unique=True)
+    name = db.Column(db.String(15), nullable=False, unique=True)
     category = db.Column(db.Integer, nullable=False)
 
     password_hash = db.Column(db.String(128))

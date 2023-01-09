@@ -30,6 +30,7 @@
                         <tr class="header">
                             <th onclick="sortTable(0)">Id</th>
                             <th onclick="sortTable(0)">Username</th>
+                            <th onclick="sortTable(0)">Name</th>
                             <th onclick="sortTable(0)">Category</th>
                             <th style="text-align: center;">Edit</th>
                             <th style="text-align: center;">Delete</th>
@@ -37,6 +38,7 @@
                         <tr>
                             <td>{{ user.id }}</td>
                             <td>{{ user.username }}</td>
+                            <td>{{ user.name }}</td>
                             <td>{{ user.category }}</td>
                             <td style="text-align: center;">
                                 <a href="{{ url_for('edit_user', id_user=user.id) }}" class="btn info">

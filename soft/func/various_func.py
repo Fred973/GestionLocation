@@ -1,3 +1,4 @@
+import decimal
 import os
 
 from flask import render_template
@@ -33,8 +34,8 @@ def total_year_forecast(y: int):
         total_list[0].append('{} €'.format(str(total_invoices_out)))
         total_list[0].append('{} €'.format(str(total_invoices_in)))
         total_list[0].append('{} €'.format(str(total_net)))
-        total_list[0].append('{} €'.format(str(total_net - ((total_net * amount_held_on_account)/100))))
-        total_list[0].append('{} €'.format(str((total_net * amount_held_on_account)/100)))
+        total_list[0].append('{} €'.format(str(total_net - ((total_invoices_out * amount_held_on_account)/100))))
+        total_list[0].append('{} €'.format(str((total_invoices_out * amount_held_on_account)/100)))
 
         return total_list
     except Exception as e:
@@ -81,22 +82,23 @@ def total_year_forecast_by_benefits(y: int):
     for data_in_other in invoices_in_other_req:
         total_invoices_in_other += data_in_other.price
 
+    total_invoices_out_7A = decimal.Decimal(total_invoices_out_7A)
     total_net_7A = total_invoices_out_7A - total_invoices_in_7A
     aparts_list[0].append('7A (Katianne)')
     aparts_list[0].append('{} €'.format(str(total_invoices_out_7A)))
     aparts_list[0].append('{} €'.format(str(total_invoices_in_7A)))
     aparts_list[0].append('{} €'.format(str(total_net_7A)))
-    aparts_list[0].append('{} €'.format(str(total_net_7A - ((total_net_7A * amount_held_on_account)/100))))
-    aparts_list[0].append('{} €'.format(str((total_net_7A * amount_held_on_account)/100)))
+    aparts_list[0].append('{} €'.format(str(total_net_7A - ((total_invoices_out_7A * amount_held_on_account)/100))))
+    aparts_list[0].append('{} €'.format(str((total_invoices_out_7A * amount_held_on_account)/100)))
 
     # append data in aparts_list for other
-    total_net_other = total_invoices_out_other - total_invoices_in_other
+    total_net_other = decimal.Decimal(total_invoices_out_other) - decimal.Decimal(total_invoices_in_other)
     aparts_list.append(['Autres (Georges)'])
     aparts_list[1].append('{} €'.format(str(total_invoices_out_other)))
     aparts_list[1].append('{} €'.format(str(total_invoices_in_other)))
     aparts_list[1].append('{} €'.format(str(total_net_other)))
-    aparts_list[1].append('{} €'.format(str(total_net_other - ((total_net_other * amount_held_on_account)/100))))
-    aparts_list[1].append('{} €'.format(str((total_net_other * amount_held_on_account)/100)))
+    aparts_list[1].append('{} €'.format(str(total_net_other - decimal.Decimal((total_invoices_out_other * amount_held_on_account)/100))))
+    aparts_list[1].append('{} €'.format(str((total_invoices_out_other * amount_held_on_account)/100)))
 
     return aparts_list
 
@@ -121,12 +123,13 @@ def total_year_forecast_by_aparts(y: int):
         for i in invoices_in_req:
             total_invoices_in += i.price
 
+        total_invoices_out = decimal.Decimal(total_invoices_out)
         total_net = total_invoices_out - total_invoices_in
         aparts_list[n].append('{} €'.format(str(total_invoices_out)))
         aparts_list[n].append('{} €'.format(str(total_invoices_in)))
         aparts_list[n].append('{} €'.format(str(total_net)))
-        aparts_list[n].append('{} €'.format(str(total_net - ((total_net * amount_held_on_account)/100))))
-        aparts_list[n].append('{} €'.format(str((total_net * amount_held_on_account)/100)))
+        aparts_list[n].append('{} €'.format(str(total_net - ((total_invoices_out * amount_held_on_account)/100))))
+        aparts_list[n].append('{} €'.format(str((total_invoices_out * amount_held_on_account)/100)))
 
         n += 1
 
@@ -134,11 +137,15 @@ def total_year_forecast_by_aparts(y: int):
 
 def total_by_benefits(y: int):
     aparts_list = [[]]
-    aparts_list_req = Apartments.query.all()
 
     """ Calculate total 7A """
     total_gross_out_7A = 0
     total_invoice_in_7A = 0
+
+    # Get and Calculate common invoice apartment 7
+    invoice_in_common_req = InvoicesIn.query.filter_by(common_invoice=True).filter_by(year=y)
+    for i in invoice_in_common_req:
+        pass
 
     # Calculate total gross 7A
     invoice_out_7A_req = InvoicesOut.query.filter_by(apartment_name='7A').filter_by(year=y)
@@ -155,39 +162,33 @@ def total_by_benefits(y: int):
     # Calculate total net 7A
     total_net_7A = total_gross_out_7A - total_invoice_in_7A
 
-    """ Calculate total other """
-    total_gross_out_other = 0
-    total_in_other = 0
-    aparts_list_other = []
-    for i in aparts_list_req:
-        aparts_list_other.append(i.apartment_name)
+    """ Calculate total 7B """
+    total_gross_out_7B = 0
+    total_in_7B = 0
+    # Calculate total gross 7B
+    invoices_out_7B_req = InvoicesOut.query.filter_by(apartment_name='7B').filter_by(year=y)
+    for i in invoices_out_7B_req:
+        d_nbr = 0
+        d_nbr += calculate_day_nbr(str(i.date_in), str(i.date_out))
+        total_gross_out_7B += i.price * d_nbr
 
-    aparts_list_other.remove('7A')
-    for apart in aparts_list_other:
-        # Calculate total gross other
-        invoices_out_other_req = InvoicesOut.query.filter_by(apartment_name=apart).filter_by(year=y)
-        for i in invoices_out_other_req:
-            d_nbr = 0
-            d_nbr += calculate_day_nbr(str(i.date_in), str(i.date_out))
-            total_gross_out_other += i.price * d_nbr
+    # Calculate total invoices in 7B
+    invoices_in_7B_req = InvoicesIn.query.filter_by(apartment_name='7B').filter_by(year=y)
+    for i in invoices_in_7B_req:
+        total_in_7B += i.price
 
-        # Calculate total invoices in other
-        invoices_in_other_req = InvoicesIn.query.filter_by(apartment_name=apart).filter_by(year=y)
-        for i in invoices_in_other_req:
-            total_in_other += i.price
-
-    # Calculate total net other
-    total_net_other = total_gross_out_other - total_in_other
+    # Calculate total net 7B
+    total_net_7B = total_gross_out_7B - total_in_7B
 
 
 
     # Made aparts_list
     aparts_list[0].append('7A (Katianne)')
-    aparts_list[0].append(str(total_net_7A - ((total_net_7A * amount_held_on_account)/100)) + ' €')
-    aparts_list[0].append(str((total_net_7A * amount_held_on_account)/100) + ' €')
-    aparts_list.append(["Autres (Georges)"])
-    aparts_list[1].append(str(total_net_other - ((total_net_other * amount_held_on_account)/100)) + ' €')
-    aparts_list[1].append(str((total_net_other * amount_held_on_account)/100) + ' €')
+    aparts_list[0].append(str(total_net_7A - ((total_gross_out_7A * amount_held_on_account)/100)) + ' €')
+    aparts_list[0].append(str((total_gross_out_7A * amount_held_on_account)/100) + ' €')
+    aparts_list.append(["7B (Georges)"])
+    aparts_list[1].append(str(total_net_7B - ((total_gross_out_7B * amount_held_on_account)/100)) + ' €')
+    aparts_list[1].append(str((total_gross_out_7B * amount_held_on_account)/100) + ' €')
 
     return aparts_list
 
@@ -226,24 +227,42 @@ def total_apart(y: int):
     return total_net_list
 
 def invoice_in_table_list(y: int):
-    aparts_list = []
-    aparts_req = Apartments.query.all()
+    total_invoices_in_list = []
 
-    # Get aparts name list
+    # Calculate total common invoices
+    total_invoice_common_in = 0
+    nbr_invoice_common_in = 0
+    invoices_in_req = InvoicesIn.query.filter_by(year=y)
+    for i in invoices_in_req:
+        if i.common_invoice:
+            total_invoice_common_in += i.price
+            nbr_invoice_common_in += 1
+
+    # Made the [aparts_list]
     n = 0
-    for i in aparts_req:
-        aparts_list.append([i.apartment_name])
-        n_invoice = 0
-        total = 0
-        invoice_req = InvoicesIn.query.filter_by(apartment_name=i.apartment_name).filter_by(year=y)
-        for item in invoice_req:
-            n_invoice += 1
-            total += item.price
-        aparts_list[n].append(str(n_invoice))
-        aparts_list[n].append("{} €".format(str(total)))
+    aparts_list_req = Apartments.query.all()
+    for apart in aparts_list_req:
+        total_invoices_in_list.append([apart.apartment_name])
+        invoice_in_req = InvoicesIn.query.filter_by(apartment_name=apart.apartment_name).filter_by(year=y)
+        nbr_invoice_in = 0
+        total_invoices_in = 0
+        for i in invoice_in_req:
+            if i.common_invoice is not True:  # Not a common invoice
+                nbr_invoice_in += 1
+                total_invoices_in += i.price
+
+        if apart.apartment_name == '7A':  # Common invoice
+            total_invoices_in += total_invoice_common_in / 2
+            nbr_invoice_in += nbr_invoice_common_in
+        elif apart.apartment_name == '7B':
+            total_invoices_in += total_invoice_common_in / 2
+            nbr_invoice_in += nbr_invoice_common_in
+
+        total_invoices_in_list[n].append(str(nbr_invoice_in))
+        total_invoices_in_list[n].append(str(total_invoices_in) + ' €')
         n += 1
 
-    return aparts_list
+    return total_invoices_in_list
 
 def invoice_out_table_list(y: int):
     aparts_list = []

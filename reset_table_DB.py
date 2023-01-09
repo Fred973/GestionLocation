@@ -14,23 +14,24 @@ with app.app_context():
     db.create_all()
 
     # Delete all files in folders : invoices, rental_contracts, receipts
-    for f in os.listdir(invoices_in_path):
-        if f:
-            os.remove(os.path.join(invoices_in_path, f))
-    for f in os.listdir(invoices_out_path):
-        if f:
-            os.remove(os.path.join(invoices_out_path, f))
-    for f in os.listdir(rental_contracts_path):
-        if f:
-            os.remove(os.path.join(rental_contracts_path, f))
-    for f in os.listdir(receipts_path):
-        if f:
-            os.remove(os.path.join(receipts_path, f))
+    # for f in os.listdir(invoices_in_path):
+    #     if f:
+    #         os.remove(os.path.join(invoices_in_path, f))
+    # for f in os.listdir(invoices_out_path):
+    #     if f:
+    #         os.remove(os.path.join(invoices_out_path, f))
+    # for f in os.listdir(rental_contracts_path):
+    #     if f:
+    #         os.remove(os.path.join(rental_contracts_path, f))
+    # for f in os.listdir(receipts_path):
+    #     if f:
+    #         os.remove(os.path.join(receipts_path, f))
 
     # Users Table
     user_1 = Users(
     id=1,
     username='fred',
+    name="Katianne",
     category=1,
     password_hash='sha256$uvPHv3uhXGtYRt0h$5090871eb4c28b38128af516a3d5c1a4611a81babf273529076e5e1aadc7dc6b'
 
@@ -38,6 +39,7 @@ with app.app_context():
     user_2 = Users(
     id=2,
     username='jojo',
+    name="Georges",
     category=2,
     password_hash='sha256$uvPHv3uhXGtYRt0h$5090871eb4c28b38128af516a3d5c1a4611a81babf273529076e5e1aadc7dc6b'
 
@@ -153,9 +155,9 @@ with app.app_context():
     db.session.add(contract_03)
     db.session.commit()
     # Copy contract files to directory
-    src_path = os.path.abspath(os.path.dirname(__file__)) + '/default_files_src'
-    try:
-        for f in os.listdir(src_path):
-            shutil.copy2(src_path + '/' + f, rental_contracts_path + '/' + f)
-    except:
-        pass
+    # src_path = os.path.abspath(os.path.dirname(__file__)) + '/default_files_src'
+    # try:
+    #     for f in os.listdir(src_path):
+    #         shutil.copy2(src_path + '/' + f, rental_contracts_path + '/' + f)
+    # except:
+    #     pass

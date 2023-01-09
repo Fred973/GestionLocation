@@ -23,6 +23,7 @@ class InvoicesIn(db.Model):
     year = db.Column(db.Numeric(4, 0), nullable=False)
     price = db.Column(db.Numeric(10, 2), nullable=False)
     tax_deductible = db.Column(db.Boolean, nullable=False)
+    common_invoice = db.Column(db.Boolean, nullable=False)
     file_name = db.Column(db.String(128), nullable=True)
 
     # Create a String

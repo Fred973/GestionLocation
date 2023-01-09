@@ -12,7 +12,6 @@ class InvoiceInForm(FlaskForm):
         - file_name
     """
 
-    who = SelectField("Qui", choices=['Georges', 'Katianne'], validators=[DataRequired()])
     aparts_name = SelectField("Appartement", choices=[], validators=[DataRequired()])
     invoice_number = StringField("N° de facture (si existant)")
     description = StringField("Description", validators=[DataRequired()])
@@ -20,6 +19,7 @@ class InvoiceInForm(FlaskForm):
     file_name = StringField("Facture")
     price = DecimalField("Somme", places=2, validators=[DataRequired()])
     tax_deductible = BooleanField("Déductible ? (oui si coché)")
+    common_invoice = BooleanField("Facture commune ? (Uniquement pour le 7 !)")
     submit = SubmitField("Valider")
 
 

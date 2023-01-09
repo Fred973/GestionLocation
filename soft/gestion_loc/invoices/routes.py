@@ -18,6 +18,7 @@ from soft.gestion_loc.invoices.forms import InvoiceInForm, InvoiceOutForm, YearF
 from soft.gestion_loc.apartments.model import Apartments
 from soft.gestion_loc.tenants.model import Tenants
 from soft.gestion_loc.invoices.model import InvoicesIn, InvoicesOut
+from soft.login.model import Users
 
 
 @app.route('/gestion_loc/Invoices', methods=['GET', 'POST'])
@@ -87,21 +88,31 @@ def add_invoice_in():
                 file_to_upload = ""
 
             # Get apartment data
-            req = Apartments.query.filter_by(apartment_name=form.aparts_name.data)
             id_apart = ""
             apartment_name = ""
+            req = Apartments.query.filter_by(apartment_name=form.aparts_name.data)
             for i in req:
                 apartment_name = i.apartment_name
                 id_apart = i.id
 
+            if form.common_invoice.data:
+                apartment_name = '7'
+
+            # Get name for who from DB user
+            who_name = ''
+            who_name_req = Users.query.filter_by(username=session['user'])
+            for name in who_name_req:
+                who_name = name.name
+
             invoice_req = InvoicesIn(
                 fk_apartment=id_apart,
-                who=form.who.data,
+                who=who_name,
                 apartment_name=apartment_name,
                 invoice_number=form.invoice_number.data,
                 description=form.description.data,
                 added_date=form.added_date.data,
                 tax_deductible=form.tax_deductible.data,
+                common_invoice=form.common_invoice.data,
                 price=form.price.data,
                 year=int(convert_to_year(form.added_date.data)),
                 file_name=file_to_upload
@@ -160,7 +171,15 @@ def edit_invoice_in(id_invoice):
                     db.session.commit()
                     db.session.close()
 
-            invoice_in_to_edit.who = form.who.data
+
+            # Get name for who from DB user
+            who_name = ''
+            who_name_req = Users.query.filter_by(username=session['user'])
+            for name in who_name_req:
+                who_name = name.name
+
+            invoice_in_to_edit.common_invoice = form.common_invoice.data
+            invoice_in_to_edit.who = who_name
             invoice_in_to_edit.apart_name = form.aparts_name.data
             invoice_in_to_edit.invoice_number = form.invoice_number.data
             if form.added_date.data != "":
@@ -174,10 +193,9 @@ def edit_invoice_in(id_invoice):
             return redirect(url_for('invoices_in'))
 
         form.aparts_name.choices = get_apartment_name_list()
-        form.who.data = invoice_in_to_edit.who
+        form.common_invoice.data = invoice_in_to_edit.common_invoice
         form.invoice_number.data = invoice_in_to_edit.invoice_number
         form.description.data = invoice_in_to_edit.description
-        # form.added_date.default = datetime.date.today().strftime("%d/%m/%YY")
         form.price.data = invoice_in_to_edit.price
         form.tax_deductible.data = invoice_in_to_edit.tax_deductible
         if invoice_in_to_edit.file_name is not None:
@@ -304,6 +322,7 @@ def add_invoice_out():
                 ref_customer=form.ref_customer.data
             )
             # return send_from_directory(invoices_out_path, file)
+            flash(f"La facture pour l'appartement {req.apartment_name} a bien été ajouté", category='success')
             return redirect(url_for('invoices_out'))
 
         return render_template(
