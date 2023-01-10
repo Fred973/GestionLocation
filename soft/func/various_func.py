@@ -1,6 +1,5 @@
 import decimal
 import os
-
 from flask import render_template
 from soft.constant import avio_json, amount_held_on_account, tmp_path
 from soft.func.date_func import today_date, convert_date_to_string_for_nbr, number_of_day, \
@@ -160,7 +159,7 @@ def total_by_benefits(y: int):
         total_invoice_in_7A += i.price
 
     # Calculate total net 7A
-    total_net_7A = total_gross_out_7A - total_invoice_in_7A
+    (total_net_7A) = decimal.Decimal(total_gross_out_7A - total_invoice_in_7A)
 
     """ Calculate total 7B """
     total_gross_out_7B = 0
@@ -178,9 +177,11 @@ def total_by_benefits(y: int):
         total_in_7B += i.price
 
     # Calculate total net 7B
-    total_net_7B = total_gross_out_7B - total_in_7B
+    total_net_7B = decimal.Decimal(total_gross_out_7B - total_in_7B)
 
-
+    # Convert to decimal
+    total_gross_out_7A = decimal.Decimal(total_gross_out_7A)
+    total_gross_out_7B = decimal.Decimal(total_gross_out_7B)
 
     # Made aparts_list
     aparts_list[0].append('7A (Katianne)')
@@ -259,10 +260,10 @@ def invoice_in_table_list(y: int):
             nbr_invoice_in += nbr_invoice_common_in
 
         total_invoices_in_list[n].append(str(nbr_invoice_in))
-        if total_invoices_in < 0:
-            total_invoices_in_list[n].append(str(0) + ' €')
-        else:
-            total_invoices_in_list[n].append(str(total_invoices_in) + ' €')
+        # if total_invoices_in < 0:
+        #     total_invoices_in_list[n].append(str(0) + ' €')
+        # else:
+        total_invoices_in_list[n].append(str(total_invoices_in) + ' €')
         n += 1
 
     return total_invoices_in_list
