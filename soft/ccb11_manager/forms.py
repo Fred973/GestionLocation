@@ -30,6 +30,7 @@ class TaskForm(FlaskForm):
     closed_date = DateField("Closure Date", )
     remarks = StringField("Remarks", widget=TextArea())
     status = SelectField("Status", choices=['Opened', 'Closed', 'Cancelled'], validators=[DataRequired()])
+    filename = StringField("Attached files")
     submit = SubmitField("Validate")
 
 class TableSaveForm(FlaskForm):

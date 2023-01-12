@@ -67,6 +67,11 @@
                 <div class="center">
                     {{ form.submit(class="btn success") }}
                 </div>
+                <br />
+                {{ form.filename.label(class="form-label") }}
+                <div style="margin-top: 5px;">
+                    <input type="file" name="attached_files" multiple>
+                </div>
             </div>
         </form>
     </div>

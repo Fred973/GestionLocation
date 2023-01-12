@@ -22,5 +22,22 @@ class Tasks(db.Model):
     remarks = db.Column(db.Text, nullable=True)
     status = db.Column(db.String(255), nullable=False)
 
+    filenames = db.relationship('TasksFilename', backref='tasks', passive_deletes=True)
+
     def __repr__(self):
         return '<Tasks %r>' % self.id
+
+
+class TasksFilename(db.Model):
+    """
+    TasksFilename Database structure:
+        - id
+        - fk_task
+        - filename
+    """
+    id = db.Column(db.Integer, primary_key=True)
+    fk_task = db.Column(db.Integer, db.ForeignKey('tasks.id', ondelete='CASCADE'), nullable=False)
+    filename = db.Column(db.String(255), nullable=True)
+
+    def __repr__(self):
+        return '<TasksFilename %r>' % self.filename

@@ -1,8 +1,13 @@
+import os
+import shutil
+
 from flask_login import login_required, current_user
 from soft import app, db
 from flask import render_template, session, redirect, request, url_for, flash
 from soft.ccb11_manager.forms import TaskForm
-from soft.ccb11_manager.model import Tasks
+from soft.ccb11_manager.model import Tasks, TasksFilename
+from soft.constant import tasks_files_path
+from soft.func.various_func import create_task_files_folder
 from soft.login.model import Users
 
 
@@ -77,6 +82,24 @@ def add_task():
         db.session.add(task_req)
         db.session.commit()
 
+        # Record file if exists
+        file_list = request.files.getlist('attached_files')
+        if file_list:
+            # upload file to folder
+            task_folder = create_task_files_folder(
+                id_task=task_req.id,
+                added_date=task_req.added_date
+            )
+            for file in file_list:
+                file.save(os.path.join(tasks_files_path + task_folder + '/' + file.filename))
+                # Update the tasks Table in filename
+                tasks_filename_req = TasksFilename(
+                    fk_task=task_req.id,
+                    filename=file.filename
+                )
+                db.session.add(tasks_filename_req)
+                db.session.commit()
+
         flash('The task is added successfully !', category='success')
         return redirect(url_for('tasks'))
 
@@ -104,6 +127,24 @@ def edit_task(id_task):
         task_to_edit.status = form.status.data
         db.session.commit()
 
+        # Record file(s) if exists
+        file_list = request.files.getlist('attached_files')
+        if file_list:
+            # upload file to folder
+            task_folder = create_task_files_folder(
+                id_task=task_to_edit.id,
+                added_date=task_to_edit.added_date
+            )
+            for file in file_list:
+                file.save(os.path.join(tasks_files_path + task_folder + '/' + file.filename))
+                # Update the tasks Table in filename
+                tasks_filename_req = TasksFilename(
+                    fk_task=task_to_edit.id,
+                    filename=file.filename
+                )
+                db.session.add(tasks_filename_req)
+                db.session.commit()
+
         flash('The task was updated successfully !', category='success')
         return redirect(url_for('tasks'))
 
@@ -125,8 +166,29 @@ def edit_task(id_task):
 @app.route('/CCB11/DeleteTasks<int:id_task>', methods=['GET', 'POST'])
 @login_required
 def delete_task(id_task):
-    task_to_delete = Tasks.query.get_or_404(id_task)
-    db.session.delete(task_to_delete)
-    db.session.commit()
-    flash('The task was deleteed successfully !', category='success')
-    return redirect(request.referrer)
+    try:
+        task_to_delete = Tasks.query.get_or_404(id_task)
+
+        # Delete file(s) in folder
+        task_folder = create_task_files_folder(
+                id_task=task_to_delete.id,
+                added_date=task_to_delete.added_date
+            )
+        try:
+            shutil.rmtree(tasks_files_path + task_folder)
+        except Exception as e:
+            flash(f"There was a problem during file delete :\n {e}")
+
+        # Delete table entry
+        db.session.delete(task_to_delete)
+        db.session.commit()
+
+        flash('The task was deleted successfully !', category='success')
+        return redirect(request.referrer)
+
+    except Exception as e:
+        print(e)
+        return render_template(
+            "error_404.html",
+            log=e
+        )

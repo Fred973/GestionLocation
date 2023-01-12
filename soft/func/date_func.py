@@ -58,3 +58,6 @@ def convert_to_year(date_):
     locale.setlocale(locale.LC_TIME,'')
     d_in = datetime.strptime(date_, '%Y-%m-%d')
     return str(datetime.strftime(d_in, '%Y'))
+
+def convert_date_format_to_date_string(date_):
+    return str(datetime.strftime(date_, "%y-%m-%d"))

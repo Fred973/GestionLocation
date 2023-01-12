@@ -1,9 +1,9 @@
 import decimal
 import os
 from flask import render_template
-from soft.constant import avio_json, amount_held_on_account, tmp_path
+from soft.constant import avio_json, amount_held_on_account, tmp_path, tasks_files_path
 from soft.func.date_func import today_date, convert_date_to_string_for_nbr, number_of_day, \
-    convert_date_string_to_isoformat, today_datetime_sec
+    convert_date_string_to_isoformat, today_datetime_sec, convert_date_format_to_date_string
 from soft.gestion_loc.apartments.model import Apartments
 from soft.gestion_loc.invoices.model import InvoicesOut, InvoicesIn
 
@@ -391,3 +391,13 @@ def compare_list(l1: list, l2: list):
         i += 1
 
     return l1
+
+def create_task_files_folder(id_task: int, added_date):
+    # Create folder name string
+    folder_name = f'{convert_date_format_to_date_string(added_date)}-ID{str(id_task)}'
+    # Create folder
+    try:
+        os.mkdir(os.path.join(tasks_files_path, folder_name))
+    except FileExistsError:
+        pass
+    return folder_name
