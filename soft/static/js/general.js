@@ -9,3 +9,8 @@ $(function () {
         }
     });
 });
+
+
+function getRow() {
+    console.log('test')
+}

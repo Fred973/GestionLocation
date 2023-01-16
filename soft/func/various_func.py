@@ -312,15 +312,14 @@ def create_invoice_out_nbr(n, apart_name, date_, id_customer=''):
         nbr = id_customer
         return 'FS-{}-{}-{}'.format(apart_name, convert_date_to_string_for_nbr(date_), nbr)
 
-def create_invoice_in_nbr(apart_name, date_, id_customer=''):
+def create_invoice_in_nbr(apart_name, id_user, id_invoice_in):
     """
-    :param date_:
+    :param id_invoice_in:
+    :param id_user:
     :param apart_name:
-    :param id_customer:
     :return:
     """
-    nbr = id_customer
-    return 'FE-{}-{}-{}'.format(apart_name, convert_date_to_string_for_nbr(date_), nbr)
+    return 'FE-{}-{}-{}-{}'.format(apart_name, today_datetime_sec(), id_user, id_invoice_in)
 
 def create_contract_nbr(apart_name):
     """

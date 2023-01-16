@@ -13,7 +13,7 @@ class InvoiceInForm(FlaskForm):
     """
 
     aparts_name = SelectField("Appartement", choices=[], validators=[DataRequired()])
-    invoice_number = StringField("N° de facture (si existant)")
+    ref_invoice = StringField("N° de facture (si existant)")
     description = StringField("Description", validators=[DataRequired()])
     added_date = StringField("Date", validators=[DataRequired()])
     file_name = StringField("Facture")

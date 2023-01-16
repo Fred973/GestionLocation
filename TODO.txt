@@ -6,3 +6,9 @@ TODO handle February 28 or 29 days for invoices
 TODO séparer impots apart 7 et 12
 
 TODO voir taxe foncière, facture eau et elec
+
+TODO ajouter nom fichier invoices in
+
+
+TODO voir pour correction taille octet image et transformer en pdf
+

@@ -4,7 +4,7 @@ import shutil
 import zipfile
 
 from flask import render_template, request, flash, redirect, url_for, send_from_directory, session
-from flask_login import login_required
+from flask_login import login_required, current_user
 from soft import app, db
 from soft.constant import invoices_in_path, avio_json, invoices_out_path, amount_held_on_account, tmp_path, \
     invoices_out_zip_path
@@ -13,7 +13,8 @@ from soft.func.pdf_func import create_invoice_out_pdf
 from soft.func.various_func import create_invoice_out_nbr, get_apartment_name, calculate_day_nbr, \
     invoice_out_table_list, \
     invoice_in_table_list, total_apart, total_by_benefits, total_year_forecast_by_benefits, total_year_forecast, \
-    total_year_forecast_by_aparts, get_apartment_name_list, mager_dicts, purge_tmp_path, create_invoices_zip_name
+    total_year_forecast_by_aparts, get_apartment_name_list, mager_dicts, purge_tmp_path, create_invoices_zip_name, \
+    create_invoice_in_nbr
 from soft.gestion_loc.invoices.forms import InvoiceInForm, InvoiceOutForm, YearForm, DateSelectForm, AllInvoicesOutForm
 from soft.gestion_loc.apartments.model import Apartments
 from soft.gestion_loc.tenants.model import Tenants
@@ -108,8 +109,8 @@ def add_invoice_in():
                 fk_apartment=id_apart,
                 who=who_name,
                 apartment_name=apartment_name,
-                invoice_number=form.invoice_number.data,
                 description=form.description.data,
+                ref_invoice=form.ref_invoice.data,
                 added_date=form.added_date.data,
                 tax_deductible=form.tax_deductible.data,
                 common_invoice=form.common_invoice.data,
@@ -121,9 +122,22 @@ def add_invoice_in():
             db.session.commit()
 
             try:
+                # Create invoice_in_nbr and file name
+                invoice_in_name = create_invoice_in_nbr(
+                    apart_name=apartment_name,
+                    id_user=current_user.id,
+                    id_invoice_in=invoice_req.id
+                )
+
                 # Upload file to contract path
                 f = request.files['invoice_file']
                 f.save(os.path.join(invoices_in_path, f.filename))
+
+                # Update DB invoice_in_nbr and filename
+                # TODO add record of filename
+                invoice_req.invoice_number = invoice_in_name
+                db.session.commit()
+
             except IsADirectoryError:
                 flash("Vous n'avez pas télécharger de facture", category="info")
 
@@ -161,15 +175,15 @@ def edit_invoice_in(id_invoice):
                     try:
                         # Delete old file
                         os.remove(invoices_in_path + "/" + invoice_in_to_edit.file_name)
+                        # Record new file
+                        f = request.files['invoice_file']
+                        f.save(os.path.join(invoices_in_path, f.filename))
+                        # Record data in DB
+                        invoice_in_to_edit.file_name = request.files['invoice_file'].filename
+                        db.session.commit()
+                        db.session.close()
                     except IsADirectoryError:
                         pass
-                    # Record new file
-                    f = request.files['invoice_file']
-                    f.save(os.path.join(invoices_in_path, f.filename))
-                    # Record data in DB
-                    invoice_in_to_edit.file_name = request.files['invoice_file'].filename
-                    db.session.commit()
-                    db.session.close()
 
 
             # Get name for who from DB user
@@ -181,7 +195,7 @@ def edit_invoice_in(id_invoice):
             invoice_in_to_edit.common_invoice = form.common_invoice.data
             invoice_in_to_edit.who = who_name
             invoice_in_to_edit.apart_name = form.aparts_name.data
-            invoice_in_to_edit.invoice_number = form.invoice_number.data
+            invoice_in_to_edit.ref_invoice = form.ref_invoice.data
             if form.added_date.data != "":
                 invoice_in_to_edit.added_date = form.added_date.data
             invoice_in_to_edit.price = form.price.data
@@ -194,7 +208,7 @@ def edit_invoice_in(id_invoice):
 
         form.aparts_name.choices = get_apartment_name_list()
         form.common_invoice.data = invoice_in_to_edit.common_invoice
-        form.invoice_number.data = invoice_in_to_edit.invoice_number
+        form.ref_invoice.data = invoice_in_to_edit.ref_invoice
         form.description.data = invoice_in_to_edit.description
         form.price.data = invoice_in_to_edit.price
         form.tax_deductible.data = invoice_in_to_edit.tax_deductible
@@ -283,6 +297,19 @@ def add_invoice_out():
         if request.method == 'POST':  # For Avio invoice
             # Get apartment_name
             req = Apartments.query.get_or_404(request.form.get('apartment'))
+
+            # Check if invoice already exists
+            invoice_nbr = create_invoice_out_nbr(
+                    n=0,
+                    apart_name=get_apartment_name(request.form.get('apartment')),
+                    date_=request.form.get('due_date')
+                )
+            invoice_out_req = InvoicesOut.query.all()
+            for i in invoice_out_req:
+                if invoice_nbr in i.invoice_number:
+                    flash('Cette facture existe déjà !', category='warning')
+                    return redirect(url_for('invoices_out'))
+
             # Record in DB invoice_out
             invoice_req = InvoicesOut(
                 fk_apartment=request.form.get('apartment'),
@@ -292,11 +319,7 @@ def add_invoice_out():
                 address=avio_json['address'],
                 zipcode=avio_json['zipcode'],
                 city=avio_json['city'],
-                invoice_number=create_invoice_out_nbr(
-                    n=0,
-                    apart_name=get_apartment_name(request.form.get('apartment')),
-                    date_=request.form.get('due_date')
-                ),
+                invoice_number=invoice_nbr,
                 added_date=datetime.date.today(),
                 date_in=convert_date_string_to_isoformat(form.date_in.data),
                 date_out=convert_date_string_to_isoformat(form.date_out.data),

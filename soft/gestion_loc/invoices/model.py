@@ -18,6 +18,7 @@ class InvoicesIn(db.Model):
     who = db.Column(db.String(255), nullable=False)
     apartment_name = db.Column(db.String(255), nullable=False)
     invoice_number = db.Column(db.String(255), nullable=True)
+    ref_invoice = db.Column(db.String(255), nullable=True)
     description = db.Column(db.String(255), nullable=True)
     added_date = db.Column(db.Date, nullable=False)
     year = db.Column(db.Numeric(4, 0), nullable=False)

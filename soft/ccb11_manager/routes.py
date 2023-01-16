@@ -84,7 +84,7 @@ def add_task():
 
         # Record file if exists
         file_list = request.files.getlist('attached_files')
-        if file_list:
+        if file_list[0].filename:
             # upload file to folder
             task_folder = create_task_files_folder(
                 id_task=task_req.id,
@@ -128,22 +128,25 @@ def edit_task(id_task):
         db.session.commit()
 
         # Record file(s) if exists
-        file_list = request.files.getlist('attached_files')
-        if file_list:
-            # upload file to folder
-            task_folder = create_task_files_folder(
-                id_task=task_to_edit.id,
-                added_date=task_to_edit.added_date
-            )
-            for file in file_list:
-                file.save(os.path.join(tasks_files_path + task_folder + '/' + file.filename))
-                # Update the tasks Table in filename
-                tasks_filename_req = TasksFilename(
-                    fk_task=task_to_edit.id,
-                    filename=file.filename
+        try:
+            file_list = request.files.getlist('attached_files')
+            if file_list:
+                # upload file to folder
+                task_folder = create_task_files_folder(
+                    id_task=task_to_edit.id,
+                    added_date=task_to_edit.added_date
                 )
-                db.session.add(tasks_filename_req)
-                db.session.commit()
+                for file in file_list:
+                    file.save(os.path.join(tasks_files_path + task_folder + '/' + file.filename))
+                    # Update the tasks Table in filename
+                    tasks_filename_req = TasksFilename(
+                        fk_task=task_to_edit.id,
+                        filename=file.filename
+                    )
+                    db.session.add(tasks_filename_req)
+                    db.session.commit()
+        except IsADirectoryError:
+            pass
 
         flash('The task was updated successfully !', category='success')
         return redirect(url_for('tasks'))

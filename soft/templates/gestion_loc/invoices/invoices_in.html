@@ -18,6 +18,7 @@
                 <th onclick="sortTable(0)">Appart.</th>
                 <th onclick="sortTable(0)">Qui</th>
                 <th onclick="sortTable(0)">N° de Facture</th>
+                <th onclick="sortTable(0)">Ref. de Facture</th>
                 <th onclick="sortTable(0)">Description</th>
                 <th onclick="sortTable(0)">Date</th>
                 <th onclick="sortTable(0)">Facture</th>
@@ -37,6 +38,7 @@
                 {% endif %}
                 <td>{{ invoice.who }}</td>
                 <td>{{ invoice.invoice_number }}</td>
+                <td>{{ invoice.ref_invoice }}</td>
                 <td>{{ invoice.description }}</td>
                 <td>{{ invoice.added_date }}</td>
                 {% if invoice.file_name == "" %}
