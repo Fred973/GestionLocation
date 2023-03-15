@@ -342,6 +342,7 @@ def create_receipt_nbr(apart_name, id_customer=''):
 
 def get_apartment_data(id_):
     apart_req = Apartments.query.get_or_404(id_)
+    print(apart_req.address)
     return [apart_req.address, str(apart_req.zipcode), apart_req.city]
 
 def get_apartment_name(id_):

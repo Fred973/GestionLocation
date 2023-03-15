@@ -26,15 +26,14 @@ class InvoiceInForm(FlaskForm):
 class InvoiceOutForm(FlaskForm):
     """
     Invoice Out form structure:
+        - apartment_name
         - ref_customer
-        - name
-        - address
-        - zipcode
-        - city
-        - phone
-        - email
+        - date_in
+        - date_out
+        - due_date
         - price
     """
+    apartment_name = SelectField("Appartement", choices=[], validators=[DataRequired()])
     ref_customer = StringField("Référence Client")
     date_in = StringField("Date de début *")
     date_out = StringField("Date de fin *")

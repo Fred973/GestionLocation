@@ -10,13 +10,14 @@
         <form method="post" enctype="multipart/form-data">
             <div class="form-group">
                 {{ form.hidden_tag() }}
-                <select name="apartment" class="form-field form-label">
-                    {% for apart in aparts %}
-                    <option class="form-label" value="{{ apart.id }}">{{ apart.apartment_name }}</option>
-                    {% endfor %}
-                </select>
-                
                 <div>
+                    <div>
+                        {{ form.apartment_name.label(class="form-label") }}
+                    </div>
+                    <div>
+                        {{ form.apartment_name(class="form-field-short form-label") }}
+                    </div>
+                    <br>
                     {{ form.ref_customer.label(class="form-label") }}
                     {{ form.ref_customer(class="form-field") }}
                     <br />

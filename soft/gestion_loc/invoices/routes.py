@@ -291,20 +291,28 @@ def invoices_out():
 @login_required
 def add_invoice_out():
     try:
+        apartment_name_list = []
         form = InvoiceOutForm()
-        apartment_name_list = Apartments.query.all()
-        tenants_list = Tenants.query.all()
+        apartment_list = Apartments.query.all()
+        for i in apartment_list:
+            apartment_name_list.append(i.apartment_name)
+
         if request.method == 'POST':  # For Avio invoice
             # Get apartment_name
-            req = Apartments.query.get_or_404(request.form.get('apartment'))
+            apartment_data = []
+            apartment_req = Apartments.query.filter_by(apartment_name=form.apartment_name.data)
+            invoice_out_req = InvoicesOut.query.all()
+            for i in apartment_req:
+                apartment_data.append(i.apartment_name)     # 0
+                apartment_data.append(i.rent_price)         # 1
+                apartment_data.append(i.id)                 # 2
 
             # Check if invoice already exists
             invoice_nbr = create_invoice_out_nbr(
                     n=0,
-                    apart_name=get_apartment_name(request.form.get('apartment')),
+                    apart_name=apartment_data[0],
                     date_=request.form.get('due_date')
                 )
-            invoice_out_req = InvoicesOut.query.all()
             for i in invoice_out_req:
                 if invoice_nbr in i.invoice_number:
                     flash('Cette facture existe déjà !', category='warning')
@@ -312,8 +320,8 @@ def add_invoice_out():
 
             # Record in DB invoice_out
             invoice_req = InvoicesOut(
-                fk_apartment=request.form.get('apartment'),
-                apartment_name=req.apartment_name,
+                fk_apartment=apartment_data[2],
+                apartment_name=apartment_data[0],
                 ref_customer=form.ref_customer.data,
                 name=avio_json['name'],
                 address=avio_json['address'],
@@ -326,33 +334,33 @@ def add_invoice_out():
                 due_date=convert_date_string_to_isoformat(form.due_date.data),
                 year=int(convert_to_year(request.form.get('date_in'))),
                 month=convert_to_month(request.form.get('date_in')),
-                price=req.rent_price,
+                price=apartment_data[1],
                 file_name='{}.pdf'.format(create_invoice_out_nbr(
                     n=0,
-                    apart_name=get_apartment_name(request.form.get('apartment')),
+                    apart_name=apartment_data[0],
                     date_=request.form.get('due_date')
                 ))
             )
             db.session.add(invoice_req)
             db.session.commit()
 
+            print(apartment_data[0], apartment_data[1], apartment_data[2])
+
             file = create_invoice_out_pdf(
-                id_apart=request.form.get('apartment'),
+                id_apart=apartment_data[2],
                 date_in=request.form.get('date_in'),
                 date_out=request.form.get('date_out'),
                 due_date=request.form.get('due_date'),
-                price=req.rent_price,
-                ref_customer=form.ref_customer.data
+                price=apartment_data[1]
             )
             # return send_from_directory(invoices_out_path, file)
-            flash(f"La facture pour l'appartement {req.apartment_name} a bien été ajouté", category='success')
+            flash(f"La facture pour l'appartement {apartment_data[0]} a bien été ajouté", category='success')
             return redirect(url_for('invoices_out'))
 
+        form.apartment_name.choices = apartment_name_list
         return render_template(
             'gestion_loc/invoices/form_invoice_out.html',
-            form=form,
-            aparts=apartment_name_list,
-            tenants=tenants_list
+            form=form
         )
     except Exception as e:
         print(e)

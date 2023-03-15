@@ -41,7 +41,7 @@ from soft.gestion_loc.tenants import routes
 from soft.gestion_loc.apartments import routes
 from soft.gestion_loc.contracts import routes
 from soft.gestion_loc.receipts import routes
-from soft.gestion_loc.database import routes
+from soft.database import routes
 
 from soft.login import model
 from soft.gestion_loc import model
@@ -50,7 +50,7 @@ from soft.gestion_loc.tenants import model
 from soft.gestion_loc.apartments import model
 from soft.gestion_loc.contracts import model
 from soft.gestion_loc.receipts import model
-from soft.gestion_loc.database import model
+from soft.database import model
 
 """ CCB11 Manager """
 # import mode.py to create tables

@@ -8,7 +8,7 @@ from soft.func.db_func import import_db, export_db, delete_db, get_date_from_db_
     export_table_to_db, delete_table
 
 
-@app.route('/gestionLoc/Databases', methods=['GET', 'POST'])
+@app.route('/Databases', methods=['GET', 'POST'])
 @login_required
 def databases():
     try:
@@ -30,7 +30,7 @@ def databases():
             table_n += 1
 
         return render_template(
-            "gestion_loc/databases/databases.html",
+            "databases/databases.html",
             file_list=db_file_list,
             table_list=table_file_list
         )
@@ -42,11 +42,12 @@ def databases():
         )
 
 
-@app.route('/gestionLoc/Databases/save_db', methods=['GET', 'POST'])
+@app.route('/Databases/save_db', methods=['GET', 'POST'])
 @login_required
 def save_database():
     try:
         import_db()
+        # Create zip file to save all documents
         flash('Database saved', category='success')
         return redirect(url_for('databases'))
 
@@ -58,7 +59,7 @@ def save_database():
         )
 
 
-@app.route('/gestionLoc/Databases/save_table', methods=['GET', 'POST'])
+@app.route('/Databases/save_table', methods=['GET', 'POST'])
 @login_required
 def save_table():
     try:
@@ -69,7 +70,7 @@ def save_table():
             return redirect(url_for('databases'))
 
         return render_template(
-            'gestion_loc/databases/save_table.html',
+            'databases/save_table.html',
             form=form
         )
 
@@ -81,7 +82,7 @@ def save_table():
         )
 
 
-@app.route('/gestionLoc/Databases/export_db/<string:db_name>', methods=['GET', 'POST'])
+@app.route('/Databases/export_db/<string:db_name>', methods=['GET', 'POST'])
 @login_required
 def export_database(db_name: str):
     try:
@@ -98,7 +99,7 @@ def export_database(db_name: str):
         )
 
 
-@app.route('/gestionLoc/Databases/export_table/<string:table_name>', methods=['GET', 'POST'])
+@app.route('/Databases/export_table/<string:table_name>', methods=['GET', 'POST'])
 @login_required
 def export_table(table_name: str):
     try:
@@ -118,7 +119,7 @@ def export_table(table_name: str):
         )
 
 
-@app.route('/gestionLoc/Databases/delete_db/<string:db_name>', methods=['GET', 'POST'])
+@app.route('/Databases/delete_db/<string:db_name>', methods=['GET', 'POST'])
 @login_required
 def delete_database_save(db_name: str):
     try:
@@ -136,7 +137,7 @@ def delete_database_save(db_name: str):
         )
 
 
-@app.route('/gestionLoc/Databases/delete_table/<string:table_name>', methods=['GET', 'POST'])
+@app.route('/Databases/delete_table/<string:table_name>', methods=['GET', 'POST'])
 @login_required
 def delete_table_save(table_name: str):
     try:

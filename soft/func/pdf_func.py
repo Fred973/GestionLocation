@@ -8,7 +8,7 @@ from soft.gestion_loc.apartments.model import Apartments
 from soft.gestion_loc.tenants.model import Tenants
 
 
-def create_invoice_out_pdf(id_apart, date_in, date_out, due_date, price, ref_customer):
+def create_invoice_out_pdf(id_apart, date_in, date_out, due_date, price):
     """
     Create pdf for invoice_out
 
@@ -17,7 +17,6 @@ def create_invoice_out_pdf(id_apart, date_in, date_out, due_date, price, ref_cus
     :param date_out:
     :param due_date:
     :param price:
-    :param ref_customer:
     :return pdf file:
     """
 
