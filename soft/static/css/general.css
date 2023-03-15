@@ -15,6 +15,12 @@ body.gestion-loc {
     background-size: 100%;
 }
 
+body.saab {
+    background-image: url('../images/saab.jpg');
+    background-repeat: no-repeat;
+    background-size: 100%;
+}
+
 body.ccb11 {
     background-image: url('../images/N1221F.jpeg');
     background-repeat: no-repeat;

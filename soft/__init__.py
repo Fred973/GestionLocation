@@ -62,3 +62,9 @@ from soft.ccb11_manager import model
 from soft.experience import routes
 
 from soft.experience import model
+
+""" SAAB manager """
+from soft.saab.questions import routes
+from soft.saab import routes
+
+from soft.saab.questions import model
