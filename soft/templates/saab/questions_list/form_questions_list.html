@@ -3,7 +3,7 @@
 {% block content %}
 
 {% include 'alert_messages.html' %}
-<body class="saab">
+<body class="default-background">
     <div class="center">
         <h1>{{ title }}</h1>
         <div class="div-btn">
@@ -51,7 +51,8 @@
 </body>
 
 {{ ckeditor.load() }}
-{{ ckeditor.config(name='description') }}
-{{ ckeditor.config(name='remarks') }}
+{{ ckeditor.config(name='question') }}
+{{ ckeditor.config(name='answer') }}
+{{ ckeditor.config(name='remark') }}
 
 {% endblock %}

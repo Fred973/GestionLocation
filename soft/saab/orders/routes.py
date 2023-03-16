@@ -1,17 +1,9 @@
 import datetime
-
 from flask_login import login_required, current_user, login_user
-from werkzeug.security import check_password_hash
-
 from soft import app, db
 from flask import render_template, session, redirect, request, url_for, flash
-
-from soft.login.forms import LoginForm
-from soft.login.model import Users
 from soft.saab.orders.forms import OrderListForm
 from soft.saab.orders.model import OrderList
-from soft.saab.questions.forms import QuestionsListForm
-from soft.saab.questions.model import QuestionsList
 
 @app.route('/SAAB/orders_list', methods=['GET', 'POST'])
 @login_required
@@ -26,18 +18,22 @@ def orders_list():
 @login_required
 def add_orders_list():
     form = OrderListForm()
-    # if request.method == 'POST':
-    #     question_req = QuestionList(
-    #         name=current_user.name,
-    #         creation_date=datetime.date.today(),
-    #         question=form.question.data,
-    #         answer=form.answer.data,
-    #         remark=form.remark.data
-    #     )
-    #     db.session.add(question_req)
-    #     db.session.commit()
-    #     flash('The question is saved successfully !', category='success')
-    #     return redirect(url_for('questions_list'))
+    if request.method == 'POST':
+        order_req = OrderList(
+            part_number=form.part_number.data,
+            description=form.description.data,
+            qty=form.qty.data,
+            remark=form.remark.data,
+            job_card=form.job_card.data,
+            order_sent_on=form.order_sent_on.data,
+            received=False,
+            record_by=current_user.name,
+            creation_date=datetime.date.today()
+        )
+        db.session.add(order_req)
+        db.session.commit()
+        flash('The order is saved successfully !', category='success')
+        return redirect(url_for('orders_list'))
 
     return render_template(
         'saab/orders_list/form_orders_list.html',
@@ -45,37 +41,67 @@ def add_orders_list():
         form=form
     )
 
-# @app.route('/SAAB/edit_questions_list<int:id_question>', methods=['GET', 'POST'])
-# @login_required
-# def edit_questions_list(id_question):
-#     form = QuestionListForm()
-#     question_to_edit = QuestionList.query.get_or_404(id_question)
-#
-#     if request.method == 'POST':
-#         question_to_edit.question = form.question.data
-#         question_to_edit.answer = form.answer.data
-#         question_to_edit.remark = form.remark.data
-#         db.session.commit()
-#
-#         flash('The question was edited successfully !', category='success')
-#         return redirect(url_for('questions_list'))
-#
-#     form.question.data = question_to_edit.question
-#     form.answer.data = question_to_edit.answer
-#     form.remark.data = question_to_edit.remark
-#
-#     return render_template(
-#         'saab/questions_list/form_questions_list.html',
-#         title='Edit Question',
-#         form=form
-#     )
-#
-# @app.route('/SAAB/delete_questions_list<int:id_to_delete>', methods=['GET', 'POST'])
-# @login_required
-# def delete_questions_list(id_to_delete):
-#     question_to_delete = QuestionList.query.get_or_404(id_to_delete)
-#     db.session.delete(question_to_delete)
-#     db.session.commit()
-#
-#     flash('The question was deleted successfully !', category='success')
-#     return redirect(request.referrer)
+@app.route('/SAAB/edit_orders_list<int:id_order>', methods=['GET', 'POST'])
+@login_required
+def edit_orders_list(id_order):
+    form = OrderListForm()
+    order_to_edit = OrderList.query.get_or_404(id_order)
+
+    if request.method == 'POST':
+        order_to_edit.part_number = form.part_number.data
+        order_to_edit.description = form.description.data
+        order_to_edit.qty = form.qty.data
+        order_to_edit.job_card = form.job_card.data
+        order_to_edit.order_sent_on = form.order_sent_on.data
+        order_to_edit.remark = form.remark.data
+        order_to_edit.record_by = current_user.name
+        order_to_edit.creation_date = datetime.date.today()
+        db.session.commit()
+
+        flash('The order was edited successfully !', category='success')
+        return redirect(url_for('orders_list'))
+
+    form.part_number.data = order_to_edit.part_number
+    form.description.data = order_to_edit.description
+    form.qty.data = order_to_edit.qty
+    form.remark.data = order_to_edit.remark
+    form.job_card.data = order_to_edit.job_card
+    form.order_sent_on.data = order_to_edit.order_sent_on
+
+    return render_template(
+        'saab/orders_list/form_orders_list.html',
+        title='Edit Order',
+        form=form
+    )
+
+@app.route('/SAAB/order_received<int:id_order>', methods=['GET', 'POST'])
+@login_required
+def order_received(id_order):
+    order_req = OrderList.query.get_or_404(id_order)
+    order_req.received = True
+    order_req.received_on = datetime.date.today()
+    db.session.commit()
+
+    flash('The order status is changed to received', category='success')
+    return redirect(request.referrer)
+
+@app.route('/SAAB/undo_received<int:id_order>', methods=['GET', 'POST'])
+@login_required
+def undo_received(id_order):
+    order_req = OrderList.query.get_or_404(id_order)
+    order_req.received = False
+    order_req.received_on = None
+    db.session.commit()
+
+    flash('The order status is changed to not received', category='success')
+    return redirect(request.referrer)
+
+@app.route('/SAAB/delete_orders_list<int:id_to_delete>', methods=['GET', 'POST'])
+@login_required
+def delete_orders_list(id_to_delete):
+    question_to_delete = OrderList.query.get_or_404(id_to_delete)
+    db.session.delete(question_to_delete)
+    db.session.commit()
+
+    flash('The order was deleted successfully !', category='success')
+    return redirect(request.referrer)

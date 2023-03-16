@@ -3,7 +3,8 @@
 {% block content %}
 
 {% include 'alert_messages.html' %}
-<body class="saab">
+
+<body class="default-background">
     <div class="center">
         <h1>{{ title }}</h1>
         <div class="div-btn">
@@ -11,47 +12,65 @@
         </div>
         <div class="card">
             <form method="post" enctype="multipart/form-data">
-<!--                <div class="form-group">-->
-<!--                    {{ form.hidden_tag() }}-->
-<!--                    <br/>-->
-<!--                    <div>-->
-<!--                        {{ form.question.label(class="form-label") }}-->
-<!--                    </div>-->
-<!--                    <div class="red-text">-->
-<!--                        <p>Utiliser "Shift + Enter" pour un saut de ligne normal et "Enter" pour un saut de type-->
-<!--                            paragraphe</p>-->
-<!--                    </div>-->
-<!--                    {{ form.question(class="form-field", rows="10") }}-->
-<!--                    <br/>-->
-<!--                    <div>-->
-<!--                        {{ form.answer.label(class="form-label") }}-->
-<!--                    </div>-->
-<!--                    <div class="red-text">-->
-<!--                        <p>Utiliser "Shift + Enter" pour un saut de ligne normal et "Enter" pour un saut de type-->
-<!--                            paragraphe</p>-->
-<!--                    </div>-->
-<!--                    {{ form.answer(class="form-field", rows="10") }}-->
-<!--                    <br/>-->
-<!--                    <div>-->
-<!--                        {{ form.remark.label(class="form-label") }}-->
-<!--                    </div>-->
-<!--                    <div class="red-text">-->
-<!--                        <p>Utiliser "Shift + Enter" pour un saut de ligne normal et "Enter" pour un saut de type-->
-<!--                            paragraphe</p>-->
-<!--                    </div>-->
-<!--                    {{ form.remark(class="form-field", rows="10") }}-->
-<!--                </div>-->
+                <div class="form-group">
+                    {{ form.hidden_tag() }}
+
+                    <div>
+                        {{ form.part_number.label(class="form-label") }}
+                    </div>
+                    <div>
+                        {{ form.part_number(class="form-field form-label") }}
+                    </div>
+                    <br />
+
+                    <div>
+                        {{ form.description.label(class="form-label") }}
+                    </div>
+                    <div>
+                        {{ form.description(class="form-field form-label") }}
+                    </div>
+                    <br>
+
+                    <div>
+                        {{ form.qty.label(class="form-label") }}
+                    </div>
+                    <div>
+                        {{ form.qty(class="form-field-short form-label") }}
+                    </div>
+                    <br>
+
+                    <div>
+                        {{ form.job_card.label(class="form-label") }}
+                    </div>
+                    <div>
+                        {{ form.job_card(class="form-field-short form-label") }}
+                    </div>
+                    <br>
+
+                    <div class="red-text">
+                        <p>Utiliser "Shift + Enter" pour un saut de ligne normal et "Enter" pour un saut de type
+                            paragraphe</p>
+                    </div>
+                    {{ form.remark(class="form-field", rows="10") }}
+                    <br>
+
+                    <div>
+                        {{ form.order_sent_on.label(class="form-label") }}
+                    </div>
+                    <div>
+                        {{ form.order_sent_on(class="form-field-short form-label") }}
+                    </div>
+                </div>
                 <div>
                     {{ form.submit(class="btn success") }}
                 </div>
                 <br>
             </form>
         </div>
-    </div>  
+    </div>
 </body>
 
 {{ ckeditor.load() }}
-{{ ckeditor.config(name='description') }}
-{{ ckeditor.config(name='remarks') }}
+{{ ckeditor.config(name='remark') }}
 
 {% endblock %}

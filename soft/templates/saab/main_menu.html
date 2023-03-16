@@ -12,6 +12,9 @@
             <a class="btn info" href="{{ url_for('questions_list')}}">SAAB Questions List</a>
             <a class="btn info" href="{{ url_for('tasks_list')}}">Tasks Inspection List</a>
         </div>
+        <div class="div-btn">
+            <a href="{{url_for('logout')}}" class="btn default">Se déconnecter</a>
+        </div>
 </body>
 
 {% endblock %}

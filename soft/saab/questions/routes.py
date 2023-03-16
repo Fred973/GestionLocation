@@ -1,13 +1,7 @@
 import datetime
-
 from flask_login import login_required, current_user, login_user
-from werkzeug.security import check_password_hash
-
 from soft import app, db
 from flask import render_template, session, redirect, request, url_for, flash
-
-from soft.login.forms import LoginForm
-from soft.login.model import Users
 from soft.saab.questions.forms import QuestionsListForm
 from soft.saab.questions.model import QuestionsList
 
