@@ -1,6 +1,6 @@
 from soft import db
 
-class QuestionList(db.Model):
+class QuestionsList(db.Model):
     """
     - id
     - name
@@ -17,4 +17,4 @@ class QuestionList(db.Model):
     remark = db.Column(db.Text, nullable=True)
 
     def __repr__(self):
-        return '<QuestionList %r>' % self.name
+        return '<QuestionsList %r>' % self.name

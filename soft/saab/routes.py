@@ -6,8 +6,8 @@ from flask import render_template, session, redirect, request, url_for, flash
 
 from soft.login.forms import LoginForm
 from soft.login.model import Users
-from soft.saab.questions.forms import QuestionListForm
-from soft.saab.questions.model import QuestionList
+from soft.saab.questions.forms import QuestionsListForm
+from soft.saab.questions.model import QuestionsList
 
 
 @app.route('/SAAB/login', methods=['GET', 'POST'])
@@ -43,18 +43,4 @@ def saab_login():
 def main_menu():
     return render_template(
         'saab/main_menu.html'
-    )
-
-@app.route('/SAAB/orders')
-@login_required
-def orders():
-    return render_template(
-        'saab/orders.html'
-    )
-
-@app.route('/SAAB/tasks_list_inspection')
-@login_required
-def tasks_list_inspection():
-    return render_template(
-        'saab/tasks_list_inspection.html'
     )

@@ -8,24 +8,24 @@ from flask import render_template, session, redirect, request, url_for, flash
 
 from soft.login.forms import LoginForm
 from soft.login.model import Users
-from soft.saab.questions.forms import QuestionListForm
-from soft.saab.questions.model import QuestionList
+from soft.saab.questions.forms import QuestionsListForm
+from soft.saab.questions.model import QuestionsList
 
 @app.route('/SAAB/questions_list', methods=['GET', 'POST'])
 @login_required
 def questions_list():
-    req_question_list = QuestionList.query.all()
+    req_questions_list = QuestionsList.query.all()
     return render_template(
-        'saab/question_list/questions_list.html',
-        questions=req_question_list
+        'saab/questions_list/questions_list.html',
+        questions=req_questions_list
     )
 
 @app.route('/SAAB/add_questions_list', methods=['GET', 'POST'])
 @login_required
 def add_questions_list():
-    form = QuestionListForm()
+    form = QuestionsListForm()
     if request.method == 'POST':
-        question_req = QuestionList(
+        question_req = QuestionsList(
             name=current_user.name,
             creation_date=datetime.date.today(),
             question=form.question.data,
@@ -38,7 +38,7 @@ def add_questions_list():
         return redirect(url_for('questions_list'))
 
     return render_template(
-        'saab/question_list/form_questions_list.html',
+        'saab/questions_list/form_questions_list.html',
         title="Add question",
         form=form
     )
@@ -46,8 +46,8 @@ def add_questions_list():
 @app.route('/SAAB/edit_questions_list<int:id_question>', methods=['GET', 'POST'])
 @login_required
 def edit_questions_list(id_question):
-    form = QuestionListForm()
-    question_to_edit = QuestionList.query.get_or_404(id_question)
+    form = QuestionsListForm()
+    question_to_edit = QuestionsList.query.get_or_404(id_question)
 
     if request.method == 'POST':
         question_to_edit.question = form.question.data
@@ -63,7 +63,7 @@ def edit_questions_list(id_question):
     form.remark.data = question_to_edit.remark
 
     return render_template(
-        'saab/question_list/form_questions_list.html',
+        'saab/questions_list/form_questions_list.html',
         title='Edit Question',
         form=form
     )
@@ -71,7 +71,7 @@ def edit_questions_list(id_question):
 @app.route('/SAAB/delete_questions_list<int:id_to_delete>', methods=['GET', 'POST'])
 @login_required
 def delete_questions_list(id_to_delete):
-    question_to_delete = QuestionList.query.get_or_404(id_to_delete)
+    question_to_delete = QuestionsList.query.get_or_404(id_to_delete)
     db.session.delete(question_to_delete)
     db.session.commit()
 

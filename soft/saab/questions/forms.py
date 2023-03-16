@@ -5,9 +5,9 @@ from wtforms.widgets import TextArea
 
 from soft.func.db_func import get_table_list
 
-class QuestionListForm(FlaskForm):
+class QuestionsListForm(FlaskForm):
     """
-    QuestionList form strcuture:
+    QuestionsList form structure:
         - question
         - answer
         - remarks
@@ -15,4 +15,4 @@ class QuestionListForm(FlaskForm):
     question = StringField("Question", widget=TextArea())
     answer = StringField("Answer", widget=TextArea())
     remark = StringField("Remarks", widget=TextArea())
-    submit = SubmitField("Save")
+    submit = SubmitField("Add question")

@@ -66,5 +66,10 @@ from soft.experience import model
 """ SAAB manager """
 from soft.saab.questions import routes
 from soft.saab import routes
+from soft.saab.orders import routes
+from soft.saab.tasks import routes
 
+from soft.saab import model
 from soft.saab.questions import model
+from soft.saab.orders import model
+from soft.saab.tasks import model
