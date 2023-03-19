@@ -2,6 +2,9 @@ import datetime
 from flask_login import login_required, current_user, login_user
 from soft import app, db
 from flask import render_template, session, redirect, request, url_for, flash
+
+from soft.func.db_func import get_all_orders, get_received_orders, get_ordered_orders
+from soft.func.pdf_func import create_orders_pdf
 from soft.saab.orders.forms import OrderListForm
 from soft.saab.orders.model import OrderList
 
@@ -104,4 +107,37 @@ def delete_orders_list(id_to_delete):
     db.session.commit()
 
     flash('The order was deleted successfully !', category='success')
+    return redirect(request.referrer)
+
+@app.route('/SAAB/print_orders', methods=['GET', 'POST'])
+@login_required
+def print_to_pdf():
+    checkbox_values = [
+        request.form.get('check_all_orders'),
+        request.form.get('check_received_orders'),
+        request.form.get('check_ordered_orders')
+    ]
+    orders_list_to_print = []
+    counter = 1
+    if checkbox_values[0] is not None:  # All orders
+        for i in get_all_orders():
+            orders_row = [counter, i.part_number, i.description, i.qty, i.job_card, i. order_sent_on, i.record_by, i.creation_date]
+            orders_list_to_print.append(orders_row)
+            counter += 1
+    elif checkbox_values[1] is not None:  # Received orders
+        for i in get_received_orders():
+            orders_row = [counter, i.part_number, i.description, i.qty, i.job_card, i. order_sent_on, i.record_by, i.creation_date]
+            orders_list_to_print.append(orders_row)
+            counter += 1
+    elif checkbox_values[2] is not None:  # Ordered orders
+        for i in get_ordered_orders():
+            orders_row = [counter, i.part_number, i.description, i.qty, i.job_card, i. order_sent_on, i.record_by, i.creation_date]
+            orders_list_to_print.append(orders_row)
+            counter += 1
+
+    create_orders_pdf(
+        orders_list=orders_list_to_print,
+        checkbox_values=checkbox_values
+    )
+    flash('printed !!!', category='success')
     return redirect(request.referrer)

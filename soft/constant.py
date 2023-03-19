@@ -21,6 +21,8 @@ utils_path = basedir + '/utils/'
 tmp_path = basedir + '/tmp_path/'
 invoices_out_zip_path = basedir + '/invoices_out_zip_path/'
 tasks_files_path = basedir + '/static/CCB11/tasks_files/'
+questions_path = basedir + '/static/questions/'
+orders_path = basedir + '/static/orders/'
 
 # Various Data
 

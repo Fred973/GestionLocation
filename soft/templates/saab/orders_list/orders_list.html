@@ -15,6 +15,12 @@
         <div class="div-btn" style="text-align: left;">
             <a class="btn info" href="{{ url_for('add_orders_list') }}">Add an order</a>
             <a class="btn info" href="{{ url_for('main_menu') }}">Back to Main Menu</a>
+            <form method="post" action="/SAAB/print_orders">
+                <button class="btn info" style="margin-left: 500px;" type="submit">Print (PDF)</button>
+                <input class="print-choice" type="checkbox" name="check_all_orders" onclick="onlyOne(this)" checked>All orders
+                <input class="print-choice" type="checkbox" name="check_received_orders" onclick="onlyOne(this)">Received orders
+                <input class="print-choice" type="checkbox" name="check_ordered_orders" onclick="onlyOne(this)">Ordered orders
+            </form>
         </div>
         <div class="card">
             <table id="myTable">
@@ -116,5 +122,16 @@
         </div>
     </div>
 </body>
+
+<script>
+
+    function onlyOne(checkbox) {
+        var checkboxes = document.getElementsByClassName('print-choice')
+        Array.from(checkboxes).forEach((item) => {
+            if (item !== checkbox) item.checked = false;
+            if (item == checkbox) item.checked = true;
+        })
+    }
+</script>
 
 {% endblock %}

@@ -2,6 +2,7 @@ import os
 from soft import db, app
 from soft.constant import DB_USER, DB_HOSTNAME, DB_PORT, DB_PASSWORD, DB_NAME, db_save_path, table_save_path
 from soft.func.date_func import today_datetime, convert_date_str_to_date_to_string
+from soft.saab.orders.model import OrderList
 
 
 def create_db_save_name():
@@ -101,3 +102,25 @@ def get_table_list():
     with app.app_context():
         table_list = db.engine.table_names()
         return table_list
+
+
+def get_all_orders():
+    """
+    get all orders from DB
+    :return:
+    """
+    return OrderList.query.all()
+
+def get_received_orders():
+    """
+
+    :return:
+    """
+    return OrderList.query.filter_by(received=True)
+
+def get_ordered_orders():
+    """
+
+    :return:
+    """
+    return OrderList.query.filter_by(received=False)

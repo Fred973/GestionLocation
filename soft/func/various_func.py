@@ -1,6 +1,8 @@
 import decimal
 import os
+import html
 from flask import render_template
+from bs4 import BeautifulSoup
 from soft.constant import avio_json, amount_held_on_account, tmp_path, tasks_files_path
 from soft.func.date_func import today_date, convert_date_to_string_for_nbr, number_of_day, \
     convert_date_string_to_isoformat, today_datetime_sec, convert_date_format_to_date_string
@@ -401,3 +403,9 @@ def create_task_files_folder(id_task: int, added_date):
     except FileExistsError:
         pass
     return folder_name
+
+
+def convert_HTML_to_string(text):
+    """ Convert html text in latin-1 in a string """
+    conv_text = BeautifulSoup(text, 'html.parser').get_text()
+    return conv_text.encode('latin-1', 'replace').decode('latin-1')

@@ -18,3 +18,4 @@ Werkzeug==2.2.2
 WTForms==3.0.1
 zipp==3.11.0
 fpdf~=1.7.2
+beautifulsoup4~=4.11.2

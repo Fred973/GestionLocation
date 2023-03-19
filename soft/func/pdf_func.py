@@ -1,11 +1,73 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+import datetime
 from fpdf import FPDF
-from soft.constant import george_json, avio_json, receipts_path, receipt_text
+from soft.constant import george_json, avio_json, receipts_path, receipt_text, questions_path, orders_path
 from soft.constant import invoices_out_path
 from soft.func.date_func import convert_date_to_string, today_date_str, number_of_day, convert_date_string_to_isoformat
+from soft.func.db_func import get_all_orders
 from soft.func.various_func import create_invoice_out_nbr, get_apartment_data, get_apartment_name, calculate_day_nbr, \
-    create_receipt_nbr
+    create_receipt_nbr, convert_HTML_to_string
 from soft.gestion_loc.apartments.model import Apartments
 from soft.gestion_loc.tenants.model import Tenants
+from soft.saab.orders.model import OrderList
+
+
+class PDFBase(FPDF):
+    def __init__(self, title, orientation='P', unit='mm', format='A4'):
+        super().__init__(orientation=orientation, unit=unit, format=format)
+        self.title = title
+        self.col_widths = []
+        self.padding = 20
+
+    def header(self):
+        self.set_font('arial', 'B', 16)
+        self.cell(w=0, h=0, ln=1)
+        self.set_fill_color(95, 95, 95)
+        self.set_text_color(255, 255, 255)
+        self.cell(0, 10, f'{self.title}', align='C', fill=True)
+
+        # Line break
+        self.ln(20)
+
+    def footer(self):
+        self.set_y(-10)
+        self.set_font('Arial', 'I', 8)
+
+        # Add a page number
+        page = 'Page ' + str(self.page_no()) + '/{nb}'
+        self.cell(0, 10, page, 0, 0, 'C')
+
+    def create_table(self, data, headers):# Header
+        self.col_widths = [self.get_string_width(str(item)) + self.padding for item in data[0]]
+        for row in data:
+            for i, item in enumerate(row):
+                width = self.get_string_width(str(item))
+                if width > self.col_widths[i]:
+                    self.col_widths[i] = width + self.padding
+
+        # Calculate the table width
+        table_width = sum(self.col_widths)
+
+        # Determine the x-coordinate for the table start to center it
+        x_start = (self.w - table_width) / 2
+
+        # Add column titles
+        self.set_font('Arial', 'B', 12)
+        for i, title in enumerate(headers):
+            self.cell(self.col_widths[i], 10, str(title), border=1, align='C')
+        self.ln()
+
+        # Add data rows
+        self.set_font('Arial', '', 12)
+        for row in data:
+            for i, item in enumerate(row):
+                self.cell(self.col_widths[i], 10, str(item), border=1, align='C')
+            self.ln()
+
+        # Set the x-coordinate back to the left margin
+        self.set_x(x_start + self.l_margin)
 
 
 def create_invoice_out_pdf(id_apart, date_in, date_out, due_date, price):
@@ -279,3 +341,65 @@ def create_receipt_pdf(date_in, date_out, apartment, id_tenant):
             id_customer=tenant_req.id
         )
     )
+
+
+def create_questions_pdf(questions: list):
+    pdf = PDFBase(
+        title='QUESTIONS LIST'
+    )
+    pdf.alias_nb_pages()
+    pdf.add_page()
+
+    pdf.set_font('Times', '', 12)
+    for question in questions:
+        pdf.cell(0, 10, txt=f"Question N°{question[0]}", ln=1)
+        pdf.multi_cell(0, 10, txt=convert_HTML_to_string(question[1]), border=1, align='L')  # Question
+        pdf.set_xy(pdf.get_x(), pdf.get_y() - 10)  # Align text Left & Top in the cell
+        pdf.cell(0, 30, txt=f'Answer: {convert_HTML_to_string(question[2])}', ln=1, border=1)  # Answer
+        pdf.multi_cell(0, 10, txt=f'Remark: {convert_HTML_to_string(question[3])}', border=1, align='L')  # Remark
+    pdf_filename = f'questions_{datetime.date.today()}.pdf'
+    pdf.output(questions_path + pdf_filename)
+
+    return pdf_filename
+
+
+def create_orders_pdf(orders_list: list, checkbox_values: list):
+    """
+    :param checkbox_values:
+    :param orders_list:
+    :return:
+    """
+    pdf_filename = ''
+    title = ''
+    if checkbox_values[0] is not None:  # All orders
+        pdf_filename = f'all_orders_{datetime.date.today()}.pdf'
+        title = 'ALL ORDERS LIST'
+    elif checkbox_values[1] is not None:  # Received orders
+        pdf_filename = f'received_orders_{datetime.date.today()}.pdf'
+        title = 'RECEIVED ORDERS LIST'
+    elif checkbox_values[2] is not None:  # Ordered orders
+        pdf_filename = f'ordered_orders_{datetime.date.today()}.pdf'
+        title = 'ORDERED ORDERS LIST'
+
+    pdf = PDFBase(
+        title=title,
+        orientation='L'
+    )
+    pdf.alias_nb_pages()
+    pdf.add_page()
+
+    pdf.set_font('Times', '', 12)
+    table_header = ['#', 'Part Number', 'Description', 'Qty', 'JC', 'Order sent on', 'Record_by', 'Created on']
+
+    pdf.create_table(data=orders_list, headers=table_header)
+
+    # for question in questions:
+    #     pdf.cell(0, 10, txt=f"Question N°{question[0]}", ln=1)
+    #     pdf.multi_cell(0, 10, txt=convert_HTML_to_string(question[1]), border=1, align='L')  # Question
+    #     pdf.set_xy(pdf.get_x(), pdf.get_y() - 10)  # Align text Left & Top in the cell
+    #     pdf.cell(0, 30, txt=f'Answer: {convert_HTML_to_string(question[2])}', ln=1, border=1)  # Answer
+    #     pdf.multi_cell(0, 10, txt=f'Remark: {convert_HTML_to_string(question[3])}', border=1, align='L')  # Remark
+
+    pdf.output(orders_path + pdf_filename)
+
+    return pdf_filename

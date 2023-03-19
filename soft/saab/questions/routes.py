@@ -1,7 +1,10 @@
 import datetime
 from flask_login import login_required, current_user, login_user
 from soft import app, db
-from flask import render_template, session, redirect, request, url_for, flash
+from flask import render_template, session, redirect, request, url_for, flash, send_from_directory
+
+from soft.constant import questions_path
+from soft.func.pdf_func import create_questions_pdf
 from soft.saab.questions.forms import QuestionsListForm
 from soft.saab.questions.model import QuestionsList
 
@@ -71,3 +74,23 @@ def delete_questions_list(id_to_delete):
 
     flash('The question was deleted successfully !', category='success')
     return redirect(request.referrer)
+
+@app.route('/SAAB/download_questions', methods=['GET', 'POST'])
+@login_required
+def download():
+    questions_req = QuestionsList.query.all()
+    _questions_list = []
+    counter = 1
+    i_list = 0
+
+    for i in questions_req:
+        list_tmp = [counter, i.question, i.answer, i.remark]
+        _questions_list.append(list_tmp)
+        counter += 1
+        i_list += 1
+
+    filename = create_questions_pdf(_questions_list)
+    return send_from_directory(
+        questions_path,
+        filename
+    )
