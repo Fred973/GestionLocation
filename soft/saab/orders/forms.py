@@ -18,7 +18,7 @@ class OrderListForm(FlaskForm):
     part_number = StringField("Part Number", validators=[DataRequired()])
     description = StringField("Description", validators=[DataRequired()])
     qty = StringField("Quantity", validators=[DataRequired()])
-    job_card = IntegerField("Job Card N°", validators=[DataRequired()])
+    job_card = IntegerField("Job Card N°")
     remark = StringField("Remarks", widget=TextArea())
     order_sent_on = DateField("Order sent on", )
     submit = SubmitField("Save order")

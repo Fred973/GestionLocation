@@ -1,8 +1,9 @@
 import datetime
 from flask_login import login_required, current_user, login_user
 from soft import app, db
-from flask import render_template, session, redirect, request, url_for, flash
+from flask import render_template, session, redirect, request, url_for, flash, send_from_directory
 
+from soft.constant import orders_path
 from soft.func.db_func import get_all_orders, get_received_orders, get_ordered_orders
 from soft.func.pdf_func import create_orders_pdf
 from soft.saab.orders.forms import OrderListForm
@@ -135,9 +136,11 @@ def print_to_pdf():
             orders_list_to_print.append(orders_row)
             counter += 1
 
-    create_orders_pdf(
+    filename = create_orders_pdf(
         orders_list=orders_list_to_print,
         checkbox_values=checkbox_values
     )
-    flash('printed !!!', category='success')
-    return redirect(request.referrer)
+    return send_from_directory(
+        orders_path,
+        filename
+    )

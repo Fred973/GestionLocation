@@ -20,7 +20,7 @@ class OrderList(db.Model):
     qty = db.Column(db.Text, nullable=False)
     remark = db.Column(db.Text, nullable=True)
     job_card = db.Column(db.Integer, nullable=True)
-    order_sent_on = db.Column(db.Date, nullable=False)
+    order_sent_on = db.Column(db.Date, nullable=True)
     received = db.Column(db.Boolean, nullable=True)
     received_on = db.Column(db.Date, nullable=True)
     record_by = db.Column(db.String(255), nullable=False)

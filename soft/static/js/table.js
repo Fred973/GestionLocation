@@ -84,7 +84,7 @@ $(document).ready(function () {
     $('#maxRows').on('change', function () {
         getPagination('#myTable', $(this).val());
     });
-    getPagination('#myTable', 10); // the no of rows default you want to show
+    getPagination('#myTable', 20); // the no of rows default you want to show
 });
 
 function getPagination(table, noRows) {
