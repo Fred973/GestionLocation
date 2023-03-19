@@ -54,13 +54,13 @@ class PDFBase(FPDF):
         x_start = (self.w - table_width) / 2
 
         # Add column titles
-        self.set_font('Arial', 'B', 12)
+        self.set_font('Arial', 'B', 8)
         for i, title in enumerate(headers):
             self.cell(self.col_widths[i], 10, str(title), border=1, align='C')
         self.ln()
 
         # Add data rows
-        self.set_font('Arial', '', 12)
+        self.set_font('Arial', '', 8)
         for row in data:
             for i, item in enumerate(row):
                 self.cell(self.col_widths[i], 10, str(item), border=1, align='C')
@@ -388,17 +388,10 @@ def create_orders_pdf(orders_list: list, checkbox_values: list):
     pdf.alias_nb_pages()
     pdf.add_page()
 
-    pdf.set_font('Times', '', 12)
+    pdf.set_font('Times', '', 8)
     table_header = ['#', 'Part Number', 'Description', 'Qty', 'JC', 'Order sent on', 'Record_by', 'Created on']
 
     pdf.create_table(data=orders_list, headers=table_header)
-
-    # for question in questions:
-    #     pdf.cell(0, 10, txt=f"Question N°{question[0]}", ln=1)
-    #     pdf.multi_cell(0, 10, txt=convert_HTML_to_string(question[1]), border=1, align='L')  # Question
-    #     pdf.set_xy(pdf.get_x(), pdf.get_y() - 10)  # Align text Left & Top in the cell
-    #     pdf.cell(0, 30, txt=f'Answer: {convert_HTML_to_string(question[2])}', ln=1, border=1)  # Answer
-    #     pdf.multi_cell(0, 10, txt=f'Remark: {convert_HTML_to_string(question[3])}', border=1, align='L')  # Remark
 
     pdf.output(orders_path + pdf_filename)
 
