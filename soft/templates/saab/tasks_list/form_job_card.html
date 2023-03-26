@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% include 'alert_messages.html' %}
+
+<body class="default-background">
+    <div class="center">
+        <h1>{{ title }}</h1>
+        <div class="div-btn">
+            <a class="btn default" href="{{ url_for('tasks_list') }}">Back</a>
+        </div>
+        <div class="card">
+            <form method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    {{ form.hidden_tag() }}
+                    <div>
+                        {{ form.item_jc.label(class="form-label") }}
+                    </div>
+                    <div>
+                        {{ form.item_jc(class="form-field-short form-label") }}
+                    </div>
+                    <br />
+                    
+                    {{ form.description.label(class="form-label") }}
+                    {{ form.description(class="form-field form-label") }}
+                    <br />
+                    
+                    {{ form.remarks.label(class="form-label") }}
+                    {{ form.remarks(class="form-field form-label", rows='10') }}
+                    <br />
+                <div class="center">
+                    {{ form.submit(class="btn success") }}
+                </div>
+                <br>
+            </form>
+        </div>
+    </div>
+</body>
+
+{{ ckeditor.load() }}
+{{ ckeditor.config(name='remarks') }}
+
+{% endblock %}

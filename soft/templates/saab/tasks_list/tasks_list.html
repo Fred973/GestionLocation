@@ -4,7 +4,7 @@
 
 {% include 'alert_messages.html' %}
 <div class="center">
-    <h1>Tasks Lists</h1>
+    <h1>Job Card Lists</h1>
 </div>
 <div style="text-align: right;">
     <input type="text" id="myInput" onkeyup="searchTable()" placeholder="Find...">
@@ -13,69 +13,42 @@
 <body class="default-background">
     <div class="center">
         <div class="div-btn" style="text-align: left;">
-            <a class="btn info" href="{{ url_for('add_tasks_list') }}">Add a task</a>
+            <a class="btn info" href="{{ url_for('add_job_card') }}">Add a Job card</a>
             <a class="btn info" href="{{ url_for('main_menu') }}">Back to Main Menu</a>
+            <a class="btn danger" href="{{ url_for('job_card_deleting_page') }}">Delete a Job card</a>
+            <p style="display: inline-block; margin-left: 500px;">Total Accomplishment at : {{total_accomplishment}} %</p>
         </div>
-<!--        <div class="card">-->
-<!--            <table id="myTable">-->
-<!--                <tr class="header">-->
-<!--                    <th onclick="sortTable(0)">Name</th>-->
-<!--                    <th onclick="sortTable(0)">Question</th>-->
-<!--                    <th onclick="sortTable(0)">Answer</th>-->
-<!--                    <th onclick="sortTable(0)">Remark</th>-->
-<!--                    <th style="text-align: center;">Edit</th>-->
-<!--                    <th style="text-align: center;">Delete</th>-->
-<!--                </tr>-->
-<!--                {% for question in questions %}-->
-<!--                <tr>-->
-<!--                    <td>{{question.name}}</td>-->
-<!--                    <td>{{question.question|safe}}</td>-->
-<!--                    <td>{{question.answer|safe}}</td>-->
-<!--                    <td>{{question.remark|safe}}</td>-->
-<!--                    <td style="text-align: center;">-->
-<!--                        <a href="{{ url_for('edit_questions_list', id_question=question.id) }}" class="btn info">-->
-<!--                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"-->
-<!--                                class="bi bi-pencil" viewBox="0 0 16 16">-->
-<!--                                <path-->
-<!--                                    d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />-->
-<!--                            </svg>-->
-<!--                        </a>-->
-<!--                    </td>-->
-<!--                    <td style="text-align: center;">-->
-<!--                        <button class="btn danger"-->
-<!--                            onclick="document.getElementById('{{question.id}}').style.display='inline-flex'">-->
-<!--                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"-->
-<!--                                class="bi bi-trash" viewBox="0 0 16 16">-->
-<!--                                <path-->
-<!--                                    d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />-->
-<!--                                <path fill-rule="evenodd"-->
-<!--                                    d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />-->
-<!--                            </svg>-->
-<!--                        </button>-->
-<!--    -->
-<!--                        <div class="modal" id="{{question.id}}">-->
-<!--                            <form class="modal-content" action="{{ url_for('delete_questions_list', id_to_delete=question.id) }}">-->
-<!--                                <div class="container-modal">-->
-<!--                                    <h1>Question to delete</h1>-->
-<!--                                    <br>-->
-<!--                                    <p>Are you sure to delete this question ?</p>-->
-<!--                                    <br>-->
-<!--                                    <div class="clearfix">-->
-<!--                                        <button type="button"-->
-<!--                                            onclick="document.getElementById('{{question.id}}').style.display='none'"-->
-<!--                                            class="btn default">Cancel</button>-->
-<!--                                        <button type="submit" onclick="document.getElementById('id01').style.display='none'"-->
-<!--                                            class="btn danger">Delete</button>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </form>-->
-<!--                        </div>-->
-<!--                    </td>-->
-<!--                </tr>-->
-<!--                {% endfor %}-->
-<!--            <div class="pagination"></div>-->
-<!--            </table>-->
-<!--        </div>-->
+        <div class="card">
+            <table id="myTable">
+                <tr class="header">
+                    <th onclick="sortTable(0)">JC (WO)</th>
+                    <th onclick="sortTable(0)">Description</th>
+                    <th onclick="sortTable(0)">Remarks</th>
+                    <th onclick="sortTable(0)">Working Time (Total)</th>
+                    <th >Accomplishment</th>
+                    <th>Edit</th>
+                </tr>
+                {% for job_card in job_cards %}
+                <tr class="table-row" data-href="{{ url_for('show_job_card_details', id_job_card=job_card.id) }}">
+                    <td>{{job_card.item_jc}}</td>
+                    <td>{{job_card.description }}</td>
+                    <td>{{job_card.remarks }}</td>
+                    <td>{{job_card.working_time.strftime('%H:%M') }} hrs</td>
+                    <td>{{ job_card.accomplishment }} %</td>
+                    <td>
+                        <a href="{{ url_for('edit_job_card', id_job_card=job_card.id) }}" class="btn info">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-pencil" viewBox="0 0 16 16">
+                                <path
+                                    d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
+                            </svg>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+                <div class="pagination"></div>
+            </table>
+        </div>
     </div>
 </body>
 

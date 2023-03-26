@@ -129,3 +129,10 @@ function getPagination(table, noRows) {
         }); // end of for each tr in table
     }); // end of on click pagination list
 }
+
+
+$(document).ready(function () {
+    $(".table-row").click(function () {
+        window.location = $(this).data("href");
+    });
+});

@@ -6,3 +6,5 @@
 /default_files_src
 /soft/db_save
 /migrations
+/soft/static/questions/
+/soft/static/orders/

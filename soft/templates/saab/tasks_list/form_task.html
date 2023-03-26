@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% include 'alert_messages.html' %}
+
+<body class="default-background">
+    <div class="center">
+        <h1>{{title}}</h1>
+        <div class="div-btn">
+            <a class="btn default" href="{{ url_for('show_job_card_details', id_job_card=session['id_job_card']) }}">Back</a>
+        </div>
+        <div class="card">
+            <form method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    {{ form.hidden_tag() }}
+                    <div>
+                        {{ form.job_card.label(class="form-label") }}
+                    </div>
+                    <div>
+                        {{ form.job_card(class="form-field-short form-label") }}
+                    </div>
+                    <br />
+
+                    <div>
+                        {{ form.type.label(class="form-label") }}
+                    </div>
+                    <div>
+                        {{ form.type(class="form-field-short form-label") }}
+                    </div>
+                    <br />
+                    <div>
+                        {{ form.mm_ref.label(class="form-label") }}
+                    </div>
+                    <div>
+                        {{ form.mm_ref(class="form-field form-label") }}
+                    </div>
+                    <br />
+                    
+                    {{ form.description.label(class="form-label") }}
+                    {{ form.description(class="form-field form-label") }}
+                    <br />
+                    
+                    {{ form.remarks.label(class="form-label") }}
+                    {{ form.remarks(class="form-field form-label", rows='10') }}
+                    <br />
+
+                    <div>
+                        {{ form.working_time.label(class="form-label") }}
+                    </div>
+                    <div>
+                        {{ form.working_time(class="form-field-short form-label") }}
+                    </div>
+                    <br />
+
+                    <div>
+                        {{ form.nbr_tech.label(class="form-label") }}
+                    </div>
+                    <div>
+                        {{ form.nbr_tech(class="form-field-short form-label") }}
+                    </div>
+                    <br />
+
+                        {{ form.performed.label(class="form-label") }}
+                        {{ form.performed(class="form-label") }}
+                    <br />
+                <div class="center">
+                    {{ form.submit(class="btn success") }}
+                </div>
+                <br>
+            </form>
+        </div>
+    </div>
+</body>
+
+{{ ckeditor.load() }}
+{{ ckeditor.config(name='remarks') }}
+
+{% endblock %}
