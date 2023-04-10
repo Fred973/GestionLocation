@@ -5,16 +5,23 @@
 {% include 'alert_messages.html' %}
 
 <body class="saab">
-    <div class="center">
-        <h1>Main Menu</h1>
-        <div class="div-btn">
-            <a class="btn info" href="{{ url_for('orders_list')}}">Orders list</a>
-            <a class="btn info" href="{{ url_for('questions_list')}}">SAAB Questions List</a>
-            <a class="btn info" href="{{ url_for('tasks_list')}}">Tasks Inspection List</a>
+    <div style="display: -webkit-inline-box;">
+        <img src="{{url_for('static', filename='images/saab_logo.png')}}">
+        <div class="center" style="padding-left: 300px;">
+            <h1>Main Menu</h1>
+            <div class="div-btn">
+                <a class="btn info" href="{{ url_for('orders_list')}}">Orders list</a>
+                <a class="btn info" href="{{ url_for('questions_list')}}">SAAB Questions List</a>
+                <a class="btn info" href="{{ url_for('tasks_list')}}">Tasks Inspection List</a>
+                <a class="btn info" href="{{ url_for('equipment_list')}}">Equipment List</a>
+            </div>
+            <div class="div-btn" style="padding-top: 30px;">
+                <a href="{{url_for('saab_logout')}}">
+                    <img src="{{ url_for('static', filename='images/logout.png') }}">
+                </a>
+            </div>
         </div>
-        <div class="div-btn">
-            <a href="{{url_for('saab_logout')}}" class="btn default">Log Out</a>
-        </div>
+    </div>
 </body>
 
 {% endblock %}

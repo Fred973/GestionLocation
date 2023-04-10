@@ -224,12 +224,3 @@ def delete_job_card_detail(id_to_delete):
 
     flash('The Task was deleted successfully !', category='success')
     return redirect(request.referrer)
-
-@app.route('/SAAB/job_card_detail_list', methods=['GET', 'POST'])
-@login_required
-def job_card_detail_list():
-
-    return render_template(
-        'saab/tasks_list/job_card_detail_list.html',
-        job_card_detail_list=JobCardDetails.query.all()
-    )

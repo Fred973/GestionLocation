@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% include 'alert_messages.html' %}
+
+<body class="default-background">
+    <div class="center">
+        <h1>{{title}}</h1>
+        <div class="div-btn">
+            <a class="btn default" href="{{ url_for('equipment_list') }}">Back</a>
+        </div>
+        <div class="card">
+            <form method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    {{ form.hidden_tag() }}
+                    <div>
+                        {{ form.ata.label(class="form-label") }}
+                    </div>
+                    <div>
+                        {{ form.ata(class="form-field-short form-label") }}
+                    </div>
+                    <br />
+                    <div>
+                        {{ form.part_number.label(class="form-label") }}
+                    </div>
+                    <div>
+                        {{ form.part_number(class="form-field-short form-label") }}
+                    </div>
+                    <br />
+                    <div>
+                        {{ form.description.label(class="form-label") }}
+                    </div>
+                    <div>
+                        {{ form.description(class="form-field-short form-label") }}
+                    </div>
+                    <br />
+                    <div>
+                        {{ form.alternate_pn.label(class="form-label") }}
+                    </div>
+                    <div>
+                        {{ form.alternate_pn(class="form-field-short form-label") }}
+                    </div>
+                    <br />
+                    <div>
+                        {{ form.serial_number.label(class="form-label") }}
+                    </div>
+                    <div>
+                        {{ form.serial_number(class="form-field-short form-label") }}
+                    </div>
+                    <br />
+                    <div>
+                        {{ form.batch.label(class="form-label") }}
+                    </div>
+                    <div>
+                        {{ form.batch(class="form-field-short form-label") }}
+                    </div>
+                    <br />
+                    <div>
+                        {{ form.location.label(class="form-label") }}
+                    </div>
+                    <div>
+                        {{ form.location(class="form-field-short form-label") }}
+                    </div>
+                    <br />
+                    
+                    {{ form.remarks.label(class="form-label") }}
+                    {{ form.remarks(class="form-field form-label", rows='10') }}
+                    <br />
+                <div class="center">
+                    {{ form.submit(class="btn success") }}
+                </div>
+                <br>
+            </form>
+        </div>
+    </div>
+</body>
+
+{{ ckeditor.load() }}
+{{ ckeditor.config(name='remarks') }}
+
+{% endblock %}

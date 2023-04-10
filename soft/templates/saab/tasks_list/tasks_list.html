@@ -3,6 +3,7 @@
 {% block content %}
 
 {% include 'alert_messages.html' %}
+
 <div class="center">
     <h1>Job Card Lists</h1>
 </div>
@@ -15,8 +16,9 @@
         <div class="div-btn" style="text-align: left;">
             <a class="btn info" href="{{ url_for('add_job_card') }}">Add a Job card</a>
             <a class="btn info" href="{{ url_for('main_menu') }}">Back to Main Menu</a>
+            <a class="btn info" href="{{ url_for('job_card_detail_list') }}">See all Job card detail (SAAB)</a>
             <a class="btn danger" href="{{ url_for('job_card_deleting_page') }}">Delete a Job card</a>
-            <p style="display: inline-block; margin-left: 500px;">Total Accomplishment at : {{total_accomplishment}} %</p>
+            <p style="display: inline-block; margin-left: 500px; padding-top: 15px;">Total Accomplishment at : {{total_accomplishment}} %</p>
         </div>
         <div class="card">
             <table id="myTable">
@@ -32,7 +34,7 @@
                 <tr class="table-row" data-href="{{ url_for('show_job_card_details', id_job_card=job_card.id) }}">
                     <td>{{job_card.item_jc}}</td>
                     <td>{{job_card.description }}</td>
-                    <td>{{job_card.remarks }}</td>
+                    <td>{{job_card.remarks|safe}}</td>
                     <td>{{job_card.working_time.strftime('%H:%M') }} hrs</td>
                     <td>{{ job_card.accomplishment }} %</td>
                     <td>

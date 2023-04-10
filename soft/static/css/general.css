@@ -127,3 +127,8 @@ body.default-background {
 .message-alert {
     font-size: 20px;
 }
+
+.title-soft {
+    font-size: 40px;
+    padding-bottom: 20px;
+}

@@ -24,10 +24,15 @@
                     
                     {{ form.description.label(class="form-label") }}
                     {{ form.description(class="form-field form-label") }}
-                    <br />
-                    
-                    {{ form.remarks.label(class="form-label") }}
-                    {{ form.remarks(class="form-field form-label", rows='10') }}
+                    <br/>
+                    <div>
+                        {{ form.remarks.label(class="form-label") }}
+                    </div>
+                    <div class="red-text">
+                        <p>Utiliser "Shift + Enter" pour un saut de ligne normal et "Enter" pour un saut de type
+                            paragraphe</p>
+                    </div>
+                    {{ form.remarks(class="form-field", rows="10") }}
                     <br />
                 <div class="center">
                     {{ form.submit(class="btn success") }}

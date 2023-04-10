@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% include 'alert_messages.html' %}
+<div class="center">
+    <h1>Job Card Details Lists</h1>
+</div>
+<div style="text-align: right;">
+    <input type="text" id="myInput" onkeyup="searchTable()" placeholder="Find...">
+</div>
+
+<body class="default-background">
+    <div class="center">
+        <div class="div-btn" style="text-align: left;">
+            <a class="btn info" href="{{ url_for('main_menu') }}">Back to Main Menu</a>
+            <a class="btn info" href="{{ url_for('tasks_list') }}">Back to Job Cards List</a>
+        </div>
+        <div class="card">
+            <table id="myTable">
+                <tr class="header">
+                    <th onclick="sortTable(0)">JC (SAAB)</th>
+                    <th onclick="sortTable(0)">JC CVK</th>
+                    <th onclick="sortTable(0)">Type</th>
+                    <th onclick="sortTable(0)">AMM/EMM Ref.</th>
+                    <th onclick="sortTable(0)">Description</th>
+                    <th onclick="sortTable(0)">Remarks</th>
+                    <th onclick="sortTable(0)">Working Time</th>
+                    <th onclick="sortTable(0)">Nbr Tech</th>
+                    <th onclick="sortTable(0)">Status</th>
+                </tr>
+                {% for detail in job_card_detail_list %}
+                <tr>
+                    <td>{{detail.job_card}}</td>
+                    <td>{{detail.fk_task}}</td>
+                    <td>{{detail.type}}</td>
+                    <td>{{detail.mm_ref}}</td>
+                    <td>{{detail.description }}</td>
+                    <td>{{detail.remarks }}</td>
+                    <td>{{detail.working_time.strftime('%H:%M') }} hrs</td>
+                    <td>{{detail.nbr_tech}}</td>
+                    {% if detail.performed == 0 %}
+                    <td>
+                        <i class="fa fa-remove"></i>
+                    </td>
+                    {% else %}
+                    <td>
+                        <i class="fa fa-check"></i>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+                <div class="pagination"></div>
+            </table>
+        </div>
+    </div>
+</body>
+
+{% endblock %}
