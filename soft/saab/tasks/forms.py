@@ -33,6 +33,7 @@ class JobCardDetailsForm(FlaskForm):
     type = SelectField("Type", choices=["Lubrication", "Inspection", "Operational Check", "Functional Check", "Troubleshooting", "Servicing", "Removal / Installation", "Replacement", "Corrosion Prevention"], validators=[DataRequired()])
     mm_ref = StringField("Maintenance Manual reference")
     description = StringField("Description")
+    reason = SelectField("Parts Removed/Installed details", choices=['Removed', 'Installed'])
     remarks = StringField("Remarks", widget=TextArea())
     working_time = TimeField("Working Time")
     nbr_tech = IntegerField("Number of Technicians needed")

@@ -11,14 +11,14 @@ class JobCardList(db.Model):
     - performed
     """
     id = db.Column(db.Integer, primary_key=True)
-    item_jc = db.Column(db.Integer, nullable=False)
+    item_jc = db.Column(db.Integer, nullable=False, unique=True)
     description = db.Column(db.String(255), nullable=False)
     remarks = db.Column(db.Text, nullable=True)
     working_time = db.Column(db.Time, nullable=True)
     accomplishment = db.Column(db.Integer, nullable=True)
 
-
     task_details = db.relationship('JobCardDetails', backref='job_card_list', passive_deletes=True)
+    parts_list = db.relationship('PartsList', backref='job_card_list', passive_deletes=True)
 
     def __repr__(self):
         return '<JobCardList %r>' % self.item_jc

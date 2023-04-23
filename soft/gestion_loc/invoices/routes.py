@@ -232,18 +232,18 @@ def edit_invoice_in(id_invoice):
 @app.route('/gestion_loc/InvoicesIn/download_invoice_in/<int:id_invoice>', methods=['GET', 'POST'])
 @login_required
 def download_invoice_in(id_invoice):
-    try:
+    # try:
         # Get contract to download
         invoice_in_to_download = InvoicesIn.query.get_or_404(id_invoice)
         return send_from_directory(
             invoices_in_path, invoice_in_to_download.file_name
         )
-    except Exception as e:
-        print(e)
-        return render_template(
-            "error_404.html",
-            log=e
-        )
+    # except Exception as e:
+    #     print(e)
+    #     return render_template(
+    #         "error_404.html",
+    #         log=e
+    #     )
 
 
 @app.route('/gestionLoc/InvoicesIn/delete_invoice_in/<int:id_invoice>', methods=['GET'])

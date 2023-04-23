@@ -36,7 +36,7 @@
                     <td>{{detail.type}}</td>
                     <td>{{detail.mm_ref}}</td>
                     <td>{{detail.description }}</td>
-                    <td>{{detail.remarks }}</td>
+                    <td>{{detail.remarks|safe}}</td>
                     <td>{{detail.working_time.strftime('%H:%M') }} hrs</td>
                     <td>{{detail.nbr_tech}}</td>
                     {% if detail.performed == 0 %}

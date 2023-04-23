@@ -3,7 +3,8 @@
 
 import datetime
 from fpdf import FPDF
-from soft.constant import george_json, avio_json, receipts_path, receipt_text, questions_path, orders_path
+from soft.constant import george_json, avio_json, receipts_path, receipt_text, questions_path, orders_path, \
+    parts_list_path
 from soft.constant import invoices_out_path
 from soft.func.date_func import convert_date_to_string, today_date_str, number_of_day, convert_date_string_to_isoformat
 from soft.func.db_func import get_all_orders
@@ -394,5 +395,40 @@ def create_orders_pdf(orders_list: list, checkbox_values: list):
     pdf.create_table(data=orders_list, headers=table_header)
 
     pdf.output(orders_path + pdf_filename)
+
+    return pdf_filename
+
+
+def create_parts_pdf(parts_list: list, checkbox_values: list):
+    """
+    :param parts_list:
+    :param checkbox_values:
+    :return:
+    """
+    pdf_filename = ''
+    title = ''
+    if checkbox_values[0] is not None:  # All orders
+        pdf_filename = f'all_parts_{datetime.date.today()}.pdf'
+        title = 'ALL PARTS LIST'
+    elif checkbox_values[1] is not None:  # Received orders
+        pdf_filename = f'removed_parts_{datetime.date.today()}.pdf'
+        title = 'REMOVED PARTS LIST'
+    elif checkbox_values[2] is not None:  # Ordered orders
+        pdf_filename = f'installed_parts_{datetime.date.today()}.pdf'
+        title = 'INSTALLED PARTS LIST'
+
+    pdf = PDFBase(
+        title=title,
+        orientation='L'
+    )
+    pdf.alias_nb_pages()
+    pdf.add_page()
+
+    pdf.set_font('Times', '', 8)
+    table_header = ['#', 'Description', 'Part Number', 'Serial', 'Qty', 'JC', 'R/I', 'Remarks']
+
+    pdf.create_table(data=parts_list, headers=table_header)
+
+    pdf.output(parts_list_path + pdf_filename)
 
     return pdf_filename

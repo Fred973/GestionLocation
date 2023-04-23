@@ -69,9 +69,11 @@ from soft.saab.questions import routes
 from soft.saab.orders import routes
 from soft.saab.tasks import routes
 from soft.saab.equipment_list import routes
+from soft.saab.parts_list import routes
 
 from soft.saab import model
 from soft.saab.questions import model
 from soft.saab.orders import model
 from soft.saab.tasks import model
 from soft.saab.equipment_list import model
+from soft.saab.parts_list import model
